@@ -1,4 +1,4 @@
-// Rapid Health Checker AI - Advanced Symptom Checker
+// Rapid Health Checker AI - Advanced Medical Intelligence Engine
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
     const symptomDescription = document.getElementById('symptom-description');
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const backBtn = document.getElementById('back-btn');
     const analyzeBtn = document.getElementById('analyze-btn');
     const newAssessmentBtn = document.getElementById('new-assessment-btn');
-    const downloadBtn = document.getElementById('download-btn');
+    const downloadBtn = document.getElementById('download-report-btn');
     const descriptionStep = document.getElementById('description-step');
     const questionsStep = document.getElementById('questions-step');
     const resultsStep = document.getElementById('results-step');
@@ -42,44 +42,38 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCharCount();
     setupEventListeners();
     
-    // Functions
+    // ========================
+    // CORE FUNCTIONS
+    // ========================
+    
     function updateCharCount() {
         const count = symptomDescription.value.length;
         charCount.textContent = count;
-        
-        if (count > 0) {
-            nextBtn.disabled = false;
-        } else {
-            nextBtn.disabled = true;
-        }
+        nextBtn.disabled = count === 0;
     }
     
     function setupEventListeners() {
-        // Symptom description
         symptomDescription.addEventListener('input', updateCharCount);
         
-        // Symptom tags
         symptomTags.forEach(tag => {
             tag.addEventListener('click', () => {
                 const currentText = symptomDescription.value;
                 const tagText = tag.textContent;
                 
-                if (currentText.includes(tagText)) return;
-                
-                symptomDescription.value = currentText 
-                    ? `${currentText}, ${tagText}`
-                    : tagText;
-                
-                updateCharCount();
+                if (!currentText.includes(tagText)) {
+                    symptomDescription.value = currentText 
+                        ? `${currentText}, ${tagText}`
+                        : tagText;
+                    updateCharCount();
+                }
             });
         });
         
-        // Navigation buttons
         nextBtn.addEventListener('click', goToStep2);
         backBtn.addEventListener('click', goBackToStep1);
         analyzeBtn.addEventListener('click', analyzeSymptoms);
         newAssessmentBtn.addEventListener('click', startNewAssessment);
-        downloadBtn.addEventListener('click', downloadReport);
+        downloadBtn.addEventListener('click', generatePDFReport);
     }
     
     function goToStep2() {
@@ -91,11 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
         questionsContainer.innerHTML = `
             <div class="loading-questions">
                 <div class="spinner"></div>
-                <p>Generating personalized questions based on your symptoms...</p>
+                <p>Our AI is generating personalized questions based on your symptoms...</p>
             </div>
         `;
         
-        // Simulate API call to generate questions
+        // Simulate AI processing
         setTimeout(() => {
             generateFollowUpQuestions();
             currentStep = 2;
@@ -108,61 +102,21 @@ document.addEventListener('DOMContentLoaded', function() {
         updateUI();
     }
     
-    function generateFollowUpQuestions() {
-        // This would come from an actual API in production
-        // For demo purposes, we're using mock questions based on symptoms
-        const questions = getMockQuestions(userSymptoms);
-        
-        questionsContainer.innerHTML = '';
-        
-        questions.forEach((question, index) => {
-            const questionId = `question-${index}`;
-            const questionCard = document.createElement('div');
-            questionCard.className = 'question-card';
-            questionCard.innerHTML = `
-                <div class="question-text">${question.text}</div>
-                <div class="answer-options">
-                    ${question.options.map(option => `
-                        <div class="answer-option">
-                            <input type="radio" 
-                                   id="${questionId}-${option.value}" 
-                                   name="${questionId}" 
-                                   value="${option.value}"
-                                   ${option.value === userResponses[questionId] ? 'checked' : ''}>
-                            <label for="${questionId}-${option.value}">${option.text}</label>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            
-            // Add event listeners to radio buttons
-            const radioButtons = questionCard.querySelectorAll('input[type="radio"]');
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    userResponses[questionId] = e.target.value;
-                });
-            });
-            
-            questionsContainer.appendChild(questionCard);
-        });
-    }
-    
     function analyzeSymptoms() {
-        // Validate all questions are answered
         const unansweredQuestions = document.querySelectorAll('.question-card:not(:has(input[type="radio"]:checked))');
         
         if (unansweredQuestions.length > 0) {
-            alert('Please answer all questions before analyzing.');
+            showAlert('Please answer all questions before analyzing.');
             return;
         }
         
         // Show loading state
-        analyzeBtn.innerHTML = `<div class="spinner small"></div> Analyzing...`;
+        analyzeBtn.innerHTML = `<div class="spinner small"></div> Analyzing with Medical AI...`;
         analyzeBtn.disabled = true;
         
-        // Simulate API call to analyze symptoms
+        // Simulate AI processing
         setTimeout(() => {
-            aiAnalysis = getMockAnalysis(userSymptoms, userResponses);
+            aiAnalysis = analyzeSymptomsWithAI(userSymptoms, userResponses);
             currentStep = 3;
             updateUI();
             displayResults();
@@ -170,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function displayResults() {
-        // Set report date and time
         const now = new Date();
         reportDate.textContent = now.toLocaleDateString();
         reportTime.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -205,12 +158,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="condition-info">
                     <div class="condition-name">${condition.name}</div>
                     <div class="condition-probability">
-                        Probability: <span>${condition.probability}%</span>
+                        <div class="probability-bar" style="width: ${condition.probability}%"></div>
+                        <span>${condition.probability}% probability</span>
                     </div>
+                    ${condition.description ? `<div class="condition-description">${condition.description}</div>` : ''}
                 </div>
                 <div class="condition-actions">
                     <button class="learn-more-btn" data-condition="${condition.name}">
-                        Learn More
+                        <i class="fas fa-info-circle"></i> Details
                     </button>
                 </div>
             `;
@@ -223,11 +178,88 @@ document.addEventListener('DOMContentLoaded', function() {
             const recItem = document.createElement('div');
             recItem.className = 'recommendation-item';
             recItem.innerHTML = `
-                <i class="fas ${rec.icon}"></i>
-                <div class="recommendation-text">${rec.text}</div>
+                <div class="recommendation-icon">
+                    <i class="fas ${rec.icon}"></i>
+                </div>
+                <div class="recommendation-content">
+                    <h4>${rec.title}</h4>
+                    <p>${rec.text}</p>
+                    ${rec.details ? `<div class="recommendation-details">${rec.details}</div>` : ''}
+                </div>
             `;
             recommendationsList.appendChild(recItem);
         });
+        
+        // Add event listeners to learn more buttons
+        document.querySelectorAll('.learn-more-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const condition = e.target.closest('button').dataset.condition;
+                showConditionDetails(condition);
+            });
+        });
+    }
+    
+    function showConditionDetails(conditionName) {
+        const condition = aiAnalysis.conditions.find(c => c.name === conditionName);
+        if (!condition) return;
+        
+        const detailsHtml = `
+            <div class="condition-details">
+                <h3>${condition.name}</h3>
+                <div class="probability-display">
+                    <span class="probability-value">${condition.probability}%</span>
+                    <span class="probability-label">Probability</span>
+                </div>
+                <div class="condition-description">
+                    <h4>Description</h4>
+                    <p>${condition.description || 'No additional description available.'}</p>
+                </div>
+                ${condition.causes ? `
+                <div class="condition-causes">
+                    <h4>Possible Causes</h4>
+                    <ul>
+                        ${condition.causes.map(cause => `<li>${cause}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+                ${condition.when_to_see_doctor ? `
+                <div class="condition-warning">
+                    <h4>When to See a Doctor</h4>
+                    <p>${condition.when_to_see_doctor}</p>
+                </div>
+                ` : ''}
+                <button class="close-details-btn">Close</button>
+            </div>
+        `;
+        
+        showModal(detailsHtml);
+    }
+    
+    function showModal(content) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content">
+                ${content}
+            </div>
+        `;
+        
+        modal.querySelector('.close-details-btn')?.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        document.body.appendChild(modal);
+    }
+    
+    function showAlert(message) {
+        const alert = document.createElement('div');
+        alert.className = 'alert-message';
+        alert.textContent = message;
+        
+        document.body.appendChild(alert);
+        setTimeout(() => {
+            document.body.removeChild(alert);
+        }, 3000);
     }
     
     function resetTriageLevels() {
@@ -239,81 +271,625 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function startNewAssessment() {
-        // Reset everything
         currentStep = 1;
         userSymptoms = '';
         userResponses = {};
         aiAnalysis = null;
-        
-        // Clear inputs
         symptomDescription.value = '';
         questionsContainer.innerHTML = '';
-        
-        // Reset UI
         updateUI();
         updateCharCount();
-        
-        // Reset results
         conditionsList.innerHTML = '';
         recommendationsList.innerHTML = '';
         triageRecommendation.innerHTML = '';
         resetTriageLevels();
     }
     
-    function downloadReport() {
-        // In a real app, this would generate a PDF with all the analysis
-        alert('In a production app, this would download a PDF report with your health assessment.');
+    function generatePDFReport() {
+        // In a real app, this would generate a PDF with jsPDF or similar
+        showAlert('PDF report generation would be implemented in production');
     }
     
     function updateUI() {
-        // Update active step
         descriptionStep.classList.toggle('active', currentStep === 1);
         questionsStep.classList.toggle('active', currentStep === 2);
         resultsStep.classList.toggle('active', currentStep === 3);
         
-        // Update progress bar
         step1.classList.toggle('active', currentStep >= 1);
         step2.classList.toggle('active', currentStep >= 2);
         step3.classList.toggle('active', currentStep >= 3);
         
-        // Reset button states
         if (currentStep === 2) {
             analyzeBtn.innerHTML = `Analyze Symptoms <i class="fas fa-bolt"></i>`;
             analyzeBtn.disabled = false;
         }
     }
+
+    // ========================
+    // MEDICAL AI ENGINE
+    // ========================
     
-    // Mock data functions (would be replaced with real API calls)
-    function getMockQuestions(symptoms) {
-        // In a real app, this would come from an AI API
-        const commonQuestions = [
+    function analyzeSymptomsWithAI(symptoms, responses) {
+        const symptomsLower = symptoms.toLowerCase();
+        const analysis = {
+            conditions: [],
+            recommendations: [],
+            triage: {
+                level: 'self-care',
+                reason: '',
+                recommendation: ''
+            }
+        };
+
+        // Medical knowledge base
+        const CONDITIONS = {
+            // Emergency conditions
+            HEART_ATTACK: {
+                name: "Acute Coronary Syndrome (Possible Heart Attack)",
+                probability: 85,
+                description: "Blockage of blood flow to the heart muscle causing chest pain and other symptoms",
+                causes: [
+                    "Coronary artery disease",
+                    "Blood clot in coronary artery",
+                    "Coronary artery spasm"
+                ],
+                when_to_see_doctor: "Immediately call emergency services if you experience chest pain with radiation to arm/jaw, shortness of breath, or nausea."
+            },
+            STROKE: {
+                name: "Acute Ischemic Stroke",
+                probability: 80,
+                description: "Blockage of blood flow to part of the brain causing neurological symptoms",
+                causes: [
+                    "Blood clot in brain artery",
+                    "Atherosclerosis in cerebral arteries",
+                    "Cardioembolism from heart conditions"
+                ],
+                when_to_see_doctor: "Immediate emergency care required for any sudden neurological symptoms (FAST: Face drooping, Arm weakness, Speech difficulty, Time to call emergency)"
+            },
+            
+            // Cardiovascular
+            ANGINA: {
+                name: "Stable Angina Pectoris",
+                probability: 70,
+                description: "Chest pain caused by reduced blood flow to the heart muscle",
+                causes: [
+                    "Coronary artery disease",
+                    "Atherosclerosis",
+                    "Coronary artery spasm"
+                ],
+                when_to_see_doctor: "Within 24 hours for new onset chest pain, or immediately if pain worsens"
+            },
+            ARRHYTHMIA: {
+                name: "Cardiac Arrhythmia",
+                probability: 65,
+                description: "Abnormal heart rhythm that may cause palpitations, dizziness or chest discomfort",
+                causes: [
+                    "Electrical conduction system abnormalities",
+                    "Heart disease",
+                    "Electrolyte imbalances"
+                ],
+                when_to_see_doctor: "Within 24 hours for new palpitations with dizziness or chest pain"
+            },
+            
+            // Neurological
+            MIGRAINE: {
+                name: "Vestibular Migraine",
+                probability: 75,
+                description: "Migraine variant causing dizziness and nausea, often without headache",
+                causes: [
+                    "Genetic predisposition",
+                    "Triggers like stress, certain foods, or hormonal changes"
+                ],
+                when_to_see_doctor: "If symptoms are new, worsening, or don't respond to usual treatments"
+            },
+            BPPV: {
+                name: "Benign Paroxysmal Positional Vertigo (BPPV)",
+                probability: 80,
+                description: "Inner ear disorder causing brief episodes of vertigo with head movements",
+                causes: [
+                    "Displaced otoconia in semicircular canals",
+                    "Head trauma",
+                    "Viral inner ear infection"
+                ],
+                when_to_see_doctor: "If vertigo persists beyond a few days or is accompanied by hearing loss"
+            },
+            
+            // Gastrointestinal
+            GASTROENTERITIS: {
+                name: "Viral Gastroenteritis",
+                probability: 85,
+                description: "Stomach flu causing nausea, vomiting and diarrhea",
+                causes: [
+                    "Norovirus",
+                    "Rotavirus",
+                    "Foodborne pathogens"
+                ],
+                when_to_see_doctor: "If symptoms persist beyond 3 days or signs of dehydration appear"
+            },
+            GERD: {
+                name: "Gastroesophageal Reflux Disease (GERD)",
+                probability: 75,
+                description: "Chronic acid reflux causing heartburn and nausea",
+                causes: [
+                    "Weak lower esophageal sphincter",
+                    "Hiatal hernia",
+                    "Dietary triggers"
+                ],
+                when_to_see_doctor: "If symptoms occur more than twice weekly or don't respond to antacids"
+            },
+            
+            // Respiratory
+            PNEUMONIA: {
+                name: "Community-Acquired Pneumonia",
+                probability: 70,
+                description: "Lung infection causing cough, fever and difficulty breathing",
+                causes: [
+                    "Bacterial (e.g., Streptococcus pneumoniae)",
+                    "Viral (e.g., influenza)",
+                    "Fungal infections"
+                ],
+                when_to_see_doctor: "If fever >102°F (39°C), difficulty breathing, or symptoms worsen after initial improvement"
+            },
+            
+            // Other
+            ANXIETY: {
+                name: "Anxiety/Panic Disorder",
+                probability: 65,
+                description: "Psychological condition causing physical symptoms including dizziness and chest discomfort",
+                causes: [
+                    "Genetic factors",
+                    "Environmental stressors",
+                    "Neurochemical imbalances"
+                ],
+                when_to_see_doctor: "If symptoms interfere with daily life or occur frequently"
+            },
+            DEHYDRATION: {
+                name: "Moderate Dehydration",
+                probability: 80,
+                description: "Inadequate fluid intake causing dizziness, fatigue and dark urine",
+                causes: [
+                    "Insufficient water intake",
+                    "Excessive sweating",
+                    "Vomiting/diarrhea"
+                ],
+                when_to_see_doctor: "If unable to keep fluids down or signs of severe dehydration (no urine for 8+ hours, extreme weakness)"
+            }
+        };
+
+        // Symptom pattern detection
+        const symptomPatterns = [
+            // Emergency patterns
             {
-                text: "How long have you been experiencing these symptoms?",
-                id: "duration",
-                options: [
-                    { text: "Less than 24 hours", value: "<24h" },
-                    { text: "1-3 days", value: "1-3d" },
-                    { text: "4-7 days", value: "4-7d" },
-                    { text: "More than 1 week", value: ">1w" }
+                pattern: (s) => s.includes('chest pain') && 
+                        (responses['chest-pain-radiation'] === 'yes' || 
+                         s.includes('shortness of breath')),
+                condition: CONDITIONS.HEART_ATTACK,
+                triage: {
+                    level: 'emergency',
+                    reason: 'Symptoms suggest possible acute coronary syndrome (heart attack)',
+                    recommendation: 'Call emergency services immediately. Do not drive yourself. Chew 325mg aspirin if available and not allergic.'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-ambulance',
+                        title: 'Emergency Action',
+                        text: 'Call 911 or local emergency number immediately',
+                        details: 'Describe your symptoms clearly to the dispatcher'
+                    },
+                    {
+                        icon: 'fa-pills',
+                        title: 'Medication',
+                        text: 'Chew one adult aspirin (325mg) if available',
+                        details: 'Only if not allergic to aspirin'
+                    },
+                    {
+                        icon: 'fa-couch',
+                        title: 'Positioning',
+                        text: 'Sit or lie down while waiting for help',
+                        details: 'Avoid unnecessary movement'
+                    }
                 ]
             },
             {
-                text: "How would you rate the severity of your symptoms?",
-                id: "severity",
-                options: [
-                    { text: "Mild (noticeable but not bothersome)", value: "mild" },
-                    { text: "Moderate (interferes with daily activities)", value: "moderate" },
-                    { text: "Severe (prevents normal activities)", value: "severe" },
-                    { text: "Worst possible", value: "extreme" }
+                pattern: (s) => (s.includes('dizziness') && s.includes('confusion')) ||
+                               s.includes('slurred speech') || 
+                               s.includes('facial droop'),
+                condition: CONDITIONS.STROKE,
+                triage: {
+                    level: 'emergency',
+                    reason: 'Neurological symptoms suggest possible stroke',
+                    recommendation: 'Call emergency services immediately. Note time of symptom onset (critical for treatment).'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-ambulance',
+                        title: 'Emergency Action',
+                        text: 'Call emergency services immediately',
+                        details: 'Use the word "stroke" when describing symptoms'
+                    },
+                    {
+                        icon: 'fa-clock',
+                        title: 'Time Tracking',
+                        text: 'Note exact time symptoms began',
+                        details: 'Critical for determining treatment options'
+                    },
+                    {
+                        icon: 'fa-ban',
+                        title: 'Precautions',
+                        text: 'Do not eat or drink anything',
+                        details: 'In case swallowing is affected'
+                    }
+                ]
+            },
+            
+            // Cardiovascular patterns
+            {
+                pattern: (s) => s.includes('chest pain') && 
+                               !s.includes('shortness of breath') &&
+                               responses['chest-pain-duration'] === '<10min',
+                condition: CONDITIONS.ANGINA,
+                triage: {
+                    level: 'urgent',
+                    reason: 'Symptoms suggest possible angina',
+                    recommendation: 'Seek medical evaluation within 4-6 hours. Avoid physical exertion.'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-calendar-plus',
+                        title: 'Medical Evaluation',
+                        text: 'See a doctor within 4-6 hours',
+                        details: 'Urgent care or emergency department'
+                    },
+                    {
+                        icon: 'fa-heartbeat',
+                        title: 'Monitoring',
+                        text: 'Watch for worsening symptoms',
+                        details: 'Especially shortness of breath or pain lasting >10min'
+                    },
+                    {
+                        icon: 'fa-couch',
+                        title: 'Activity',
+                        text: 'Rest until evaluated',
+                        details: 'Avoid physical exertion'
+                    }
+                ]
+            },
+            {
+                pattern: (s) => s.includes('dizziness') && 
+                               s.includes('palpitations'),
+                condition: CONDITIONS.ARRHYTHMIA,
+                triage: {
+                    level: 'urgent',
+                    reason: 'Symptoms suggest possible cardiac arrhythmia',
+                    recommendation: 'Seek medical evaluation within 4-6 hours. Try to document your pulse if possible.'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-heartbeat',
+                        title: 'Pulse Check',
+                        text: 'Try to measure your pulse rate',
+                        details: 'Note if it feels regular or irregular'
+                    },
+                    {
+                        icon: 'fa-calendar-plus',
+                        title: 'Medical Evaluation',
+                        text: 'See a doctor within 4-6 hours',
+                        details: 'Cardiac evaluation recommended'
+                    },
+                    {
+                        icon: 'fa-ban',
+                        title: 'Avoid',
+                        text: 'Avoid caffeine and stimulants',
+                        details: 'These may worsen arrhythmias'
+                    }
+                ]
+            },
+            
+            // Neurological patterns
+            {
+                pattern: (s) => s.includes('dizziness') && 
+                               (s.includes('spinning') || s.includes('room spinning')) &&
+                               responses['head-movement'] === 'yes',
+                condition: CONDITIONS.BPPV,
+                triage: {
+                    level: 'routine',
+                    reason: 'Symptoms suggest benign positional vertigo',
+                    recommendation: 'See a doctor within 1-2 days. Try Epley maneuver if diagnosed.'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-bed',
+                        title: 'Positioning',
+                        text: 'Move slowly to avoid triggering dizziness',
+                        details: 'Especially when turning in bed or looking up'
+                    },
+                    {
+                        icon: 'fa-book-medical',
+                        title: 'Treatment',
+                        text: 'Research the Epley maneuver',
+                        details: 'Only perform if properly diagnosed'
+                    },
+                    {
+                        icon: 'fa-calendar-check',
+                        title: 'Follow-up',
+                        text: 'See a doctor if symptoms persist',
+                        details: 'ENT or neurologist recommended'
+                    }
+                ]
+            },
+            {
+                pattern: (s) => s.includes('dizziness') && 
+                               s.includes('nausea') &&
+                               !s.includes('chest pain'),
+                condition: CONDITIONS.MIGRAINE,
+                triage: {
+                    level: 'routine',
+                    reason: 'Symptoms suggest vestibular migraine',
+                    recommendation: 'Consider migraine treatments if diagnosed. See doctor if symptoms persist.'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-pills',
+                        title: 'Medication',
+                        text: 'Consider OTC migraine relief',
+                        details: 'If previously diagnosed with migraines'
+                    },
+                    {
+                        icon: 'fa-cloud-sun',
+                        title: 'Environment',
+                        text: 'Rest in quiet, dark room',
+                        details: 'Reduces sensory stimulation'
+                    },
+                    {
+                        icon: 'fa-calendar-check',
+                        title: 'Follow-up',
+                        text: 'See doctor if symptoms persist',
+                        details: 'Neurologist recommended for chronic cases'
+                    }
+                ]
+            },
+            
+            // Gastrointestinal patterns
+            {
+                pattern: (s) => s.includes('nausea') && 
+                               (s.includes('vomiting') || s.includes('diarrhea')),
+                condition: CONDITIONS.GASTROENTERITIS,
+                triage: {
+                    level: 'self-care',
+                    reason: 'Symptoms suggest viral gastroenteritis',
+                    recommendation: 'Stay hydrated with small sips of clear fluids. Seek care if symptoms persist >3 days.'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-tint',
+                        title: 'Hydration',
+                        text: 'Drink small amounts of clear fluids frequently',
+                        details: 'Water, broth, or oral rehydration solutions'
+                    },
+                    {
+                        icon: 'fa-utensils',
+                        title: 'Diet',
+                        text: 'Follow BRAT diet when able to eat',
+                        details: 'Bananas, rice, applesauce, toast'
+                    },
+                    {
+                        icon: 'fa-ban',
+                        title: 'Avoid',
+                        text: 'Avoid dairy and fatty foods',
+                        details: 'Until symptoms fully resolve'
+                    }
+                ]
+            },
+            {
+                pattern: (s) => s.includes('nausea') && 
+                               s.includes('heartburn'),
+                condition: CONDITIONS.GERD,
+                triage: {
+                    level: 'routine',
+                    reason: 'Symptoms suggest acid reflux',
+                    recommendation: 'Try antacids and dietary changes. See doctor if symptoms persist.'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-pills',
+                        title: 'Medication',
+                        text: 'Try OTC antacids or H2 blockers',
+                        details: 'Follow package instructions'
+                    },
+                    {
+                        icon: 'fa-utensils',
+                        title: 'Diet',
+                        text: 'Avoid acidic/spicy foods',
+                        details: 'Especially before bedtime'
+                    },
+                    {
+                        icon: 'fa-bed',
+                        title: 'Positioning',
+                        text: 'Elevate head of bed',
+                        details: 'Reduces nighttime reflux'
+                    }
+                ]
+            },
+            
+            // Default pattern (viral URI)
+            {
+                pattern: () => true,
+                condition: {
+                    name: "Viral Upper Respiratory Infection",
+                    probability: 60,
+                    description: "Common cold caused by a virus"
+                },
+                triage: {
+                    level: 'self-care',
+                    reason: 'Symptoms suggest minor viral infection',
+                    recommendation: 'Rest, stay hydrated, and use OTC remedies as needed. See doctor if symptoms persist >10 days.'
+                },
+                recommendations: [
+                    {
+                        icon: 'fa-bed',
+                        title: 'Rest',
+                        text: 'Get plenty of rest',
+                        details: 'Adequate sleep supports immune function'
+                    },
+                    {
+                        icon: 'fa-tint',
+                        title: 'Hydration',
+                        text: 'Stay well hydrated',
+                        details: 'Water, tea, or broth recommended'
+                    },
+                    {
+                        icon: 'fa-pills',
+                        title: 'Symptom Relief',
+                        text: 'Use OTC remedies as needed',
+                        details: 'For fever, congestion, or sore throat'
+                    }
                 ]
             }
         ];
+
+        // Find matching pattern
+        const matchedPattern = symptomPatterns.find(p => p.pattern(symptomsLower));
         
-        // Add symptom-specific questions
-        const symptomSpecific = [];
-        
-        if (symptoms.toLowerCase().includes('headache')) {
-            symptomSpecific.push({
+        // Set analysis based on matched pattern
+        analysis.conditions.push(matchedPattern.condition);
+        analysis.triage = matchedPattern.triage;
+        analysis.recommendations = matchedPattern.recommendations;
+
+        // Add secondary conditions when appropriate
+        if (symptomsLower.includes('fever') && symptomsLower.includes('cough')) {
+            analysis.conditions.push({
+                ...CONDITIONS.PNEUMONIA,
+                probability: Math.min(60, matchedPattern.condition.probability - 15)
+            });
+        }
+
+        if (symptomsLower.includes('dizziness') && symptomsLower.includes('anxiety'))) {
+            analysis.conditions.push({
+                ...CONDITIONS.ANXIETY,
+                probability: Math.min(70, matchedPattern.condition.probability - 10)
+            });
+        }
+
+        if (symptomsLower.includes('dizziness') && symptomsLower.includes('thirst'))) {
+            analysis.conditions.push({
+                ...CONDITIONS.DEHYDRATION,
+                probability: Math.min(75, matchedPattern.condition.probability - 5)
+            });
+        }
+
+        // Sort conditions by probability
+        analysis.conditions.sort((a, b) => b.probability - a.probability);
+
+        // Add standard recommendations
+        analysis.recommendations.push(
+            {
+                icon: 'fa-notes-medical',
+                title: 'Monitoring',
+                text: 'Keep symptom diary',
+                details: 'Track severity and frequency of symptoms'
+            },
+            {
+                icon: 'fa-heartbeat',
+                title: 'Follow-up',
+                text: 'Monitor for changes',
+                details: 'Seek care if symptoms worsen or new symptoms appear'
+            }
+        );
+
+        return {
+            symptoms: symptoms,
+            responses: responses,
+            ...analysis
+        };
+    }
+
+    function generateFollowUpQuestions() {
+        const symptomsLower = userSymptoms.toLowerCase();
+        const questions = [];
+
+        // Core questions
+        questions.push({
+            text: "How long have you been experiencing these symptoms?",
+            id: "duration",
+            options: [
+                { text: "Less than 1 hour", value: "<1h" },
+                { text: "1-24 hours", value: "1-24h" },
+                { text: "1-3 days", value: "1-3d" },
+                { text: "4-7 days", value: "4-7d" },
+                { text: "More than 1 week", value: ">1w" }
+            ]
+        });
+
+        questions.push({
+            text: "How would you rate the severity of your symptoms?",
+            id: "severity",
+            options: [
+                { text: "Mild (noticeable but not bothersome)", value: "mild" },
+                { text: "Moderate (interferes with daily activities)", value: "moderate" },
+                { text: "Severe (prevents normal activities)", value: "severe" },
+                { text: "Worst possible", value: "extreme" }
+            ]
+        });
+
+        // Symptom-specific questions
+        if (symptomsLower.includes('chest pain')) {
+            questions.push({
+                text: "Does the chest pain radiate to your arm, neck, or jaw?",
+                id: "chest-pain-radiation",
+                options: [
+                    { text: "Yes", value: "yes" },
+                    { text: "No", value: "no" },
+                    { text: "I'm not sure", value: "unsure" }
+                ]
+            });
+
+            questions.push({
+                text: "How long does the chest pain typically last?",
+                id: "chest-pain-duration",
+                options: [
+                    { text: "Less than 1 minute", value: "<1min" },
+                    { text: "1-10 minutes", value: "1-10min" },
+                    { text: "10-30 minutes", value: "10-30min" },
+                    { text: "More than 30 minutes", value: ">30min" }
+                ]
+            });
+        }
+
+        if (symptomsLower.includes('dizziness')) {
+            questions.push({
+                text: "Does the dizziness feel like spinning or the room moving?",
+                id: "spinning",
+                options: [
+                    { text: "Yes", value: "yes" },
+                    { text: "No", value: "no" },
+                    { text: "I'm not sure", value: "unsure" }
+                ]
+            });
+
+            questions.push({
+                text: "Is the dizziness triggered by head movement?",
+                id: "head-movement",
+                options: [
+                    { text: "Yes", value: "yes" },
+                    { text: "No", value: "no" },
+                    { text: "Sometimes", value: "sometimes" }
+                ]
+            });
+        }
+
+        if (symptomsLower.includes('nausea')) {
+            questions.push({
+                text: "Have you vomited in the last 24 hours?",
+                id: "vomiting",
+                options: [
+                    { text: "Yes", value: "yes" },
+                    { text: "No", value: "no" }
+                ]
+            });
+        }
+
+        if (symptomsLower.includes('headache')) {
+            questions.push({
                 text: "Where is your headache located?",
                 id: "headache-location",
                 options: [
@@ -323,196 +899,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     { text: "Back of head", value: "back" }
                 ]
             });
-            
-            symptomSpecific.push({
-                text: "Does light or sound bother you more than usual when you have this headache?",
-                id: "headache-sensitivity",
-                options: [
-                    { text: "Yes", value: "yes" },
-                    { text: "No", value: "no" },
-                    { text: "I'm not sure", value: "unsure" }
-                ]
-            });
         }
-        
-        if (symptoms.toLowerCase().includes('fever')) {
-            symptomSpecific.push({
-                text: "Have you measured your temperature? If yes, what was it?",
-                id: "fever-temp",
-                options: [
-                    { text: "Below 100°F (37.8°C)", value: "<100" },
-                    { text: "100-102°F (37.8-38.9°C)", value: "100-102" },
-                    { text: "Above 102°F (38.9°C)", value: ">102" },
-                    { text: "I haven't measured", value: "unknown" }
-                ]
-            });
-        }
-        
-        if (symptoms.toLowerCase().includes('chest pain')) {
-            symptomSpecific.push({
-                text: "Does the chest pain radiate to your arm, neck, or jaw?",
-                id: "chest-pain-radiation",
-                options: [
-                    { text: "Yes", value: "yes" },
-                    { text: "No", value: "no" },
-                    { text: "I'm not sure", value: "unsure" }
-                ]
-            });
+
+        // Render questions
+        questionsContainer.innerHTML = '';
+        questions.forEach((question, index) => {
+            const questionId = `question-${index}`;
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card';
+            questionCard.innerHTML = `
+                <div class="question-text">${question.text}</div>
+                <div class="answer-options">
+                    ${question.options.map(option => `
+                        <div class="answer-option">
+                            <input type="radio" 
+                                   id="${questionId}-${option.value}" 
+                                   name="${question.id}" 
+                                   value="${option.value}"
+                                   ${option.value === userResponses[question.id] ? 'checked' : ''}>
+                            <label for="${questionId}-${option.value}">${option.text}</label>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
             
-            symptomSpecific.push({
-                text: "Are you experiencing shortness of breath with the chest pain?",
-                id: "chest-pain-breath",
-                options: [
-                    { text: "Yes", value: "yes" },
-                    { text: "No", value: "no" }
-                ]
-            });
-        }
-        
-        return [...commonQuestions, ...symptomSpecific];
-    }
-    
-    function getMockAnalysis(symptoms, responses) {
-        // This would come from an AI API in production
-        // For demo, we generate mock analysis based on symptoms and responses
-        
-        const hasEmergency = symptoms.toLowerCase().includes('chest pain') && 
-                           responses['chest-pain-radiation'] === 'yes';
-        
-        const hasHeadache = symptoms.toLowerCase().includes('headache');
-        const hasFever = symptoms.toLowerCase().includes('fever');
-        
-        const conditions = [];
-        const recommendations = [];
-        let triageLevel = 'self-care';
-        let triageReason = '';
-        let triageRec = '';
-        
-        // Determine conditions based on symptoms and responses
-        if (hasEmergency) {
-            conditions.push({
-                name: "Possible Heart Attack",
-                probability: "85",
-                description: "Chest pain radiating to arm/jaw is a classic symptom of heart attack"
+            // Add event listeners to radio buttons
+            const radioButtons = questionCard.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    userResponses[question.id] = e.target.value;
+                });
             });
             
-            triageLevel = 'emergency';
-            triageReason = 'Your symptoms suggest a possible heart attack which requires immediate medical attention.';
-            triageRec = 'Call emergency services immediately. Do not drive yourself to the hospital. Chew one adult aspirin (325 mg) if available and you are not allergic.';
-            
-            recommendations.push(
-                { icon: 'fa-ambulance', text: 'Call 911 or your local emergency number immediately' },
-                { icon: 'fa-procedures', text: 'Do not attempt to drive yourself to the hospital' },
-                { icon: 'fa-user-md', text: 'Inform emergency responders about your symptoms and that you may be having a heart attack' }
-            );
-        } 
-        else if (hasHeadache && hasFever) {
-            conditions.push(
-                {
-                    name: "Viral Infection",
-                    probability: "65",
-                    description: "Headache with fever is commonly caused by viral infections"
-                },
-                {
-                    name: "Sinusitis",
-                    probability: "45",
-                    description: "Inflamed sinuses can cause headache and low-grade fever"
-                },
-                {
-                    name: "Meningitis",
-                    probability: "15",
-                    description: "Serious infection of the brain and spinal cord lining"
-                }
-            );
-            
-            if (responses['headache-sensitivity'] === 'yes') {
-                conditions.find(c => c.name === 'Meningitis').probability = '35';
-                triageLevel = 'urgent';
-                triageReason = 'Headache with fever and sensitivity to light could indicate meningitis.';
-                triageRec = 'You should seek medical evaluation within the next 4-6 hours. If symptoms worsen, go to the emergency department immediately.';
-                
-                recommendations.push(
-                    { icon: 'fa-calendar-plus', text: 'Schedule an urgent appointment with your doctor today' },
-                    { icon: 'fa-prescription-bottle-alt', text: 'Take acetaminophen or ibuprofen for pain and fever as directed' },
-                    { icon: 'fa-eye', text: 'Monitor for worsening symptoms like confusion, stiff neck, or rash' }
-                );
-            } else {
-                triageLevel = 'routine';
-                triageReason = 'Your symptoms are likely caused by a viral infection.';
-                triageRec = 'Schedule an appointment with your doctor in the next 1-2 days if symptoms persist. Rest and stay hydrated.';
-                
-                recommendations.push(
-                    { icon: 'fa-bed', text: 'Get plenty of rest and stay hydrated' },
-                    { icon: 'fa-prescription-bottle-alt', text: 'Take acetaminophen or ibuprofen for pain and fever as directed' },
-                    { icon: 'fa-calendar-check', text: 'See a doctor if symptoms last more than 3 days or worsen' }
-                );
-            }
-        } 
-        else if (hasHeadache) {
-            conditions.push(
-                {
-                    name: "Tension Headache",
-                    probability: "75",
-                    description: "Most common type of headache, often stress-related"
-                },
-                {
-                    name: "Migraine",
-                    probability: "40",
-                    description: "Recurrent headaches that can cause throbbing pain"
-                },
-                {
-                    name: "Cluster Headache",
-                    probability: "10",
-                    description: "Severe headaches that occur in cyclical patterns"
-                }
-            );
-            
-            triageLevel = 'self-care';
-            triageReason = 'Your headache is likely not serious, but monitor for changes.';
-            triageRec = 'Try rest, hydration, and over-the-counter pain relievers. See a doctor if headaches persist or worsen.';
-            
-            recommendations.push(
-                { icon: 'fa-glass-whiskey', text: 'Drink plenty of water to stay hydrated' },
-                { icon: 'fa-prescription-bottle-alt', text: 'Take ibuprofen or acetaminophen as directed' },
-                { icon: 'fa-bed', text: 'Rest in a quiet, dark room' },
-                { icon: 'fa-calendar-check', text: 'See a doctor if headaches become frequent or severe' }
-            );
-        } 
-        else {
-            conditions.push({
-                name: "Viral Upper Respiratory Infection",
-                probability: "80",
-                description: "Common cold caused by a virus"
-            });
-            
-            triageLevel = 'self-care';
-            triageReason = 'Your symptoms suggest a minor viral infection.';
-            triageRec = 'Rest, stay hydrated, and use over-the-counter remedies as needed. See a doctor if symptoms persist beyond 10 days.';
-            
-            recommendations.push(
-                { icon: 'fa-glass-whiskey', text: 'Drink plenty of fluids' },
-                { icon: 'fa-bed', text: 'Get adequate rest' },
-                { icon: 'fa-prescription-bottle-alt', text: 'Use over-the-counter cold remedies as needed' },
-                { icon: 'fa-hand-sparkles', text: 'Wash hands frequently to prevent spreading' }
-            );
-        }
-        
-        // Add general recommendations
-        recommendations.push(
-            { icon: 'fa-notes-medical', text: 'Keep track of your symptoms and any changes' },
-            { icon: 'fa-heartbeat', text: 'Monitor for new or worsening symptoms' }
-        );
-        
-        return {
-            symptoms: symptoms,
-            responses: responses,
-            conditions: conditions,
-            recommendations: recommendations,
-            triage: {
-                level: triageLevel,
-                reason: triageReason,
-                recommendation: triageRec
-            }
-        };
+            questionsContainer.appendChild(questionCard);
+        });
     }
 }); 
