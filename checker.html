@@ -9,30 +9,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="checker-header">
-        <nav>
-            <div class="logo">
-                <i class="fas fa-heartbeat"></i>
-                <span>Rapid Health Checker AI</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="checker.html" class="active">Symptom Checker</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <div class="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </div>
-        </nav>
+        <div class="header-container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Rapid Health Checker AI</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="checker.html" class="active">Symptom Checker</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
     </header>
 
     <main class="checker-container">
         <div class="checker-header-content">
-            <h1>AI Symptom Checker</h1>
+            <h1><i class="fas fa-stethoscope"></i> AI Symptom Checker</h1>
             <p>Describe your symptoms to receive an instant AI-powered health assessment</p>
             <div class="progress-bar">
                 <div class="progress-step active" id="step-1">
@@ -59,7 +61,7 @@
                         <p>Describe your symptoms in detail for the most accurate assessment. Include duration, severity, and any other relevant information.</p>
                         
                         <div class="symptom-input-container">
-                            <textarea id="symptom-description" placeholder="Example: 'I've had a severe headache on the right side of my head for 2 days, along with nausea and sensitivity to light...'"></textarea>
+                            <textarea id="symptom-description" placeholder="Example: 'I've had severe dizziness when standing up, along with nausea for the past 2 days...'"></textarea>
                             <div class="input-footer">
                                 <div class="voice-input-btn">
                                     <i class="fas fa-microphone"></i>
@@ -75,19 +77,19 @@
                             <h3>Common Symptoms</h3>
                             <div class="symptom-tags">
                                 <div class="symptom-tag">Headache</div>
-                                <div class="symptom-tag">Fever</div>
-                                <div class="symptom-tag">Cough</div>
-                                <div class="symptom-tag">Fatigue</div>
-                                <div class="symptom-tag">Nausea</div>
                                 <div class="symptom-tag">Dizziness</div>
+                                <div class="symptom-tag">Nausea</div>
                                 <div class="symptom-tag">Chest Pain</div>
+                                <div class="symptom-tag">Fever</div>
+                                <div class="symptom-tag">Fatigue</div>
                                 <div class="symptom-tag">Shortness of Breath</div>
+                                <div class="symptom-tag">Palpitations</div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="action-buttons">
-                        <button id="next-btn" class="cta-button primary">
+                        <button id="next-btn" class="cta-button primary" disabled>
                             Continue <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -125,7 +127,7 @@
             <div class="checker-step" id="results-step">
                 <div class="step-content">
                     <div class="results-header">
-                        <h2>Your AI Health Assessment</h2>
+                        <h2><i class="fas fa-file-medical-alt"></i> Your AI Health Assessment</h2>
                         <p>Generated on <span id="report-date"></span> at <span id="report-time"></span></p>
                     </div>
                     
@@ -155,14 +157,20 @@
                     </div>
                     
                     <div class="results-card">
-                        <h3>Possible Conditions</h3>
+                        <div class="card-header">
+                            <h3><i class="fas fa-diagnoses"></i> Possible Conditions</h3>
+                            <p>Based on your symptoms and responses</p>
+                        </div>
                         <div class="conditions-list" id="conditions-list">
                             <!-- Conditions will be inserted here -->
                         </div>
                     </div>
                     
                     <div class="results-card">
-                        <h3>AI Recommendations</h3>
+                        <div class="card-header">
+                            <h3><i class="fas fa-clipboard-list"></i> AI Recommendations</h3>
+                            <p>Personalized guidance based on your assessment</p>
+                        </div>
                         <div class="recommendations-list" id="recommendations-list">
                             <!-- Recommendations will be inserted here -->
                         </div>
@@ -182,7 +190,7 @@
                         <button id="new-assessment-btn" class="cta-button secondary">
                             <i class="fas fa-redo"></i> New Assessment
                         </button>
-                        <button id="download-btn" class="cta-button primary">
+                        <button id="download-report-btn" class="cta-button primary">
                             <i class="fas fa-download"></i> Download Report
                         </button>
                     </div>
@@ -192,15 +200,17 @@
         
         <div class="checker-sidebar">
             <div class="sidebar-card">
-                <h3>Need Help?</h3>
-                <p>Our AI is here to assist you 24/7 with your health concerns.</p>
-                <button class="sidebar-btn">
-                    <i class="fas fa-comment-medical"></i> Chat with Health Assistant
-                </button>
+                <h3><i class="fas fa-lightbulb"></i> Tips for Best Results</h3>
+                <ul class="tips-list">
+                    <li>Describe symptoms in detail</li>
+                    <li>Include duration and severity</li>
+                    <li>Mention any worsening factors</li>
+                    <li>Note associated symptoms</li>
+                </ul>
             </div>
             <div class="sidebar-card">
-                <h3>Did You Know?</h3>
-                <p>Rapid Health Checker AI has detected over 1,200 medical emergencies that users weren't aware were serious.</p>
+                <h3><i class="fas fa-shield-alt"></i> Your Privacy</h3>
+                <p>All health information is processed securely and never stored permanently.</p>
             </div>
         </div>
     </main>
