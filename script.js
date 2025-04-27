@@ -250,4 +250,145 @@ class SymptomCheckerUI {
         };
     }
     
-    bind 
+    bindEvents() {
+        this.elements.analyzeBtn.addEventListener('click', () => this.runAnalysis());
+        
+        // Bind risk factor changes
+        for (const [key, element] of Object.entries(this.elements.riskFactorInputs)) {
+            element.addEventListener('change', (e) => {
+                this.riskFactors[key] = e.target.checked;
+            });
+        }
+    }
+    
+    async runAnalysis() {
+        const symptoms = this.elements.symptomInput.value.trim();
+        
+        if (!symptoms) {
+            this.showError("Please describe your symptoms");
+            return;
+        }
+        
+        this.showLoading();
+        
+        try {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            const analysis = await this.ai.analyzeSymptoms(symptoms, this.riskFactors);
+            this.displayResults(analysis);
+        } catch (error) {
+            console.error("Analysis error:", error);
+            this.showError("Analysis failed. Please try again.");
+        } finally {
+            this.hideLoading();
+        }
+    }
+    
+    showLoading() {
+        this.elements.analyzeBtn.disabled = true;
+        this.elements.buttonText.textContent = "Analyzing...";
+        this.elements.buttonSpinner.style.display = "inline-block";
+    }
+    
+    hideLoading() {
+        this.elements.analyzeBtn.disabled = false;
+        this.elements.buttonText.textContent = "Analyze Symptoms";
+        this.elements.buttonSpinner.style.display = "none";
+    }
+    
+    showError(message) {
+        alert(message); // Replace with prettier error display
+    }
+    
+    displayResults(analysis) {
+        const { conditions, urgency, protocols } = analysis;
+        
+        // Format conditions list
+        const conditionsHtml = conditions.map(condition => `
+            <div class="condition-item">
+                <div class="condition-info">
+                    <span class="condition-name">${condition.name}</span>
+                    ${condition.emergency ? '<span class="emergency-tag">EMERGENCY</span>' : ''}
+                </div>
+                <span class="condition-prob">${condition.probability}%</span>
+            </div>
+        `).join('');
+        
+        // Format actions
+        const actionsHtml = protocols.actions.map(action => `
+            <li class="action-item">${action}</li>
+        `).join('');
+        
+        // Format monitoring
+        const monitoringHtml = protocols.monitoring.map(item => `
+            <li class="action-item">${item}</li>
+        `).join('');
+        
+        // Set urgency indicator
+        const urgencyClass = `severity-${urgency}`;
+        const urgencyPercentage = 
+            urgency === 'critical' ? 100 :
+            urgency === 'high' ? 75 :
+            urgency === 'medium' ? 50 : 25;
+        
+        // Build full results HTML
+        this.elements.resultsContainer.innerHTML = `
+            <div class="result-header">
+                <h3><i class="fas fa-diagnoses"></i> AI Health Assessment</h3>
+                <span class="result-timestamp">${new Date().toLocaleString()}</span>
+            </div>
+            
+            <div class="condition-list">
+                ${conditionsHtml}
+            </div>
+            
+            <div class="severity-section ${urgencyClass}">
+                <div class="severity-header">
+                    <h4><i class="fas fa-triage"></i> Urgency Assessment</h4>
+                </div>
+                <div class="severity-indicator">
+                    <div class="severity-bar" style="width: ${urgencyPercentage}%"></div>
+                </div>
+                <div class="severity-labels">
+                    <span>Low</span>
+                    <span>Medium</span>
+                    <span>High</span>
+                    <span>Critical</span>
+                </div>
+                <div class="urgency-recommendation">
+                    <p><strong>${protocols.recommendation}</strong></p>
+                </div>
+            </div>
+            
+            <div class="recommendation-card">
+                <h4><i class="fas fa-first-aid"></i> Recommended Actions</h4>
+                <ul class="action-list">
+                    ${actionsHtml}
+                </ul>
+            </div>
+            
+            <div class="recommendation-card">
+                <h4><i class="fas fa-heartbeat"></i> Monitoring Guidance</h4>
+                <ul class="action-list">
+                    ${monitoringHtml}
+                </ul>
+            </div>
+            
+            <div class="disclaimer">
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>Disclaimer:</strong> This AI tool provides preliminary health information only and is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+            </div>
+        `;
+        
+        // Show results with animation
+        this.elements.resultsContainer.style.display = 'block';
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const app = new SymptomCheckerUI();
+    
+    // For debugging/development
+    window.HealthAI = app;
+}); 
