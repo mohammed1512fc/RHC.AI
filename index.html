@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid Health Checker AI | Medical Symptom Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="background-gradient"></div>
+    
+    <div class="container">
+        <header class="text-center my-5 animate__animated animate__fadeInDown">
+            <div class="logo-medical">
+                <i class="fas fa-heartbeat pulse"></i>
+                <h1>Rapid Health <span class="ai-text">AI</span> Checker</h1>
+            </div>
+            <p class="lead">Advanced AI-powered symptom analysis with emergency detection</p>
+        </header>
+
+        <div class="card symptom-card animate__animated animate__fadeInUp">
+            <div class="card-body">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search-plus"></i></span>
+                    <textarea class="form-control" id="symptoms" rows="5" 
+                              placeholder="Describe your symptoms in detail (e.g., 'Sharp chest pain lasting 30 minutes with dizziness...')"></textarea>
+                </div>
+                
+                <div class="additional-options mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="recentTravel">
+                        <label class="form-check-label" for="recentTravel">
+                            Recent international travel
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="existingConditions">
+                        <label class="form-check-label" for="existingConditions">
+                            I have pre-existing medical conditions
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="d-grid mt-4">
+                    <button id="analyzeBtn" class="btn btn-analyze">
+                        <span id="buttonText">Analyze Symptoms</span>
+                        <span id="buttonSpinner" class="spinner" role="status"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="results" class="card results-card animate__animated animate__fadeIn">
+            <div class="card-body">
+                <div class="results-header">
+                    <h3><i class="fas fa-diagnoses"></i> AI Health Assessment</h3>
+                    <div class="timestamp" id="analysisTime"></div>
+                </div>
+                
+                <div class="results-container">
+                    <div class="conditions-section">
+                        <h4>Possible Conditions <small>(Ordered by likelihood)</small></h4>
+                        <div id="conditionsList" class="conditions-list"></div>
+                    </div>
+                    
+                    <div class="severity-section">
+                        <h4><i class="fas fa-triage"></i> Urgency Assessment</h4>
+                        <div class="severity-indicator" id="severityIndicator">
+                            <div class="severity-bar" id="severityBar"></div>
+                        </div>
+                        <div class="severity-recommendation" id="severityRecommendation"></div>
+                    </div>
+                    
+                    <div class="action-section">
+                        <h4><i class="fas fa-first-aid"></i> Recommended Actions</h4>
+                        <div id="actionSteps"></div>
+                    </div>
+                    
+                    <div class="monitoring-section">
+                        <h4><i class="fas fa-heart-rate"></i> Monitoring Guidance</h4>
+                        <div id="monitoringGuidance"></div>
+                    </div>
+                </div>
+                
+                <div class="disclaimer">
+                    <p><i class="fas fa-exclamation-circle"></i> <strong>Important:</strong> This AI assessment is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center">
+        <p>© 2023 Rapid Health AI System | <span id="version">v3.1.0</span> | For educational purposes only</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
