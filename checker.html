@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Checker | 2025 Rapid Health AI</title>
+    <meta name="description" content="AI-powered clinical symptom analysis with emergency detection. Not a substitute for professional medical advice.">
+    <!-- Same CSS/JS imports as index.html -->
+</head>
+<body class="checker-page">
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-heartbeat"></i> 
+                <span>Rapid Health AI</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="checker.html" class="btn-nav active">Symptom Checker</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container checker-container animate__animated animate__fadeIn">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="checker-header">
+                    <h1><i class="fas fa-stethoscope"></i> AI Symptom Analysis</h1>
+                    <p class="subtitle">Describe your symptoms in detail for a comprehensive health assessment</p>
+                </div>
+
+                <div class="card analysis-card">
+                    <div class="card-body">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-notes-medical"></i></span>
+                            <textarea class="form-control" id="symptoms" rows="6" placeholder="Example: 'Sharp chest pain radiating to left arm for 20 minutes with nausea and cold sweats...'"></textarea>
+                        </div>
+
+                        <div class="additional-factors">
+                            <h5><i class="fas fa-clipboard-check"></i> Additional Factors</h5>
+                            <div class="factors-grid">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="recentTravel">
+                                    <label class="form-check-label" for="recentTravel">
+                                        <i class="fas fa-plane"></i> Recent travel
+                                    </label>
+                                </div>
+                                <!-- 5 more checkboxes for medical history, etc. -->
+                            </div>
+                        </div>
+
+                        <div class="analyze-btn-container">
+                            <button id="analyzeBtn" class="btn-analyze">
+                                <span id="buttonText">Analyze Symptoms</span>
+                                <span id="buttonSpinner" class="spinner"></span>
+                            </button>
+                            <p class="disclaimer-note"><i class="fas fa-info-circle"></i> Analysis takes ~2 seconds</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="results" class="results-card">
+                    <!-- Dynamic content from script.js -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Same footer as index.html -->
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
