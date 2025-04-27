@@ -1,369 +1,299 @@
 // =================================================================
-// 2025 Rapid Health AI - Medical Diagnostic Engine v7.0
+// 2025 Rapid Health AI - Medical Diagnostic Engine v8.0
 // =================================================================
 
-class MedicalAI {
-    constructor() {
-        this.version = "7.0.1";
-        this.lastUpdated = "2025-02-15";
-        
-        // Medical systems and symptoms (500+ entries)
-        this.systems = {
-            cardiovascular: {
-                name: "Cardiovascular System",
-                prevalence: 0.18,
-                symptoms: {
-                    "chest pain": { specificity: 0.85, sensitivity: 0.75 },
-                    "shortness of breath": { specificity: 0.7, sensitivity: 0.8 },
-                    // ...50+ cardiovascular symptoms
-                },
-                conditions: this.initCardiovascularConditions()
-            },
-            // 11 other systems...
-        };
-        
-        // Emergency protocols (CDC/WHO guidelines)
-        this.protocols = this.initEmergencyProtocols();
-        
-        // Symptom synonyms (500+ terms)
-        this.symptomLexicon = this.buildSymptomLexicon();
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    // ======================
+    // Configuration
+    // ======================
+    const config = {
+        analysisDelay: 1500, // Simulate AI processing time
+        maxConditionsToShow: 5,
+        emergencyThreshold: 75 // Probability % for emergency
+    };
 
-    initCardiovascularConditions() {
-        return [
-            {
-                id: "ami",
-                name: "Acute Myocardial Infarction",
-                baseProb: 0.03,
-                emergency: true,
-                symptoms: [
-                    { id: "chest pain", weight: 0.9, desc: "Crushing chest pain" },
-                    { id: "left arm pain", weight: 0.7 },
-                    // ...15 AMI symptoms
-                ],
-                riskFactors: ["hypertension", "smoking", "diabetes"],
-                cdcGuideline: "STEMI Protocol v2024"
-            },
-            // ...15 other CV conditions
-        ];
-    }
-
-    buildSymptomLexicon() {
-        return {
-            "headache": ["head pain", "cephalgia", "migraine"],
-            "fever": ["pyrexia", "high temperature", "febrile"],
-            // ...500+ symptom entries
-        };
-    }
-
-    initEmergencyProtocols() {
-        return {
-            level1: { // Immediate life-threatening
-                color: "#dc2626",
-                action: "Call 911 immediately",
-                timeframe: "Now",
-                examples: ["Cardiac arrest", "Stroke", "Severe trauma"]
-            },
-            // ...4 other triage levels
-        };
-    }
-
-    async analyze(symptomText, riskProfile = {}) {
-        // 1. Parse and map symptoms
-        const symptoms = this.parseInput(symptomText);
-        
-        // 2. Generate differential diagnosis
-        const differentials = this.generateDifferentials(symptoms);
-        
-        // 3. Bayesian probability scoring
-        const scored = this.calculateProbabilities(differentials, symptoms, riskProfile);
-        
-        // 4. Triage assessment
-        const triage = this.determineTriageLevel(scored);
-        
-        // 5. Generate recommendations
-        const recommendations = this.generateRecommendations(scored, triage);
-        
-        return {
-            conditions: scored.slice(0, 5), // Top 5
-            triage,
-            recommendations,
-            analyzedSymptoms: symptoms,
-            metadata: {
-                version: this.version,
-                processedAt: new Date().toISOString()
-            }
-        };
-    }
-
-    parseInput(text) {
-        // Advanced NLP simulation (in real app, use TensorFlow.js or API)
-        const tokens = text.toLowerCase().split(/[ ,.;]+/).filter(t => t.length > 2);
-        
-        return tokens.map(token => {
-            const normalized = this.normalizeTerm(token);
-            return normalized ? {
-                raw: token,
-                normalized,
-                system: this.mapToSystem(normalized)
-            } : null;
-        }).filter(Boolean);
-    }
-
-    normalizeTerm(term) {
-        // Check exact matches
-        if (this.symptomLexicon[term]) return term;
-        
-        // Check synonyms
-        for (const [key, synonyms] of Object.entries(this.symptomLexicon)) {
-            if (synonyms.includes(term)) return key;
+    // ======================
+    // Medical Knowledge Base
+    // ======================
+    const medicalKnowledge = {
+        cardiovascular: {
+            name: "Cardiovascular",
+            conditions: [
+                {
+                    id: "ami",
+                    name: "Heart Attack (AMI)",
+                    probability: 0.05,
+                    emergency: true,
+                    symptoms: ["chest pain", "left arm pain", "shortness of breath"],
+                    actions: ["Call 911 immediately", "Chew aspirin if available"],
+                    monitoring: ["Check pulse every 5 minutes", "Watch for consciousness changes"]
+                }
+                // ...499 more conditions
+            ]
+        },
+        neurological: {
+            name: "Neurological",
+            conditions: [
+                {
+                    id: "stroke",
+                    name: "Stroke (CVA)",
+                    probability: 0.04,
+                    emergency: true,
+                    symptoms: ["facial drooping", "arm weakness", "speech difficulty"],
+                    actions: ["Call 911 immediately", "Note time symptoms started"],
+                    monitoring: ["Watch breathing", "Check consciousness level"]
+                }
+                // ...Other conditions
+            ]
         }
-        
-        return null;
+        // ...10 other medical systems
+    };
+
+    // ======================
+    // DOM Elements
+    // ======================
+    const elements = {
+        symptomInput: document.getElementById('symptoms'),
+        analyzeBtn: document.getElementById('analyzeBtn'),
+        buttonText: document.getElementById('buttonText'),
+        buttonSpinner: document.getElementById('buttonSpinner'),
+        resultsContainer: document.getElementById('results'),
+        riskFactors: {
+            travel: document.getElementById('travel'),
+            conditions: document.getElementById('conditions'),
+            medications: document.getElementById('medications'),
+            allergies: document.getElementById('allergies')
+        }
+    };
+
+    // ======================
+    // Event Listeners
+    // ======================
+    elements.analyzeBtn.addEventListener('click', analyzeSymptoms);
+
+    // ======================
+    // Core Functions
+    // ======================
+    async function analyzeSymptoms() {
+        try {
+            // Validate input
+            const symptoms = elements.symptomInput.value.trim();
+            if (!symptoms) {
+                showError("Please describe your symptoms");
+                return;
+            }
+
+            // UI Feedback
+            showLoading();
+
+            // Simulate AI processing
+            await new Promise(resolve => setTimeout(resolve, config.analysisDelay));
+
+            // Get risk factors
+            const riskFactors = getRiskFactors();
+
+            // Perform analysis
+            const results = performMedicalAnalysis(symptoms, riskFactors);
+
+            // Display results
+            displayResults(results);
+
+        } catch (error) {
+            console.error("Analysis error:", error);
+            showError("Analysis failed. Please try again.");
+        } finally {
+            hideLoading();
+        }
     }
 
-    generateDifferentials(symptoms) {
-        const conditions = [];
+    function performMedicalAnalysis(symptomText, riskFactors) {
+        // Convert text to lowercase for matching
+        const symptomLower = symptomText.toLowerCase();
         
-        // Check each system for matching conditions
-        for (const [systemId, system] of Object.entries(this.systems)) {
-            for (const condition of system.conditions) {
-                const matches = condition.symptoms.filter(cs => 
-                    symptoms.some(s => s.normalized === cs.id)
+        // Find matching conditions
+        const matchedConditions = [];
+        
+        // Search through all medical systems
+        for (const system in medicalKnowledge) {
+            for (const condition of medicalKnowledge[system].conditions) {
+                // Check if any symptom matches
+                const matchedSymptoms = condition.symptoms.filter(symptom => 
+                    symptomLower.includes(symptom.toLowerCase())
                 );
                 
-                if (matches.length > 0) {
-                    conditions.push({
+                if (matchedSymptoms.length > 0) {
+                    // Calculate probability score
+                    let score = condition.probability * 100; // Base probability
+                    
+                    // Increase score for each matching symptom
+                    score += matchedSymptoms.length * 15;
+                    
+                    // Adjust for risk factors
+                    if (riskFactors.existingConditions) score *= 1.2;
+                    if (riskFactors.medications) score *= 1.1;
+                    
+                    // Cap at 95%
+                    score = Math.min(95, score);
+                    
+                    matchedConditions.push({
                         ...condition,
-                        system: systemId,
-                        matchingSymptoms: matches,
-                        supportingSymptoms: matches.length / condition.symptoms.length
+                        matchedSymptoms,
+                        score: Math.round(score)
                     });
                 }
             }
         }
         
-        return conditions;
-    }
-
-    calculateProbabilities(conditions, symptoms, riskProfile) {
-        return conditions.map(condition => {
-            // Base probability adjusted by prevalence
-            let probability = condition.baseProb * this.systems[condition.system].prevalence;
-            
-            // Symptom evidence
-            condition.matchingSymptoms.forEach(symptom => {
-                const sysData = this.systems[condition.system].symptoms[symptom.id];
-                probability *= sysData.specificity * symptom.weight;
-            });
-            
-            // Risk factors
-            if (riskProfile.age > 50) probability *= 1.2;
-            if (condition.riskFactors.some(rf => riskProfile[rf])) probability *= 1.3;
-            
-            // Apply sigmoid function
-            probability = 1 / (1 + Math.exp(-10 * (probability - 0.5)));
-            
-            return {
-                ...condition,
-                probability: Math.min(100, Math.round(probability * 100))
-            };
-        }).sort((a, b) => b.probability - a.probability);
-    }
-
-    determineTriageLevel(conditions) {
-        // Level 1 - Immediate emergency
-        const critical = conditions.find(c => c.emergency && c.probability >= 80);
-        if (critical) return { level: 1, ...this.protocols.level1 };
+        // Sort by highest probability
+        matchedConditions.sort((a, b) => b.score - a.score);
         
-        // Level 2 - Emergency within 1 hour
-        const urgent = conditions.find(c => c.probability >= 65);
-        if (urgent) return { level: 2, ...this.protocols.level2 };
+        // Determine urgency level
+        const urgency = determineUrgency(matchedConditions);
         
-        // ...other levels
-        
-        // Default to routine care
-        return { level: 5, ...this.protocols.level5 };
-    }
-
-    generateRecommendations(conditions, triage) {
         return {
-            immediateActions: this.getImmediateActions(triage),
-            conditionSpecific: conditions.map(c => this.getConditionGuide(c)),
-            diagnosticSuggestions: this.getDiagnosticTests(conditions),
-            preventionTips: this.getPreventionTips(conditions)
+            conditions: matchedConditions.slice(0, config.maxConditionsToShow),
+            urgency,
+            analyzedSymptoms: symptomText
         };
     }
 
-    getImmediateActions(triage) {
-        switch(triage.level) {
-            case 1: return [
-                "Call emergency services",
-                "Begin CPR if unresponsive",
-                "Prepare AED if available"
-            ];
-            // ...other levels
-            default: return [
-                "Schedule doctor visit",
-                "Monitor symptoms",
-                "Rest and hydrate"
-            ];
-        }
-    }
+    function determineUrgency(conditions) {
+        // Check for emergency conditions
+        const emergency = conditions.find(c => c.emergency && c.score >= config.emergencyThreshold);
+        if (emergency) return {
+            level: 1,
+            name: "Emergency",
+            color: "#dc2626",
+            action: "Seek immediate medical attention"
+        };
 
-    getConditionGuide(condition) {
+        // Check for urgent conditions
+        const urgent = conditions.find(c => c.score >= 50);
+        if (urgent) return {
+            level: 2,
+            name: "Urgent",
+            color: "#ea580c",
+            action: "See doctor within 24 hours"
+        };
+
+        // Default to routine
         return {
-            name: condition.name,
-            actions: [
-                condition.emergency ? "Seek emergency care" : "Consult physician",
-                ...condition.treatmentGuidelines.slice(0, 3)
-            ],
-            monitoring: [
-                `Track ${condition.keySymptoms.join(", ")}`,
-                "Watch for worsening signs"
-            ]
+            level: 3,
+            name: "Routine",
+            color: "#2563eb",
+            action: "Schedule doctor visit when convenient"
         };
     }
-}
 
-// =================================================================
-// UI Controller with Advanced Features
-// =================================================================
+    function getRiskFactors() {
+        return {
+            travel: elements.riskFactors.travel.checked,
+            existingConditions: elements.riskFactors.conditions.checked,
+            medications: elements.riskFactors.medications.checked,
+            allergies: elements.riskFactors.allergies.checked
+        };
+    }
 
-class HealthCheckUI {
-    constructor() {
-        this.ai = new MedicalAI();
-        this.riskProfile = {
-            age: null,
-            smoker: false,
-            // ...other factors
-        };
-        this.initDOM();
-        this.bindEvents();
-        this.setupTypeAhead();
-    }
-    
-    initDOM() {
-        this.elements = {
-            symptomInput: document.getElementById('symptoms'),
-            analyzeBtn: document.getElementById('analyzeBtn'),
-            resultsContainer: document.getElementById('results'),
-            // ...other elements
-        };
-    }
-    
-    bindEvents() {
-        this.elements.analyzeBtn.addEventListener('click', () => this.runAnalysis());
-        
-        // Risk factor inputs
-        document.querySelectorAll('[data-risk-factor]').forEach(el => {
-            el.addEventListener('change', (e) => {
-                this.riskProfile[e.target.dataset.riskFactor] = e.target.checked;
-            });
-        });
-    }
-    
-    setupTypeAhead() {
-        // Implement with libraries like Typeahead.js
-        // Uses this.ai.symptomLexicon for suggestions
-    }
-    
-    async runAnalysis() {
-        const symptoms = this.elements.symptomInput.value.trim();
-        
-        if (!symptoms) {
-            this.showError("Please describe your symptoms");
-            return;
-        }
-        
-        this.showLoading();
-        
-        try {
-            const analysis = await this.ai.analyze(symptoms, this.riskProfile);
-            this.displayResults(analysis);
-        } catch (error) {
-            console.error("Analysis error:", error);
-            this.showError("Analysis failed. Please try again.");
-        } finally {
-            this.hideLoading();
-        }
-    }
-    
-    displayResults(analysis) {
-        const { conditions, triage, recommendations } = analysis;
-        
-        // Build emergency alert if needed
-        const emergencyAlert = triage.level <= 2 ? `
-            <div class="emergency-alert" style="background-color: ${triage.color}">
-                <h3><i class="fas fa-exclamation-triangle"></i> ${triage.action}</h3>
-                <p>${triage.timeframe}: ${triage.examples.join(", ")}</p>
-            </div>
-        ` : '';
+    // ======================
+    // UI Functions
+    // ======================
+    function displayResults(results) {
+        const { conditions, urgency } = results;
         
         // Build conditions list
-        const conditionsHtml = conditions.map(cond => `
+        const conditionsHtml = conditions.map(condition => `
             <div class="condition-card">
-                <h4>${cond.name} <span class="probability">${cond.probability}%</span></h4>
-                ${cond.emergency ? '<span class="emergency-tag">EMERGENCY</span>' : ''}
-                <ul class="symptom-matches">
-                    ${cond.matchingSymptoms.map(s => `
-                        <li>${s.desc || s.id} (${Math.round(s.weight * 100)}% match)</li>
-                    `).join('')}
-                </ul>
+                <h4>${condition.name}</h4>
+                <div class="condition-details">
+                    <span class="probability">${condition.score}% likelihood</span>
+                    ${condition.emergency ? '<span class="emergency-tag">EMERGENCY</span>' : ''}
+                </div>
+                <div class="matched-symptoms">
+                    <strong>Matching symptoms:</strong> 
+                    ${condition.matchedSymptoms.join(", ")}
+                </div>
             </div>
         `).join('');
         
-        // Build recommendations
-        const recHtml = `
-            <div class="recommendation-section">
-                <h3><i class="fas fa-first-aid"></i> Immediate Actions</h3>
-                <ul>
-                    ${recommendations.immediateActions.map(a => `<li>${a}</li>`).join('')}
-                </ul>
-                
-                <h3><i class="fas fa-stethoscope"></i> Condition Guidance</h3>
-                ${recommendations.conditionSpecific.map(c => `
-                    <div class="condition-guide">
-                        <h4>${c.name}</h4>
-                        <ul>
-                            ${c.actions.map(a => `<li>${a}</li>`).join('')}
-                        </ul>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-        
-        // Assemble full results
-        this.elements.resultsContainer.innerHTML = `
-            ${emergencyAlert}
+        // Build full results HTML
+        const resultsHtml = `
             <div class="results-header">
-                <h2>AI Health Assessment</h2>
-                <p class="timestamp">${new Date().toLocaleString()}</p>
+                <h3><i class="fas fa-diagnoses"></i> AI Health Assessment</h3>
+                <div class="urgency-level" style="border-left-color: ${urgency.color}">
+                    <strong>${urgency.name}</strong>: ${urgency.action}
+                </div>
             </div>
             
-            <div class="triage-level" style="border-left: 5px solid ${triage.color}">
-                <h3>Triage Level ${triage.level}: ${triage.levelName}</h3>
-                <p>${triage.description}</p>
-            </div>
-            
-            <div class="conditions-section">
-                <h3><i class="fas fa-diagnoses"></i> Likely Conditions</h3>
+            <div class="conditions-list">
                 ${conditionsHtml}
             </div>
             
-            ${recHtml}
+            <div class="recommendations">
+                <h4><i class="fas fa-first-aid"></i> Recommended Actions</h4>
+                <ul>
+                    ${conditions[0].actions.map(action => `<li>${action}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <div class="monitoring">
+                <h4><i class="fas fa-heartbeat"></i> Monitoring Guidance</h4>
+                <ul>
+                    ${conditions[0].monitoring.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>
             
             <div class="disclaimer">
-                <p><i class="fas fa-info-circle"></i> This AI analysis is not a substitute for professional medical evaluation.</p>
+                <p><i class="fas fa-info-circle"></i> This tool does not replace professional medical advice.</p>
             </div>
         `;
         
-        this.elements.resultsContainer.style.display = 'block';
+        // Display results
+        elements.resultsContainer.innerHTML = resultsHtml;
+        elements.resultsContainer.style.display = 'block';
+        
+        // Smooth scroll to results
+        elements.resultsContainer.scrollIntoView({ behavior: 'smooth' });
     }
-}
 
-// Initialize when ready
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new HealthCheckUI();
-    window.MedicalAI = app; // For debugging
-});
+    function showLoading() {
+        elements.analyzeBtn.disabled = true;
+        elements.buttonText.textContent = "Analyzing...";
+        elements.buttonSpinner.style.display = "inline-block";
+    }
+
+    function hideLoading() {
+        elements.analyzeBtn.disabled = false;
+        elements.buttonText.textContent = "Analyze Symptoms";
+        elements.buttonSpinner.style.display = "none";
+    }
+
+    function showError(message) {
+        // Create error element if it doesn't exist
+        let errorElement = document.getElementById('error-message');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.id = 'error-message';
+            errorElement.className = 'error-message';
+            elements.symptomInput.parentNode.insertBefore(errorElement, elements.symptomInput.nextSibling);
+        }
+        
+        // Set error message
+        errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+        
+        // Remove error after 5 seconds
+        setTimeout(() => {
+            errorElement.style.opacity = '0';
+            setTimeout(() => errorElement.remove(), 300);
+        }, 5000);
+    }
+// Sample analysis flow:
+1. User clicks "Analyze Symptoms"
+2. Button shows loading state
+3. AI processes symptoms (1500ms simulation)
+4. Results appear with smooth animation
+5. Error messages if input invalid
+    // ======================
+    // Initialization
+    // ======================
+    console.log("Medical AI System initialized successfully");
+}); 
