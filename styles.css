@@ -2,25 +2,25 @@
 /* Medical-Grade UI Theme */
 /* ====================== */
 :root {
-    --primary: #3a86ff;
-    --primary-dark: #2667cc;
-    --secondary: #8338ec;
-    --danger: #ff006e;
-    --warning: #fb5607;
-    --success: #38b000;
+    --primary: #4361ee;
+    --primary-dark: #3a56d4;
+    --secondary: #3f37c9;
+    --danger: #f72585;
+    --warning: #f8961e;
+    --success: #4cc9f0;
     --info: #00b4d8;
     --light: #f8f9fa;
     --dark: #212529;
     --gray: #6c757d;
 }
 
-/* Base Styles */
 body {
-    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
     color: var(--dark);
     line-height: 1.7;
     overflow-x: hidden;
     position: relative;
+    background-color: #f5f7fa;
 }
 
 .background-gradient {
@@ -29,12 +29,12 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #f5f7fa 0%, #dfe7f5 100%);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     z-index: -1;
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     position: relative;
@@ -52,9 +52,19 @@ body {
     animation: pulse 2s infinite;
 }
 
-/* Header */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Header Styles */
 header {
     margin-bottom: 3rem;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
 }
 
 .logo-medical {
@@ -67,35 +77,37 @@ header {
 
 .logo-medical i {
     font-size: 3rem;
-    color: var(--danger);
+    color: white;
 }
 
 .logo-medical h1 {
     font-weight: 800;
     margin: 0;
     font-size: 2.5rem;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: white;
 }
 
 .ai-text {
     font-weight: 900;
-    background: linear-gradient(to right, #8338ec, #ff006e);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: #ffd166;
+}
+
+.slogan {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.5rem;
+    font-style: italic;
 }
 
 header p.lead {
-    font-size: 1.2rem;
-    color: var(--gray);
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.85);
     max-width: 700px;
     margin: 0 auto;
 }
 
-/* Cards */
+/* Card Styles */
 .card {
     border: none;
     border-radius: 15px;
@@ -103,8 +115,7 @@ header p.lead {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
     margin-bottom: 2rem;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    background: white;
 }
 
 .card:hover {
@@ -146,13 +157,19 @@ header p.lead {
 
 .form-control:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 0.25rem rgba(58, 134, 255, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
 }
 
-.additional-options {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+.additional-factors {
+    background: rgba(248, 249, 250, 0.7);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 1.5rem;
+}
+
+.additional-factors h5 {
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
 }
 
 .form-check-input:checked {
@@ -160,7 +177,11 @@ header p.lead {
     border-color: var(--primary);
 }
 
-/* Buttons */
+.form-check-label {
+    margin-left: 5px;
+}
+
+/* Button Styles */
 .btn-analyze {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     border: none;
@@ -172,12 +193,12 @@ header p.lead {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(58, 134, 255, 0.4);
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
 }
 
 .btn-analyze:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(58, 134, 255, 0.5);
+    box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
 }
 
 .btn-analyze:active {
@@ -236,16 +257,8 @@ header p.lead {
     grid-column: span 2;
 }
 
-.severity-section {
-    grid-column: 1;
-}
-
-.action-section {
-    grid-column: 2;
-}
-
-.monitoring-section {
-    grid-column: span 2;
+.severity-section, .action-section, .monitoring-section, .prevention-section {
+    grid-column: span 1;
 }
 
 .conditions-list {
@@ -301,6 +314,14 @@ header p.lead {
     transition: width 1.5s ease, background-color 0.5s ease;
 }
 
+.severity-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
 .severity-recommendation {
     padding: 15px;
     border-radius: 10px;
@@ -308,12 +329,12 @@ header p.lead {
     margin-top: 1rem;
 }
 
-.action-steps-list {
+.action-steps-list, .monitoring-guidance-list, .prevention-tips-list {
     list-style-type: none;
     padding: 0;
 }
 
-.action-step {
+.action-step, .monitoring-item, .prevention-tip {
     margin-bottom: 0.8rem;
     position: relative;
     padding-left: 2rem;
@@ -328,22 +349,18 @@ header p.lead {
     font-size: 1.5rem;
 }
 
-.monitoring-guidance-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.monitoring-item {
-    margin-bottom: 0.8rem;
-    position: relative;
-    padding-left: 2rem;
-}
-
 .monitoring-item:before {
     content: "✓";
     position: absolute;
     left: 0;
     color: var(--success);
+}
+
+.prevention-tip:before {
+    content: "♻";
+    position: absolute;
+    left: 0;
+    color: var(--info);
 }
 
 /* Severity Colors */
@@ -395,11 +412,9 @@ footer {
     font-size: 0.9rem;
 }
 
-#version {
-    font-family: monospace;
-    background: rgba(0, 0, 0, 0.05);
-    padding: 2px 5px;
-    border-radius: 3px;
+footer .small {
+    font-size: 0.8rem;
+    opacity: 0.8;
 }
 
 /* Responsive Design */
@@ -428,26 +443,8 @@ footer {
     .conditions-section,
     .severity-section,
     .action-section,
-    .monitoring-section {
+    .monitoring-section,
+    .prevention-section {
         grid-column: span 1;
-    }
-}
-
-/* Print Styles */
-@media print {
-    .background-gradient,
-    .btn-analyze,
-    footer {
-        display: none;
-    }
-    
-    .container {
-        max-width: 100%;
-        padding: 0;
-    }
-    
-    .card {
-        box-shadow: none;
-        border: 1px solid #ddd;
     }
 } 
