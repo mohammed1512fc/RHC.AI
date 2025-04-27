@@ -2,342 +2,252 @@
 // 2025 Rapid Health AI - Medical Diagnostic Engine v6.0
 // =================================================================
 
-/**
- * Clinical Symptom Analysis System
- * Features:
- * - Bayesian probability scoring
- * - Emergency condition detection
- * - Differential diagnosis generator
- * - Risk factor adjustment
- * - Temporal symptom analysis
- */
-
 class MedicalAI {
     constructor() {
-        this.version = "6.0.2";
-        this.lastUpdated = "2025-01-15";
-        this.author = "Rapid Health AI Team";
+        this.version = "6.0.3";
+        this.lastUpdated = "2025-01-20";
         
-        // Emergency detection thresholds
-        this.emergencyThresholds = {
-            cardiac: 0.85,
-            neurological: 0.8,
-            respiratory: 0.75
-        };
+        // Initialize knowledge base
+        this.medicalKnowledge = this.initializeKnowledgeBase();
         
-        // Medical knowledge base
-        this.knowledgeBase = this.initializeKnowledgeBase();
-        
-        // Symptom lexicon (300+ terms)
-        this.symptomLexicon = this.buildSymptomLexicon();
-    }
-
-    /**
-     * Initialize the medical knowledge base
-     */
-    initializeKnowledgeBase() {
-        return {
-            cardiovascular: {
-                name: "Cardiovascular",
-                prevalence: 0.18, // Population prevalence
-                symptoms: {
-                    "chest pain": { specificity: 0.7, sensitivity: 0.85 },
-                    "shortness of breath": { specificity: 0.6, sensitivity: 0.75 },
-                    // ... 20+ cardiovascular symptoms
-                },
-                conditions: [
-                    {
-                        id: "ami",
-                        name: "Acute Myocardial Infarction",
-                        baseProbability: 0.03,
-                        emergency: true,
-                        riskFactors: ["hypertension", "smoking", "diabetes"],
-                        symptoms: [
-                            { id: "chest pain", weight: 0.9, timeFactor: 0.8 },
-                            { id: "left arm pain", weight: 0.7 },
-                            // ... 15+ AMI symptoms
-                        ]
-                    },
-                    // ... 15+ cardiovascular conditions
+        // Emergency protocols
+        this.emergencyProtocols = {
+            critical: {
+                recommendation: "🚨 EMERGENCY: Call emergency services immediately",
+                actions: [
+                    "Call local emergency number (911/112/999)",
+                    "Do not drive yourself to hospital",
+                    "If unconscious, place in recovery position",
+                    "Perform CPR if no pulse (if trained)"
+                ],
+                monitoring: [
+                    "Check breathing every minute",
+                    "Monitor consciousness level",
+                    "Note time symptoms started"
                 ]
             },
-            // ... 7 other medical specialties
-        };
-    }
-
-    /**
-     * Build symptom lexicon with synonyms and related terms
-     */
-    buildSymptomLexicon() {
-        return {
-            "chest pain": ["chest discomfort", "chest pressure", "heart pain"],
-            "shortness of breath": ["breathlessness", "difficulty breathing", "SOB"],
-            // ... 300+ symptom entries
-        };
-    }
-
-    /**
-     * Main analysis function
-     */
-    async analyze(inputText, riskFactors = {}) {
-        // 1. Pre-process input
-        const { symptoms, temporalData } = this.parseInput(inputText);
-        
-        // 2. Map symptoms to medical ontology
-        const mappedSymptoms = this.mapSymptoms(symptoms);
-        
-        // 3. Generate differential diagnosis
-        const differentials = this.generateDifferentials(mappedSymptoms);
-        
-        // 4. Apply Bayesian probability scoring
-        const scoredDifferentials = this.scoreDifferentials(differentials, mappedSymptoms, riskFactors, temporalData);
-        
-        // 5. Emergency detection
-        const emergencyFlags = this.checkEmergencies(scoredDifferentials);
-        
-        // 6. Generate recommendations
-        const recommendations = this.generateRecommendations(scoredDifferentials, emergencyFlags);
-        
-        return {
-            symptoms: mappedSymptoms,
-            differentials: scoredDifferentials,
-            emergencyFlags,
-            recommendations,
-            metadata: {
-                version: this.version,
-                analysisDate: new Date().toISOString(),
-                processingTime: `${performance.now().toFixed(2)}ms`
+            high: {
+                recommendation: "Urgent: Seek medical care within 2 hours",
+                actions: [
+                    "Contact your doctor or visit urgent care",
+                    "Have someone accompany you",
+                    "Bring all current medications"
+                ],
+                monitoring: [
+                    "Check temperature every 2 hours",
+                    "Monitor symptom progression"
+                ]
+            },
+            medium: {
+                recommendation: "Schedule doctor visit within 24-48 hours",
+                actions: [
+                    "Make appointment with primary care physician",
+                    "Rest and stay hydrated",
+                    "Use over-the-counter remedies as directed"
+                ],
+                monitoring: [
+                    "Track symptoms twice daily",
+                    "Watch for worsening symptoms"
+                ]
+            },
+            low: {
+                recommendation: "Self-care recommended",
+                actions: [
+                    "Rest and stay hydrated",
+                    "Use OTC medications as needed",
+                    "Try home remedies (saltwater gargle, etc.)"
+                ],
+                monitoring: [
+                    "Monitor for 3 days",
+                    "Seek care if symptoms persist"
+                ]
             }
         };
     }
 
-    /**
-     * Advanced NLP symptom parsing
-     */
-    parseInput(text) {
-        // Implement:
-        // - Symptom extraction
-        // - Temporal analysis ("pain for 3 days")
-        // - Severity detection ("severe headache")
-        // - Location mapping ("left arm pain")
-        
+    initializeKnowledgeBase() {
         return {
-            symptoms: [], // Extracted symptoms
-            temporalData: {} // Duration, onset, etc.
+            cardiovascular: {
+                name: "Cardiovascular",
+                conditions: [
+                    {
+                        id: "ami",
+                        name: "Acute Myocardial Infarction",
+                        baseProbability: 0.05,
+                        emergency: true,
+                        symptoms: [
+                            { id: "chest pain", weight: 0.9, description: "Crushing or pressure-like chest pain" },
+                            { id: "left arm pain", weight: 0.7 },
+                            { id: "shortness of breath", weight: 0.6 },
+                            { id: "nausea", weight: 0.4 },
+                            { id: "cold sweat", weight: 0.5 }
+                        ]
+                    },
+                    // More conditions...
+                ]
+            },
+            neurological: {
+                name: "Neurological",
+                conditions: [
+                    {
+                        id: "stroke",
+                        name: "Acute Stroke",
+                        baseProbability: 0.04,
+                        emergency: true,
+                        symptoms: [
+                            { id: "facial droop", weight: 0.8 },
+                            { id: "arm weakness", weight: 0.8 },
+                            { id: "speech difficulty", weight: 0.9 }
+                        ]
+                    },
+                    // More conditions...
+                ]
+            },
+            // More systems...
         };
     }
 
-    /**
-     * Map raw symptoms to medical ontology
-     */
-    mapSymptoms(rawSymptoms) {
-        // Implement symptom normalization using lexicon
-        return rawSymptoms.map(symptom => {
-            return {
-                rawText: symptom,
-                mappedTerm: this.findMedicalTerm(symptom),
-                // Additional medical coding...
-            };
-        });
-    }
-
-    /**
-     * Generate differential diagnoses
-     */
-    generateDifferentials(symptoms) {
-        // Implement:
-        // - System-based filtering
-        // - Symptom pattern matching
-        // - Prevalence adjustment
+    async analyzeSymptoms(text, riskFactors = {}) {
+        // 1. Parse input
+        const symptoms = this.parseSymptomText(text);
         
-        return [
-            // Array of potential conditions
-        ];
+        // 2. Generate differential diagnosis
+        const differentials = this.generateDifferentials(symptoms);
+        
+        // 3. Score conditions
+        const scoredConditions = this.scoreConditions(differentials, symptoms, riskFactors);
+        
+        // 4. Determine urgency
+        const urgency = this.determineUrgency(scoredConditions);
+        
+        // 5. Prepare results
+        return {
+            conditions: scoredConditions.slice(0, 5), // Top 5 conditions
+            urgency,
+            protocols: this.emergencyProtocols[urgency],
+            analyzedSymptoms: symptoms,
+            metadata: {
+                version: this.version,
+                processedAt: new Date().toISOString()
+            }
+        };
     }
 
-    /**
-     * Bayesian probability scoring
-     */
-    scoreDifferentials(differentials, symptoms, riskFactors, temporalData) {
-        return differentials.map(condition => {
-            // Calculate prior probability (prevalence + risk factors)
-            let prior = condition.baseProbability;
-            
-            // Adjust for risk factors
-            condition.riskFactors.forEach(factor => {
-                if (riskFactors[factor]) prior *= 2; // Example adjustment
-            });
-            
-            // Calculate likelihood (symptom weights)
-            let likelihood = 1;
-            symptoms.forEach(symptom => {
-                const symptomData = condition.symptoms.find(s => s.id === symptom.mappedTerm);
-                if (symptomData) {
-                    likelihood *= symptomData.weight;
-                    
-                    // Temporal adjustment
-                    if (symptomData.timeFactor && temporalData.duration) {
-                        likelihood *= this.calculateTemporalFactor(temporalData.duration, symptomData.timeFactor);
-                    }
+    parseSymptomText(text) {
+        // Simple tokenization - replace with proper NLP in production
+        const tokens = text.toLowerCase().split(/[ ,.]+/).filter(t => t.length > 2);
+        
+        // Map to known symptoms
+        return tokens.map(token => {
+            return {
+                raw: token,
+                normalized: this.normalizeSymptom(token),
+                count: 1
+            };
+        }).filter(s => s.normalized);
+    }
+
+    normalizeSymptom(term) {
+        // Simple synonym mapping - expand this
+        const synonyms = {
+            "headache": "headache",
+            "head pain": "headache",
+            "fever": "fever",
+            "temp": "fever",
+            // Expand this dictionary
+        };
+        
+        return synonyms[term] || null;
+    }
+
+    generateDifferentials(symptoms) {
+        // Get all conditions that match any symptom
+        const conditions = [];
+        
+        for (const system in this.medicalKnowledge) {
+            for (const condition of this.medicalKnowledge[system].conditions) {
+                const matchingSymptoms = condition.symptoms.filter(cs => 
+                    symptoms.some(s => s.normalized === cs.id)
+                );
+                
+                if (matchingSymptoms.length > 0) {
+                    conditions.push({
+                        ...condition,
+                        system,
+                        matchingSymptoms
+                    });
                 }
+            }
+        }
+        
+        return conditions;
+    }
+
+    scoreConditions(conditions, symptoms, riskFactors) {
+        return conditions.map(condition => {
+            // Start with base probability
+            let score = condition.baseProbability;
+            
+            // Add symptom weights
+            condition.matchingSymptoms.forEach(symptom => {
+                score += symptom.weight * 0.1; // Adjust weighting factor as needed
             });
             
-            // Posterior probability
-            const probability = (prior * likelihood) / 
-                              (prior * likelihood + (1 - prior) * (1 - likelihood));
+            // Apply risk factors
+            if (riskFactors.age > 50) score *= 1.2;
+            if (riskFactors.smoker) score *= 1.3;
+            // Add other risk factors
+            
+            // Cap at 95%
+            score = Math.min(score, 0.95);
             
             return {
                 ...condition,
-                probability: this.adjustProbability(probability),
-                supportingSymptoms: symptoms.filter(s => 
-                    condition.symptoms.some(cs => cs.id === s.mappedTerm)
+                probability: Math.round(score * 100)
             };
         }).sort((a, b) => b.probability - a.probability);
     }
 
-    /**
-     * Emergency condition detection
-     */
-    checkEmergencies(differentials) {
-        return differentials
-            .filter(condition => condition.emergency && 
-                   condition.probability > this.emergencyThresholds[condition.system])
-            .map(condition => ({
-                condition: condition.name,
-                probability: condition.probability,
-                action: this.getEmergencyProtocol(condition.id)
-            }));
-    }
-
-    /**
-     * Generate clinical recommendations
-     */
-    generateRecommendations(differentials, emergencies) {
-        // Implement CDC/WHO guideline-based recommendations
-        return {
-            topConditions: differentials.slice(0, 5),
-            emergencies,
-            selfCareAdvice: this.generateSelfCareTips(differentials),
-            whenToSeekCare: this.generateCareTiming(differentials),
-            preventionTips: this.generatePreventionTips(differentials)
-        };
-    }
-
-    // ==============================================
-    // Helper Methods
-    // ==============================================
-    
-    findMedicalTerm(rawSymptom) {
-        // Implementation using symptomLexicon
-    }
-    
-    calculateTemporalFactor(duration, baseFactor) {
-        // Time-based probability adjustment
-    }
-    
-    adjustProbability(rawProb) {
-        // Apply sigmoid function for better distribution
-        return 1 / (1 + Math.exp(-10 * (rawProb - 0.5)));
-    }
-    
-    getEmergencyProtocol(conditionId) {
-        // Return CDC/WHO emergency protocols
-    }
-    
-    generateSelfCareTips() {
-        // Evidence-based self-care recommendations
+    determineUrgency(conditions) {
+        // Check for critical conditions
+        const critical = conditions.find(c => c.emergency && c.probability > 75);
+        if (critical) return "critical";
+        
+        // Check for high urgency
+        const high = conditions.find(c => c.probability > 50);
+        if (high) return "high";
+        
+        // Default to medium/low
+        return conditions.some(c => c.probability > 30) ? "medium" : "low";
     }
 }
 
 // =================================================================
-// UI Controller with Advanced Features
+// UI Controller
 // =================================================================
 
-class HealthCheckUI {
+class SymptomCheckerUI {
     constructor() {
         this.ai = new MedicalAI();
         this.riskFactors = {};
-        this.initDOM();
+        this.initElements();
         this.bindEvents();
-        this.setupTypeAhead();
     }
     
-    initDOM() {
+    initElements() {
         this.elements = {
-            input: document.getElementById('symptoms'),
+            symptomInput: document.getElementById('symptoms'),
             analyzeBtn: document.getElementById('analyzeBtn'),
-            results: document.getElementById('results'),
-            // ... other elements
+            buttonText: document.getElementById('buttonText'),
+            buttonSpinner: document.getElementById('buttonSpinner'),
+            resultsContainer: document.getElementById('results'),
+            riskFactorInputs: {
+                travel: document.getElementById('travel'),
+                conditions: document.getElementById('conditions'),
+                medications: document.getElementById('medications'),
+                allergies: document.getElementById('allergies')
+            }
         };
     }
     
-    bindEvents() {
-        this.elements.analyzeBtn.addEventListener('click', () => this.runAnalysis());
-        
-        // Risk factor checkboxes
-        document.querySelectorAll('.risk-factor').forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                this.riskFactors[e.target.id] = e.target.checked;
-            });
-        });
-    }
-    
-    setupTypeAhead() {
-        // Implement symptom autocomplete using symptomLexicon
-    }
-    
-    async runAnalysis() {
-        this.showLoading();
-        
-        try {
-            const analysis = await this.ai.analyze(
-                this.elements.input.value,
-                this.riskFactors
-            );
-            
-            this.displayResults(analysis);
-        } catch (error) {
-            this.showError(error);
-        } finally {
-            this.hideLoading();
-        }
-    }
-    
-    displayResults(analysis) {
-        // Implement dynamic results rendering with:
-        // - Condition cards
-        // - Probability graphs
-        // - Emergency alerts
-        // - Recommendation sections
-    }
-    
-    showLoading() {
-        // Animated loading state
-    }
-    
-    hideLoading() {
-        // Hide loading indicators
-    }
-    
-    showError(error) {
-        // User-friendly error display
-    }
-}
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new HealthCheckUI();
-    
-    // Expose for debugging
-    window.HealthAI = app;
-});
-
-// =================================================================
-// Performance Optimization
-// =================================================================
-
-// Web Worker for heavy computations
-if (window.Worker) {
-    const aiWorker = new Worker('ai-worker.js');
-    // Implement worker communication
-} 
+    bind 
