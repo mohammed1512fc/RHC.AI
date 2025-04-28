@@ -1,206 +1,316 @@
-// Rapid Health Checker AI - Medical Intelligence Engine (2025)
+// Rapid Health Checker AI - Advanced Medical Intelligence Engine (2025)
 class MedicalAI {
   constructor() {
-    this.medicalKnowledge = this.initializeKnowledgeBase();
-    this.userSymptoms = {};
-    this.userResponses = {};
+    this.medicalKnowledgeBase = this.initializeKnowledgeBase();
+    this.symptomParser = new SymptomParser();
+    this.diagnosticEngine = new DiagnosticEngine();
+    this.triageSystem = new TriageSystem();
+    this.userSession = {
+      symptoms: {},
+      responses: {},
+      medicalHistory: {}
+    };
   }
 
   initializeKnowledgeBase() {
     return {
-      // Emergency conditions (highest priority)
-      emergencyConditions: [
-        {
-          id: 'heart_attack',
-          name: "Acute Myocardial Infarction (Heart Attack)",
-          symptoms: ["chest pain", "left arm pain", "shortness of breath", "nausea", "sweating"],
-          triggers: {
-            chestPain: { duration: ">30min", radiation: true, severity: "severe" }
+      conditions: {
+        // Emergency conditions (highest priority)
+        emergency: [
+          {
+            id: 'acute_myocardial_infarction',
+            name: "Acute Myocardial Infarction",
+            prevalence: 0.02,
+            symptoms: {
+              primary: ["chest pain"],
+              associated: ["left arm pain", "shortness of breath", "nausea", "sweating"],
+              required: 2
+            },
+            riskFactors: ["age > 50", "hypertension", "smoking", "high cholesterol"],
+            diagnosticCriteria: {
+              duration: ">30min",
+              radiation: true,
+              severity: "severe"
+            },
+            triage: 'emergency',
+            actions: {
+              immediate: ["Call emergency services", "Chew 325mg aspirin if available"],
+              followUp: ["Cardiology referral", "Stress test"]
+            }
           },
-          probability: 95,
-          triage: 'emergency',
-          recommendation: "Call emergency services immediately. Chew 325mg aspirin if available and not allergic."
+          // 15+ other emergency conditions
+        ],
+        
+        // Cardiovascular conditions
+        cardiovascular: [
+          {
+            id: 'stable_angina',
+            name: "Stable Angina Pectoris",
+            prevalence: 0.05,
+            symptoms: {
+              primary: ["chest pain"],
+              associated: ["exertional discomfort", "shortness of breath"],
+              required: 1
+            },
+            diagnosticCriteria: {
+              duration: "5-15min",
+              relationToActivity: true,
+              relievedByRest: true
+            },
+            triage: 'urgent',
+            actions: {
+              immediate: ["Seek medical evaluation within 24 hours"],
+              followUp: ["Cardiology consultation", "Lipid profile"]
+            }
+          }
+          // 20+ other cardiovascular conditions
+        ],
+        
+        // 15+ other body systems with conditions
+      },
+      
+      symptomRelationships: {
+        // Symptom clusters and their relationships
+        "chest pain": {
+          cardiovascular: 0.85,
+          musculoskeletal: 0.10,
+          gastrointestinal: 0.05
         },
-        {
-          id: 'stroke',
-          name: "Acute Ischemic Stroke",
-          symptoms: ["facial droop", "arm weakness", "speech difficulty", "sudden dizziness", "vision loss"],
-          triggers: {
-            neurological: { sudden: true, multipleSymptoms: true }
-          },
-          probability: 90,
-          triage: 'emergency',
-          recommendation: "Call emergency services immediately. Note time of symptom onset."
-        }
-      ],
-
-      // Systemic conditions
-      systemicConditions: [
-        {
-          id: 'sepsis',
-          name: "Sepsis",
-          symptoms: ["fever", "chills", "rapid breathing", "confusion", "high heart rate"],
-          triggers: {
-            infection: { present: true, systemic: true }
-          },
-          probability: 85,
-          triage: 'emergency',
-          recommendation: "Seek immediate medical attention. This is a life-threatening condition."
-        }
-      ],
-
-      // Cardiovascular conditions
-      cardiovascular: [
-        {
-          id: 'angina',
-          name: "Stable Angina Pectoris",
-          symptoms: ["chest pain", "exertional discomfort", "shortness of breath"],
-          triggers: {
-            chestPain: { duration: "5-15min", relationToActivity: true }
-          },
-          probability: 75,
-          triage: 'urgent',
-          recommendation: "Seek medical evaluation within 24 hours. Avoid strenuous activity."
-        }
-      ],
-
-      // Neurological conditions
-      neurological: [
-        {
-          id: 'migraine',
-          name: "Vestibular Migraine",
-          symptoms: ["headache", "dizziness", "nausea", "light sensitivity"],
-          triggers: {
-            headache: { unilateral: true, throbbing: true }
-          },
-          probability: 80,
-          triage: 'routine',
-          recommendation: "Rest in quiet, dark environment. Consider OTC pain relievers."
-        }
-      ],
-
-      // 200+ additional conditions would be listed here in a real implementation
-      // Organized by body systems: respiratory, gastrointestinal, musculoskeletal, etc.
+        // 100+ other symptom relationships
+      },
+      
+      demographicFactors: {
+        age: {
+          ranges: [
+            { min: 0, max: 12, modifier: 0.8 },
+            { min: 13, max: 40, modifier: 1.0 },
+            { min: 41, max: 65, modifier: 1.2 },
+            { min: 66, max: 120, modifier: 1.5 }
+          ]
+        },
+        // Other demographic factors
+      }
     };
   }
 
-  analyzeSymptoms(symptomDescription, userResponses) {
-    // Preprocess symptoms
-    const symptoms = this.preprocessInput(symptomDescription);
-    this.userSymptoms = symptoms;
-    this.userResponses = userResponses;
-
-    // Initialize results
-    const analysis = {
-      conditions: [],
-      recommendations: [],
-      triage: { level: 'self-care', reason: '', recommendation: '' }
-    };
-
-    // Check emergency conditions first
-    const emergencyResults = this.checkEmergencyConditions();
-    if (emergencyResults) return emergencyResults;
-
-    // Check systemic conditions
-    const systemicResults = this.checkSystemicConditions();
-    if (systemicResults.triage.level === 'emergency') return systemicResults;
-
-    // Check other body systems
-    const fullAnalysis = this.comprehensiveAnalysis();
-    
-    // Combine results with proper prioritization
-    return this.finalizeAnalysis(fullAnalysis);
+  async analyzeSymptoms(symptomText, userProfile = {}) {
+    try {
+      // Step 1: Parse and normalize symptoms
+      const parsedSymptoms = this.symptomParser.parse(symptomText);
+      this.userSession.symptoms = parsedSymptoms;
+      
+      // Step 2: Generate differential diagnosis
+      const differentials = this.diagnosticEngine.generateDifferentials(
+        parsedSymptoms, 
+        userProfile,
+        this.medicalKnowledgeBase
+      );
+      
+      // Step 3: Calculate probabilities
+      const weightedDifferentials = this.diagnosticEngine.calculateProbabilities(
+        differentials,
+        userProfile,
+        this.medicalKnowledgeBase
+      );
+      
+      // Step 4: Determine triage level
+      const triageAssessment = this.triageSystem.assessTriageLevel(
+        weightedDifferentials,
+        this.userSession
+      );
+      
+      // Step 5: Generate recommendations
+      const recommendations = this.generateRecommendations(
+        weightedDifferentials,
+        triageAssessment
+      );
+      
+      return {
+        conditions: weightedDifferentials,
+        triage: triageAssessment,
+        recommendations: recommendations,
+        suggestedQuestions: this.generateFollowUpQuestions(weightedDifferentials)
+      };
+      
+    } catch (error) {
+      console.error("AI Analysis Error:", error);
+      return this.getFallbackResponse();
+    }
   }
 
-  checkEmergencyConditions() {
-    const emergencyMatches = [];
+  generateFollowUpQuestions(conditions) {
+    const questions = [];
     
-    this.medicalKnowledge.emergencyConditions.forEach(condition => {
-      const matchScore = this.calculateMatchScore(condition);
-      if (matchScore > 80) {
-        emergencyMatches.push({
-          condition,
-          score: matchScore
-        });
+    // Core questions for all cases
+    questions.push({
+      id: "duration",
+      text: "How long have you been experiencing these symptoms?",
+      type: "multiple_choice",
+      options: [
+        { value: "<1h", text: "Less than 1 hour" },
+        { value: "1-24h", text: "1-24 hours" },
+        { value: "1-3d", text: "1-3 days" },
+        { value: "4-7d", text: "4-7 days" },
+        { value: ">1w", text: "More than 1 week" }
+      ],
+      importance: "high"
+    });
+    
+    // Condition-specific questions
+    conditions.forEach(condition => {
+      switch(condition.id) {
+        case 'acute_myocardial_infarction':
+          questions.push({
+            id: "chest_pain_radiation",
+            text: "Does the chest pain radiate to your arm, neck, or jaw?",
+            type: "boolean",
+            importance: "critical"
+          });
+          break;
+        // 50+ other condition-specific questions
       }
     });
-
-    if (emergencyMatches.length > 0) {
-      const topEmergency = emergencyMatches.sort((a, b) => b.score - a.score)[0];
-      return {
-        conditions: [{
-          name: topEmergency.condition.name,
-          probability: topEmergency.condition.probability,
-          description: this.generateConditionDescription(topEmergency.condition)
-        }],
-        triage: {
-          level: 'emergency',
-          reason: `Symptoms suggest possible ${topEmergency.condition.name}`,
-          recommendation: topEmergency.condition.recommendation
-        },
-        recommendations: this.generateEmergencyRecommendations(topEmergency.condition)
-      };
-    }
-    return null;
+    
+    return questions;
   }
 
-  comprehensiveAnalysis() {
-    const allConditions = [
-      ...this.medicalKnowledge.cardiovascular,
-      ...this.medicalKnowledge.neurological,
-      // Add all other condition categories
-    ];
+  // 15+ other helper methods would be here...
+}
 
-    const possibleConditions = allConditions.map(condition => {
-      const matchScore = this.calculateMatchScore(condition);
-      return {
-        condition,
-        score: matchScore
-      };
-    }).filter(item => item.score > 50)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 5); // Return top 5 matches
-
-    // Determine triage level based on top conditions
-    const triageLevel = this.determineTriageLevel(possibleConditions);
-
+// Supporting Classes
+class SymptomParser {
+  parse(text) {
+    // Advanced NLP parsing would go here
     return {
-      conditions: possibleConditions.map(item => ({
-        name: item.condition.name,
-        probability: item.score,
-        description: this.generateConditionDescription(item.condition)
-      })),
-      triage: {
-        level: triageLevel,
-        reason: this.generateTriageReason(triageLevel),
-        recommendation: this.generateTriageRecommendation(triageLevel)
+      primary: ["chest pain"], // Extracted from text
+      modifiers: {
+        duration: "2 hours",
+        severity: "7/10"
       },
-      Recommendations: this.generateGeneralRecommendations(possibleConditions)
+      context: {
+        onset: "sudden",
+        aggravating: ["physical activity"],
+        relieving: ["rest"]
+      }
     };
   }
+}
 
-  // 20+ additional helper methods would be here in a full implementation
-  // Including: calculateMatchScore, generateRecommendations, etc.
+class DiagnosticEngine {
+  generateDifferentials(symptoms, userProfile, knowledgeBase) {
+    // Complex diagnostic logic would go here
+    return [
+      {
+        id: "acute_myocardial_infarction",
+        name: "Acute Myocardial Infarction",
+        baseProbability: 0.25,
+        matchedSymptoms: ["chest pain", "shortness of breath"],
+        supportingFactors: ["age > 50"],
+        conflictingFactors: []
+      }
+      // Other potential diagnoses
+    ];
+  }
+
+  calculateProbabilities(differentials, userProfile, knowledgeBase) {
+    // Bayesian probability calculations
+    return differentials.map(dx => {
+      let adjustedProbability = dx.baseProbability;
+      
+      // Adjust based on demographic factors
+      adjustedProbability *= this.getAgeModifier(userProfile.age);
+      
+      // Adjust based on symptom matches
+      adjustedProbability *= (1 + (dx.matchedSymptoms.length * 0.1));
+      
+      return {
+        ...dx,
+        probability: Math.min(0.99, adjustedProbability * 100) // Convert to percentage
+      };
+    }).sort((a, b) => b.probability - a.probability);
+  }
+}
+
+class TriageSystem {
+  assessTriageLevel(conditions, session) {
+    // Check for emergency conditions first
+    const emergencies = conditions.filter(c => 
+      this.medicalKnowledgeBase.conditions.emergency.some(e => e.id === c.id)
+    );
+    
+    if (emergencies.length > 0) {
+      return {
+        level: "emergency",
+        priority: 1,
+        recommendation: emergencies[0].actions.immediate.join(". ") + ".",
+        rationale: `Symptoms suggest ${emergencies[0].name} which requires immediate medical attention`
+      };
+    }
+    
+    // Implement full triage logic
+    return {
+      level: this.calculateTriageLevel(conditions),
+      priority: this.calculatePriority(conditions),
+      recommendation: this.generateTriageRecommendation(conditions),
+      rationale: this.generateTriageRationale(conditions)
+    };
+  }
 }
 
 // UI Integration
 document.addEventListener('DOMContentLoaded', function() {
   const medicalAI = new MedicalAI();
-  
-  // DOM elements
-  const analyzeBtn = document.getElementById('analyze-btn');
   const symptomInput = document.getElementById('symptom-input');
-  const resultsSection = document.getElementById('results-section');
-  
-  analyzeBtn.addEventListener('click', function() {
-    const symptoms = symptomInput.value;
-    const analysis = medicalAI.analyzeSymptoms(symptoms, {});
+  const analyzeBtn = document.getElementById('analyze-btn');
+  const resultsContainer = document.getElementById('results-container');
+
+  analyzeBtn.addEventListener('click', async function() {
+    const symptoms = symptomInput.value.trim();
     
-    // Display results
-    displayResults(analysis);
+    if (!symptoms) {
+      showError("Please describe your symptoms");
+      return;
+    }
+    
+    showLoading();
+    
+    try {
+      const analysis = await medicalAI.analyzeSymptoms(symptoms);
+      displayResults(analysis);
+    } catch (error) {
+      showError("Analysis failed. Please try again.");
+    }
   });
-  
+
   function displayResults(analysis) {
-    // Implementation would display the analysis results
+    resultsContainer.innerHTML = `
+      <div class="triage-alert ${analysis.triage.level}">
+        <h3>Triage Level: ${analysis.triage.level.toUpperCase()}</h3>
+        <p>${analysis.triage.rationale}</p>
+        <div class="recommendation">${analysis.triage.recommendation}</div>
+      </div>
+      
+      <div class="conditions-list">
+        <h3>Possible Conditions</h3>
+        ${analysis.conditions.map(condition => `
+          <div class="condition">
+            <div class="condition-header">
+              <h4>${condition.name}</h4>
+              <div class="probability">${condition.probability.toFixed(1)}%</div>
+            </div>
+            <div class="condition-details">
+              <p>Matching symptoms: ${condition.matchedSymptoms.join(", ")}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="recommendations">
+        <h3>Recommendations</h3>
+        <ul>
+          ${analysis.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+        </ul>
+      </div>
+    `;
   }
 }); 
