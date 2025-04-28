@@ -1,146 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rapid Health Checker AI - Symptom Analysis</title>
-
-  <!-- Professional Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="styles.css">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #d0e8f2, #f8d7da);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    header {
-      background-color: #ffffff;
-      padding: 1rem 2rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      color: #333;
-    }
-    main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-    }
-    .checker-container {
-      background: #ffffff;
-      padding: 3rem;
-      border-radius: 20px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      max-width: 700px;
-      width: 100%;
-      animation: fadeIn 1.5s ease;
-    }
-    .checker-container h2 {
-      margin-bottom: 1rem;
-      font-size: 2rem;
-      color: #555;
-      text-align: center;
-    }
-    textarea {
-      width: 100%;
-      height: 150px;
-      padding: 1rem;
-      border-radius: 12px;
-      border: 2px solid #d0e8f2;
-      resize: vertical;
-      font-size: 1rem;
-      background-color: #f8f9fa;
-      transition: all 0.3s;
-    }
-    textarea:focus {
-      border-color: #a4cbe3;
-      background-color: #ffffff;
-      outline: none;
-    }
-    button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 1rem;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: white;
-      background: linear-gradient(to right, #6ec1e4, #f17b83);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.4s;
-    }
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
-    }
-    #loader {
-      display: none;
-      margin-top: 1rem;
-      text-align: center;
-    }
-    #results {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      background: #f0f8ff;
-      border-radius: 15px;
-      display: none;
-      animation: fadeIn 1s ease forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background-color: #ffffff;
-      font-size: 0.9rem;
-      color: #999;
-      margin-top: auto;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Checker | Rapid Health Checker AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
-
 <body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo-container">
+                <h1 class="logo">Rapid Health Checker AI</h1>
+                <span class="tagline">Advanced Medical Symptom Analysis</span>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="checker.html" class="active">Symptom Checker</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-  <header>
-    <h1>Rapid Health Checker AI</h1>
-  </header>
+    <main class="checker-container">
+        <div class="container">
+            <section class="checker-intro">
+                <h2>AI Symptom Checker</h2>
+                <p>Enter your symptoms below for an instant AI-powered health assessment. Our system will analyze your symptoms and provide possible conditions along with recommended actions.</p>
+            </section>
 
-  <main>
-    <div class="checker-container">
-      <h2>Enter Your Symptoms</h2>
-      <textarea id="symptoms-input" placeholder="Describe your symptoms here..."></textarea>
-      <button id="analyze-btn">Analyze</button>
+            <section class="symptom-form-section">
+                <form id="symptomForm" class="symptom-form">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="1" max="120" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="symptoms">Primary Symptoms (comma separated)</label>
+                        <textarea id="symptoms" name="symptoms" rows="3" required placeholder="e.g. headache, fever, nausea"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duration">Duration of Symptoms</label>
+                        <select id="duration" name="duration" required>
+                            <option value="">Select</option>
+                            <option value="less than 1 hour">Less than 1 hour</option>
+                            <option value="1-6 hours">1-6 hours</option>
+                            <option value="6-24 hours">6-24 hours</option>
+                            <option value="1-3 days">1-3 days</option>
+                            <option value="3-7 days">3-7 days</option>
+                            <option value="1-2 weeks">1-2 weeks</option>
+                            <option value="more than 2 weeks">More than 2 weeks</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="severity">Severity (1-10 scale)</label>
+                        <input type="range" id="severity" name="severity" min="1" max="10" value="5">
+                        <span id="severityValue">5</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additionalInfo">Additional Information</label>
+                        <textarea id="additionalInfo" name="additionalInfo" rows="2" placeholder="Any other relevant information about your symptoms"></textarea>
+                    </div>
+                    
+                    <button type="submit" id="analyzeBtn" class="cta-button analyze-btn">Analyze Symptoms</button>
+                </form>
+            </section>
 
-      <div id="loader">
-        <p>🔍 Analyzing symptoms...</p>
-      </div>
+            <section id="resultsSection" class="results-section hidden">
+                <div class="results-header">
+                    <h3>AI Analysis Results</h3>
+                    <div class="triage-level" id="triageLevel">
+                        <!-- Will be filled by JS -->
+                    </div>
+                </div>
+                
+                <div class="results-content">
+                    <div class="possible-conditions">
+                        <h4>Possible Conditions</h4>
+                        <ul id="possibleConditions">
+                            <!-- Will be filled by JS -->
+                        </ul>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h4>Recommendations</h4>
+                        <div id="recommendations">
+                            <!-- Will be filled by JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="emergency-warning hidden" id="emergencyWarning">
+                        <div class="warning-icon">⚠️</div>
+                        <h4>Emergency Warning</h4>
+                        <p id="emergencyMessage"></p>
+                    </div>
+                </div>
+                
+                <div class="disclaimer-box">
+                    <p><strong>Disclaimer:</strong> This AI analysis is for informational purposes only and does not constitute medical advice. Always consult with a healthcare professional for proper diagnosis and treatment.</p>
+                </div>
+            </section>
+        </div>
+    </main>
 
-      <div id="results">
-        <!-- Analysis results will appear here -->
-      </div>
-    </div>
-  </main>
+    <footer class="main-footer">
+        <div class="container">
+            <p>© 2023 Rapid Health Checker AI. All rights reserved.</p>
+            <p class="disclaimer">Disclaimer: This tool does not provide medical advice. It is intended for informational purposes only.</p>
+        </div>
+    </footer>
 
-  <footer>
-    &copy; 2025 Rapid Health Checker AI. All rights reserved.
-  </footer>
-
-  <!-- Script -->
-  <script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
-</html>
+</html> 
