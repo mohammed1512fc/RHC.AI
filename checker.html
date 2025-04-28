@@ -1,91 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symptom Checker | Rapid Health Checker AI</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Symptom Checker | Rapid Health Checker AI</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="main-header">
-        <!-- Same header as index.html -->
-    </header>
+  <header class="header">
+    <div class="container">
+      <h1>Symptom Checker</h1>
+      <p>Enter your symptoms and receive instant smart advice.</p>
+      <a href="index.html" class="btn btn-secondary">← Back to Home</a>
+    </div>
+  </header>
 
-    <main class="checker-container">
-        <div class="container">
-            <div class="checker-header">
-                <h2><i class="fas fa-clipboard-check"></i> Advanced Symptom Analysis</h2>
-                <div class="progress-indicator">
-                    <div class="step active"><span>1</span> Describe Symptoms</div>
-                    <div class="step"><span>2</span> AI Analysis</div>
-                    <div class="step"><span>3</span> Get Results</div>
-                </div>
-            </div>
-            
-            <div class="checker-form-container">
-                <form id="symptomForm" class="checker-form">
-                    <!-- Professional form fields -->
-                    <div class="form-group">
-                        <label for="symptoms"><i class="fas fa-comment-medical"></i> Describe Your Symptoms</label>
-                        <textarea id="symptoms" name="symptoms" rows="5" required 
-                                  placeholder="Describe your symptoms in detail (e.g., 'Sharp headache behind right eye for 3 days, worsened by light')"></textarea>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" id="analyzeBtn" class="btn btn-primary">
-                            <i class="fas fa-brain"></i> Analyze with Clinical AI
-                        </button>
-                    </div>
-                </form>
-                
-                <div id="loadingIndicator" class="loading-indicator">
-                    <div class="spinner-container">
-                        <div class="spinner"></div>
-                        <div class="ai-process">
-                            <div class="process-step active">
-                                <i class="fas fa-check-circle"></i>
-                                <span>Processing symptom descriptions</span>
-                            </div>
-                            <!-- Additional process steps -->
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="resultsContainer" class="results-container">
-                    <!-- Comprehensive results display -->
-                    <div class="clinical-summary">
-                        <h3><i class="fas fa-diagnoses"></i> Clinical AI Analysis</h3>
-                        <div class="triage-alert">
-                            <div class="triage-level">Urgent Care Recommended</div>
-                            <div class="triage-description">Based on your symptoms, you should seek medical care within 24 hours</div>
-                        </div>
-                    </div>
-                    
-                    <div class="differential-diagnosis">
-                        <h4><i class="fas fa-clipboard-list"></i> Differential Diagnosis</h4>
-                        <div class="conditions-grid">
-                            <!-- Condition cards with likelihood percentages -->
-                        </div>
-                    </div>
-                    
-                    <div class="clinical-recommendations">
-                        <h4><i class="fas fa-procedures"></i> Clinical Recommendations</h4>
-                        <!-- Evidence-based recommendations -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+  <main>
+    <section class="checker-form container">
+      <textarea id="symptomInput" placeholder="Describe your symptoms... e.g. 'Fever, chills, shortness of breath'"></textarea>
+      <button class="btn btn-primary" onclick="analyzeSymptoms()">Analyze Symptoms</button>
 
-    <footer class="main-footer">
-        <!-- Same footer as index.html -->
-    </footer>
+      <div id="results" class="results hidden">
+        <div id="loading" class="loading hidden">Analyzing...</div>
+        <div id="output"></div>
+      </div>
+    </section>
+  </main>
 
-    <script src="ai-engine.js"></script>
-    <script src="script.js"></script>
+  <footer class="footer">
+    <div class="container">
+      <p>Rapid Health Checker AI does not replace professional medical advice. Always consult a licensed physician.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html> 
