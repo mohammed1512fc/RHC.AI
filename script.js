@@ -1,58 +1,170 @@
-const aiDatabase = [
-  // --- CARDIOVASCULAR SYSTEM ---
-  { keyword: ["chest pain", "tightness", "left arm pain", "jaw pain"], condition: "Possible Heart Attack", urgency: "🚨 Emergency", recommendation: "Call 911 immediately. Take aspirin if not allergic." },
-  { keyword: ["irregular heartbeat", "palpitations"], condition: "Possible Arrhythmia", urgency: "⚠️ Moderate", recommendation: "Schedule cardiology evaluation." },
-  { keyword: ["swollen legs", "swelling ankles"], condition: "Possible Congestive Heart Failure", urgency: "⚠️ Serious", recommendation: "Consult cardiologist immediately." },
+// script.js (Hyper-Polished Rapid Health Checker AI)
 
-  // --- RESPIRATORY SYSTEM ---
-  { keyword: ["shortness of breath", "difficulty breathing"], condition: "Possible Asthma or COPD", urgency: "⚠️ Moderate to Emergency", recommendation: "Use rescue inhaler and seek medical attention." },
-  { keyword: ["persistent cough", "blood cough"], condition: "Possible Lung Infection or Cancer", urgency: "⚠️ Urgent", recommendation: "See pulmonologist urgently." },
-  { keyword: ["sudden breathing stop", "can't breathe"], condition: "Possible Airway Blockage or Severe Asthma", urgency: "🚨 Emergency", recommendation: "Call 911 immediately!" },
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('symptomForm');
+    const resultDiv = document.getElementById('result');
+    const submitButton = document.getElementById('submitBtn');
 
-  // --- NEUROLOGICAL SYSTEM ---
-  { keyword: ["seizure", "convulsion"], condition: "Possible Epilepsy or Acute Neurological Event", urgency: "🚨 Emergency", recommendation: "Protect head, call emergency services immediately." },
-  { keyword: ["vision loss", "blurred vision", "double vision"], condition: "Possible Stroke or Eye Emergency", urgency: "🚨 Emergency", recommendation: "Call 911 immediately." },
-  { keyword: ["loss of balance", "difficulty walking"], condition: "Possible Stroke or Brain Tumor", urgency: "⚠️ Urgent", recommendation: "Seek urgent neurological assessment." },
-  { keyword: ["tremors", "shaking hands"], condition: "Possible Parkinson's Disease", urgency: "🧠 Important", recommendation: "See neurologist for evaluation." },
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        analyzeSymptoms();
+    });
 
-  // --- GASTROINTESTINAL SYSTEM ---
-  { keyword: ["abdominal pain", "nausea", "vomiting"], condition: "Possible Appendicitis", urgency: "🚨 Emergency", recommendation: "Seek immediate ER care." },
-  { keyword: ["bloody stool", "black stool"], condition: "Possible Gastrointestinal Bleeding", urgency: "⚠️ Serious", recommendation: "Go to emergency department." },
-  { keyword: ["persistent diarrhea", "dehydration"], condition: "Possible Gastroenteritis", urgency: "🩺 Mild to Moderate", recommendation: "Hydrate and monitor." },
-  { keyword: ["jaundice", "yellow skin"], condition: "Possible Liver Disease", urgency: "⚠️ Urgent", recommendation: "Seek specialist consultation." },
+    function analyzeSymptoms() {
+        const symptomsInput = document.getElementById('symptoms').value.toLowerCase().trim();
+        resultDiv.innerHTML = '';
 
-  // --- RENAL / URINARY SYSTEM ---
-  { keyword: ["back pain", "painful urination", "blood urine"], condition: "Possible Kidney Infection or Stones", urgency: "⚠️ Moderate", recommendation: "Consult urologist." },
-  { keyword: ["frequent urination", "increased thirst"], condition: "Possible Diabetes or Urinary Infection", urgency: "🩺 Mild to Moderate", recommendation: "Check blood sugar and consult physician." },
+        if (!symptomsInput) {
+            return displayError('⚠️ Please describe your symptoms before analyzing.');
+        }
 
-  // --- SKIN / IMMUNE SYSTEM ---
-  { keyword: ["rash", "itchy skin", "hives"], condition: "Possible Allergic Reaction", urgency: "⚠️ Moderate", recommendation: "Take antihistamines and monitor." },
-  { keyword: ["blistering rash", "severe skin pain"], condition: "Possible Shingles (Herpes Zoster)", urgency: "⚠️ Urgent", recommendation: "Antiviral treatment within 72 hours." },
-  { keyword: ["open wound", "infected cut"], condition: "Possible Skin Infection", urgency: "⚠️ Moderate", recommendation: "Clean wound and seek medical attention if worsening." },
+        submitButton.disabled = true;
+        submitButton.innerText = 'Analyzing...';
 
-  // --- MUSCULOSKELETAL SYSTEM ---
-  { keyword: ["joint pain", "swollen joints"], condition: "Possible Rheumatoid Arthritis", urgency: "🩺 Mild to Moderate", recommendation: "Consult rheumatologist." },
-  { keyword: ["bone pain", "easy fractures"], condition: "Possible Osteoporosis", urgency: "🩺 Mild", recommendation: "Bone density scan recommended." },
-  
-  // --- ENDOCRINE SYSTEM ---
-  { keyword: ["weight gain", "cold intolerance"], condition: "Possible Hypothyroidism", urgency: "🩺 Mild", recommendation: "Blood test for thyroid hormones." },
-  { keyword: ["weight loss", "heat intolerance"], condition: "Possible Hyperthyroidism", urgency: "🩺 Mild to Moderate", recommendation: "Consult endocrinologist." },
+        setTimeout(() => {
+            const analysis = performDeepAnalysis(symptomsInput);
+            renderResults(analysis);
+            submitButton.disabled = false;
+            submitButton.innerText = 'Analyze';
+        }, 800); // Slight delay to simulate thinking
+    }
 
-  // --- MENTAL HEALTH / PSYCHIATRY ---
-  { keyword: ["hopeless", "suicidal thoughts"], condition: "Mental Health Crisis", urgency: "🚨 Mental Health Emergency", recommendation: "Call crisis hotline or 911 immediately." },
-  { keyword: ["anxiety attack", "panic attack"], condition: "Acute Anxiety Disorder", urgency: "⚠️ Moderate", recommendation: "Breathing exercises, seek mental health care." },
-  { keyword: ["memory problems", "confusion"], condition: "Possible Early Dementia", urgency: "🧠 Important", recommendation: "Neurological evaluation recommended." },
+    function displayError(message) {
+        resultDiv.innerHTML = `
+            <div class="error-card fade-in-up">
+                <p>${message}</p>
+            </div>
+        `;
+    }
 
-  // --- PREGNANCY & WOMEN'S HEALTH ---
-  { keyword: ["pregnant", "bleeding"], condition: "Possible Pregnancy Complication", urgency: "⚠️ Urgent", recommendation: "Obstetric emergency evaluation needed." },
-  { keyword: ["severe cramps during period"], condition: "Possible Endometriosis", urgency: "🩺 Mild to Moderate", recommendation: "Consult gynecologist." },
+    function performDeepAnalysis(input) {
+        const conditionsDB = [
+            {
+                name: "Influenza or COVID-19",
+                keywords: ['fever', 'chills', 'cough', 'fatigue', 'body aches', 'loss of smell', 'breathless'],
+                severity: 3,
+                triage: "Primary Care / Urgent Care",
+                recommendation: "Rest, monitor symptoms, consult a doctor if breathing worsens."
+            },
+            {
+                name: "Heart Attack",
+                keywords: ['chest pain', 'shortness of breath', 'sweating', 'nausea', 'jaw pain', 'left arm pain'],
+                severity: 5,
+                triage: "Emergency Room Required",
+                recommendation: "Call 911 immediately. Do not delay."
+            },
+            {
+                name: "Stroke",
+                keywords: ['face drooping', 'speech problems', 'arm weakness', 'confusion', 'vision changes'],
+                severity: 5,
+                triage: "Emergency Stroke Care",
+                recommendation: "Call emergency services immediately."
+            },
+            {
+                name: "Severe Allergy (Anaphylaxis)",
+                keywords: ['difficulty breathing', 'hives', 'swelling', 'throat closing'],
+                severity: 5,
+                triage: "Emergency Room Required",
+                recommendation: "Use EpiPen if available. Call emergency services."
+            },
+            {
+                name: "Migraine",
+                keywords: ['headache', 'throbbing', 'sensitivity to light', 'nausea', 'aura'],
+                severity: 2,
+                triage: "Primary Care / Neurologist",
+                recommendation: "Rest in dark room. Seek help if frequent or disabling."
+            },
+            {
+                name: "Appendicitis",
+                keywords: ['lower right abdominal pain', 'fever', 'nausea', 'vomiting'],
+                severity: 4,
+                triage: "Emergency Room - Surgical Evaluation",
+                recommendation: "Immediate evaluation required to prevent rupture."
+            },
+            {
+                name: "Food Poisoning",
+                keywords: ['diarrhea', 'vomiting', 'abdominal cramps', 'nausea'],
+                severity: 2,
+                triage: "Self-care or Urgent Care",
+                recommendation: "Stay hydrated. Seek care if symptoms are severe."
+            },
+            {
+                name: "Mental Health Crisis",
+                keywords: ['suicidal thoughts', 'hopelessness', 'persistent sadness', 'anxiety attacks'],
+                severity: 5,
+                triage: "Behavioral Health Urgent Help",
+                recommendation: "Call crisis line or see emergency psychiatric care."
+            }
+        ];
 
-  // --- GENERAL SYMPTOMS ---
-  { keyword: ["fatigue", "tired all the time"], condition: "Possible Anemia or Chronic Fatigue Syndrome", urgency: "🩺 Mild to Moderate", recommendation: "General check-up and blood work recommended." },
-  { keyword: ["night sweats", "unexplained weight loss"], condition: "Possible Lymphoma or TB", urgency: "⚠️ Serious", recommendation: "Urgent medical evaluation." },
-  { keyword: ["frequent infections"], condition: "Possible Immune Deficiency", urgency: "⚠️ Serious", recommendation: "Immune function testing recommended." },
-  { keyword: ["swollen lymph nodes"], condition: "Possible Infection or Cancer", urgency: "⚠️ Serious", recommendation: "Consult physician if persists beyond 2 weeks." },
-  
-  // --- BLOOD DISORDERS ---
-  { keyword: ["easy bruising", "nosebleeds"], condition: "Possible Blood Clotting Disorder", urgency: "⚠️ Moderate", recommendation: "See hematologist for blood tests." },
-]; 
+        let matchedConditions = [];
+        let totalSeverity = 0;
+
+        conditionsDB.forEach(condition => {
+            const foundKeywords = condition.keywords.filter(word => input.includes(word));
+            if (foundKeywords.length > 0) {
+                matchedConditions.push({
+                    ...condition,
+                    matchedKeywords: foundKeywords
+                });
+                totalSeverity += condition.severity;
+            }
+        });
+
+        if (matchedConditions.length === 0) {
+            return {
+                diagnosis: "Unrecognized Symptoms",
+                triage: "Primary Care Recommended",
+                recommendation: "Please consult your doctor for a thorough evaluation.",
+                severity: 2,
+                matches: []
+            };
+        }
+
+        const avgSeverity = totalSeverity / matchedConditions.length;
+        const triageLevel = calculateTriage(avgSeverity);
+
+        return {
+            diagnosis: matchedConditions.map(c => c.name).join(', '),
+            triage: triageLevel,
+            recommendation: generateRecommendations(matchedConditions),
+            severity: Math.round(avgSeverity),
+            matches: matchedConditions
+        };
+    }
+
+    function calculateTriage(severity) {
+        if (severity >= 5) return "EMERGENCY - Immediate Care Needed";
+        if (severity >= 4) return "URGENT - Seek Medical Care Soon";
+        if (severity >= 3) return "PRIMARY CARE - Physician Visit Recommended";
+        return "SELF-CARE or Routine Consultation";
+    }
+
+    function generateRecommendations(matches) {
+        const uniqueRecs = new Set();
+        matches.forEach(m => uniqueRecs.add(m.recommendation));
+        return Array.from(uniqueRecs).join(' ');
+    }
+
+    function renderResults(analysis) {
+        let matchDetails = '';
+        if (analysis.matches.length > 0) {
+            matchDetails = '<ul class="match-list">';
+            analysis.matches.forEach(m => {
+                matchDetails += `<li><strong>${m.name}:</strong> matched symptoms: ${m.matchedKeywords.join(', ')}</li>`;
+            });
+            matchDetails += '</ul>';
+        }
+
+        resultDiv.innerHTML = `
+            <div class="result-card fade-in-up">
+                <h2>🧠 Rapid Health Analysis</h2>
+                <p><strong>🩺 Diagnosis:</strong> ${analysis.diagnosis}</p>
+                <p><strong>🚑 Triage Recommendation:</strong> ${analysis.triage}</p>
+                <p><strong>📋 Advice:</strong> ${analysis.recommendation}</p>
+                <p><strong>⚡ Severity Score:</strong> ${analysis.severity}/5</p>
+                ${matchDetails}
+            </div>
+        `;
+    }
+}); 
