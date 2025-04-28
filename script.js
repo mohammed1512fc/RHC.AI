@@ -1,170 +1,150 @@
-// script.js (Hyper-Polished Rapid Health Checker AI)
+// script.js - Ultra Advanced Rapid Health Checker AI
 
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('symptomForm');
-    const resultDiv = document.getElementById('result');
-    const submitButton = document.getElementById('submitBtn');
+// Grab DOM elements
+const analyzeBtn = document.getElementById('analyze-btn');
+const symptomsInput = document.getElementById('symptoms-input');
+const resultsContainer = document.getElementById('results');
+const loader = document.getElementById('loader');
 
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        analyzeSymptoms();
-    });
+// Symptom dictionary grouped by categories
+const symptomKeywords = {
+    "Emergency": [
+        "chest pain", "shortness of breath", "severe bleeding", "loss of consciousness", "seizure",
+        "stroke", "paralysis", "numbness", "severe allergic reaction", "anaphylaxis", "severe burn",
+        "severe head injury", "uncontrolled bleeding", "difficulty breathing", "spinal injury",
+        "open fracture", "major trauma", "vision loss", "confusion", "unresponsiveness"
+    ],
+    "Urgent": [
+        "high fever", "severe pain", "persistent vomiting", "deep cut", "serious burn", "broken bone",
+        "infected wound", "sudden weakness", "abnormal heartbeat", "severe dehydration", "abdominal swelling",
+        "difficulty urinating", "severe migraine", "persistent diarrhea", "unexplained severe weight loss"
+    ],
+    "General": [
+        "cough", "headache", "sore throat", "stomachache", "back pain", "fatigue", "runny nose",
+        "nausea", "diarrhea", "mild fever", "joint pain", "rash", "mild swelling", "earache",
+        "nasal congestion", "toothache", "sneezing", "chills", "muscle aches", "mild dizziness",
+        "irritated eyes", "dry throat", "sinus pressure", "bruises", "itchy skin", "hair loss"
+    ],
+    "Mental Health": [
+        "anxiety", "depression", "insomnia", "panic attack", "feeling hopeless", "extreme sadness",
+        "thoughts of self-harm", "excessive fear", "difficulty concentrating", "social withdrawal",
+        "loss of interest", "agitation", "mood swings", "chronic stress", "emotional numbness"
+    ],
+    "Respiratory": [
+        "difficulty breathing", "wheezing", "persistent cough", "choking", "tightness in chest",
+        "productive cough", "bloody sputum", "asthma attack", "shortness of breath during exertion",
+        "nighttime coughing", "hoarseness", "prolonged sore throat"
+    ],
+    "Digestive": [
+        "abdominal pain", "constipation", "bloating", "loss of appetite", "acid reflux",
+        "bloody stool", "yellowing skin (jaundice)", "indigestion", "heartburn", "nausea after eating",
+        "vomiting blood", "painful swallowing", "frequent gas", "diarrhea with mucus"
+    ],
+    "Cardiovascular": [
+        "palpitations", "chest tightness", "cold sweats", "swollen legs", "blue lips",
+        "irregular heartbeat", "dizziness when standing", "fainting spells", "sharp chest pain",
+        "rapid heartbeat", "slow heartbeat"
+    ],
+    "Neurological": [
+        "tingling", "numbness in limbs", "memory loss", "confusion", "difficulty speaking",
+        "unsteady gait", "loss of coordination", "muscle weakness", "sudden vision changes",
+        "sudden hearing loss", "vertigo", "tremors"
+    ],
+    "Infectious Diseases": [
+        "persistent cough", "fever with chills", "night sweats", "skin lesions", "swollen lymph nodes",
+        "sudden rash", "painful urination", "white patches in mouth", "unexplained fever",
+        "prolonged diarrhea", "redness around wound"
+    ],
+    "Musculoskeletal": [
+        "joint swelling", "joint redness", "restricted movement", "muscle cramp", "bone pain",
+        "stiffness in joints", "muscle soreness", "knee locking", "shoulder dislocation", "tendonitis symptoms"
+    ],
+    "Dermatological": [
+        "rash", "hives", "eczema", "acne", "dry skin", "peeling skin", "skin infection",
+        "itching", "skin blister", "dark mole", "sudden mole growth", "skin discoloration",
+        "skin ulcers"
+    ],
+    "Urinary": [
+        "frequent urination", "painful urination", "blood in urine", "incomplete bladder emptying",
+        "lower abdominal pressure", "foul-smelling urine", "urinary urgency", "incontinence"
+    ],
+    "Reproductive": [
+        "pelvic pain", "abnormal bleeding", "missed periods", "painful periods", "unusual vaginal discharge",
+        "testicular pain", "erectile dysfunction", "breast lump", "breast tenderness"
+    ]
+};
 
-    function analyzeSymptoms() {
-        const symptomsInput = document.getElementById('symptoms').value.toLowerCase().trim();
-        resultDiv.innerHTML = '';
+// Recommendations based on triage
+const recommendations = {
+    "Emergency": "⚠️ Seek immediate medical attention. Call 911 or go to the nearest emergency room.",
+    "Urgent": "🚑 Visit an urgent care center or contact your doctor as soon as possible.",
+    "General": "🏥 Monitor symptoms. Rest, stay hydrated, and consult your doctor if symptoms worsen.",
+    "Mental Health": "🧠 Please consider reaching out to a mental health professional.",
+    "Respiratory": "🌬️ Seek care if breathing issues worsen.",
+    "Digestive": "🍽️ Follow a gentle diet. Consult your doctor if symptoms persist."
+};
 
-        if (!symptomsInput) {
-            return displayError('⚠️ Please describe your symptoms before analyzing.');
-        }
-
-        submitButton.disabled = true;
-        submitButton.innerText = 'Analyzing...';
-
-        setTimeout(() => {
-            const analysis = performDeepAnalysis(symptomsInput);
-            renderResults(analysis);
-            submitButton.disabled = false;
-            submitButton.innerText = 'Analyze';
-        }, 800); // Slight delay to simulate thinking
+// Handle analyze button click
+analyzeBtn.addEventListener('click', function () {
+    const symptomsText = symptomsInput.value.trim().toLowerCase();
+    if (symptomsText.length === 0) {
+        alert('Please enter your symptoms to analyze.');
+        return;
     }
 
-    function displayError(message) {
-        resultDiv.innerHTML = `
-            <div class="error-card fade-in-up">
-                <p>${message}</p>
-            </div>
-        `;
-    }
+    // Show loading spinner
+    resultsContainer.innerHTML = '';
+    loader.style.display = 'block';
 
-    function performDeepAnalysis(input) {
-        const conditionsDB = [
-            {
-                name: "Influenza or COVID-19",
-                keywords: ['fever', 'chills', 'cough', 'fatigue', 'body aches', 'loss of smell', 'breathless'],
-                severity: 3,
-                triage: "Primary Care / Urgent Care",
-                recommendation: "Rest, monitor symptoms, consult a doctor if breathing worsens."
-            },
-            {
-                name: "Heart Attack",
-                keywords: ['chest pain', 'shortness of breath', 'sweating', 'nausea', 'jaw pain', 'left arm pain'],
-                severity: 5,
-                triage: "Emergency Room Required",
-                recommendation: "Call 911 immediately. Do not delay."
-            },
-            {
-                name: "Stroke",
-                keywords: ['face drooping', 'speech problems', 'arm weakness', 'confusion', 'vision changes'],
-                severity: 5,
-                triage: "Emergency Stroke Care",
-                recommendation: "Call emergency services immediately."
-            },
-            {
-                name: "Severe Allergy (Anaphylaxis)",
-                keywords: ['difficulty breathing', 'hives', 'swelling', 'throat closing'],
-                severity: 5,
-                triage: "Emergency Room Required",
-                recommendation: "Use EpiPen if available. Call emergency services."
-            },
-            {
-                name: "Migraine",
-                keywords: ['headache', 'throbbing', 'sensitivity to light', 'nausea', 'aura'],
-                severity: 2,
-                triage: "Primary Care / Neurologist",
-                recommendation: "Rest in dark room. Seek help if frequent or disabling."
-            },
-            {
-                name: "Appendicitis",
-                keywords: ['lower right abdominal pain', 'fever', 'nausea', 'vomiting'],
-                severity: 4,
-                triage: "Emergency Room - Surgical Evaluation",
-                recommendation: "Immediate evaluation required to prevent rupture."
-            },
-            {
-                name: "Food Poisoning",
-                keywords: ['diarrhea', 'vomiting', 'abdominal cramps', 'nausea'],
-                severity: 2,
-                triage: "Self-care or Urgent Care",
-                recommendation: "Stay hydrated. Seek care if symptoms are severe."
-            },
-            {
-                name: "Mental Health Crisis",
-                keywords: ['suicidal thoughts', 'hopelessness', 'persistent sadness', 'anxiety attacks'],
-                severity: 5,
-                triage: "Behavioral Health Urgent Help",
-                recommendation: "Call crisis line or see emergency psychiatric care."
+    setTimeout(() => {
+        const analysisResult = analyzeSymptoms(symptomsText);
+        displayResults(analysisResult);
+    }, 1500); // Simulate AI thinking delay
+});
+
+// Analyze symptoms smartly
+function analyzeSymptoms(text) {
+    let detected = [];
+    let emergencyCount = 0;
+    let urgentCount = 0;
+    let generalCount = 0;
+
+    // Loop through all categories
+    for (const [category, keywords] of Object.entries(symptomKeywords)) {
+        for (const keyword of keywords) {
+            if (text.includes(keyword)) {
+                detected.push({ keyword, category });
+
+                if (category === "Emergency") emergencyCount++;
+                else if (category === "Urgent") urgentCount++;
+                else generalCount++;
             }
-        ];
-
-        let matchedConditions = [];
-        let totalSeverity = 0;
-
-        conditionsDB.forEach(condition => {
-            const foundKeywords = condition.keywords.filter(word => input.includes(word));
-            if (foundKeywords.length > 0) {
-                matchedConditions.push({
-                    ...condition,
-                    matchedKeywords: foundKeywords
-                });
-                totalSeverity += condition.severity;
-            }
-        });
-
-        if (matchedConditions.length === 0) {
-            return {
-                diagnosis: "Unrecognized Symptoms",
-                triage: "Primary Care Recommended",
-                recommendation: "Please consult your doctor for a thorough evaluation.",
-                severity: 2,
-                matches: []
-            };
         }
-
-        const avgSeverity = totalSeverity / matchedConditions.length;
-        const triageLevel = calculateTriage(avgSeverity);
-
-        return {
-            diagnosis: matchedConditions.map(c => c.name).join(', '),
-            triage: triageLevel,
-            recommendation: generateRecommendations(matchedConditions),
-            severity: Math.round(avgSeverity),
-            matches: matchedConditions
-        };
     }
 
-    function calculateTriage(severity) {
-        if (severity >= 5) return "EMERGENCY - Immediate Care Needed";
-        if (severity >= 4) return "URGENT - Seek Medical Care Soon";
-        if (severity >= 3) return "PRIMARY CARE - Physician Visit Recommended";
-        return "SELF-CARE or Routine Consultation";
-    }
+    let triage = "General";
+    if (emergencyCount > 0) triage = "Emergency";
+    else if (urgentCount > 0) triage = "Urgent";
 
-    function generateRecommendations(matches) {
-        const uniqueRecs = new Set();
-        matches.forEach(m => uniqueRecs.add(m.recommendation));
-        return Array.from(uniqueRecs).join(' ');
-    }
+    return {
+        detected,
+        triage,
+        recommendation: recommendations[triage],
+        totalMatches: detected.length
+    };
+}
 
-    function renderResults(analysis) {
-        let matchDetails = '';
-        if (analysis.matches.length > 0) {
-            matchDetails = '<ul class="match-list">';
-            analysis.matches.forEach(m => {
-                matchDetails += `<li><strong>${m.name}:</strong> matched symptoms: ${m.matchedKeywords.join(', ')}</li>`;
-            });
-            matchDetails += '</ul>';
-        }
-
-        resultDiv.innerHTML = `
-            <div class="result-card fade-in-up">
-                <h2>🧠 Rapid Health Analysis</h2>
-                <p><strong>🩺 Diagnosis:</strong> ${analysis.diagnosis}</p>
-                <p><strong>🚑 Triage Recommendation:</strong> ${analysis.triage}</p>
-                <p><strong>📋 Advice:</strong> ${analysis.recommendation}</p>
-                <p><strong>⚡ Severity Score:</strong> ${analysis.severity}/5</p>
-                ${matchDetails}
-            </div>
-        `;
-    }
-}); 
+// Display the analysis results
+function displayResults(result) {
+    loader.style.display = 'none';
+    resultsContainer.innerHTML = `
+        <h2>Analysis Result</h2>
+        <p><strong>Triage Level:</strong> ${result.triage}</p>
+        <p><strong>Recommendation:</strong> ${result.recommendation}</p>
+        <h3>Detected Symptoms:</h3>
+        <ul>
+            ${result.detected.map(d => `<li>${d.keyword} (${d.category})</li>`).join('')}
+        </ul>
+        <p><strong>Total Matched Symptoms:</strong> ${result.totalMatches}</p>
+    `;
+} 
