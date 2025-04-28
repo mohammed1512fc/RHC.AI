@@ -1,249 +1,127 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RapidHealth AI | Medical Symptom Analysis Platform</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>Symptom Checker | Rapid Health Checker AI</title>
     <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
-    <!-- AI Assistant Floating Button -->
-    <div class="ai-assistant">
-        <button class="ai-button pulse">
-            <i class="fas fa-robot"></i>
-            <span class="tooltip">AI Health Assistant</span>
-        </button>
-    </div>
-
-    <!-- Dynamic Header with User Status -->
     <header class="main-header">
         <div class="container">
-            <div class="branding">
-                <div class="logo-medical">
-                    <i class="fas fa-heartbeat"></i>
-                    <h1>RapidHealth<span class="ai-highlight">AI</span></h1>
-                </div>
-                <p class="tagline">Hospital-Grade Symptom Analysis</p>
+            <div class="logo-container">
+                <h1 class="logo">Rapid Health Checker AI</h1>
+                <span class="tagline">Advanced Medical Symptom Analysis</span>
             </div>
-            
             <nav class="main-nav">
                 <ul>
-                    <li><a href="./index.html" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="./checker.html" class="nav-link"><i class="fas fa-stethoscope"></i> Symptom Checker</a></li>
-                    <li><a href="#telehealth" class="nav-link"><i class="fas fa-video"></i> Telehealth</a></li>
-                    <li><a href="#resources" class="nav-link"><i class="fas fa-book-medical"></i> Resources</a></li>
-                    <li class="user-status">
-                        <div class="status-indicator"></div>
-                        <span>Guest User</span>
-                    </li>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./checker.html" class="active">Symptom Checker</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Hero Section with Animated ECG -->
-    <section class="hero">
-        <div class="ecg-animation"></div>
+    <main class="checker-container">
         <div class="container">
-            <div class="hero-content">
-                <h2 class="hero-title">Advanced AI-Powered <span class="highlight">Health Assessment</span></h2>
-                <p class="hero-subtitle">Real-time symptom analysis powered by deep learning algorithms trained on 2.3M+ medical cases</p>
-                
-                <div class="cta-container">
-                    <a href="./checker.html" class="cta-button primary">
-                        <i class="fas fa-bolt"></i> Start Symptom Analysis
-                    </a>
-                    <a href="#demo" class="cta-button secondary">
-                        <i class="fas fa-play"></i> See How It Works
-                    </a>
-                </div>
-                
-                <div class="trust-badges">
-                    <div class="badge">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>HIPAA Compliant</span>
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-user-md"></i>
-                        <span>Physician-Reviewed</span>
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-brain"></i>
-                        <span>Neural Network AI</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="hero-image">
-                <div class="medical-illustration">
-                    <div class="organ-pulse heart"></div>
-                    <div class="organ-pulse brain"></div>
-                    <div class="organ-pulse lungs"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+            <section class="checker-intro">
+                <h2>AI Symptom Checker</h2>
+                <p>Enter your symptoms below for an instant AI-powered health assessment. Our system will analyze your symptoms and provide possible conditions along with recommended actions.</p>
+            </section>
 
-    <!-- AI Capabilities Section -->
-    <section class="ai-capabilities">
-        <div class="container">
-            <h3 class="section-title">Clinical-Grade Diagnostic AI</h3>
-            <p class="section-subtitle">Our system outperforms standard symptom checkers with multi-modal analysis</p>
-            
-            <div class="capabilities-grid">
-                <div class="capability-card" data-aos="fade-up">
-                    <div class="capability-icon">
-                        <i class="fas fa-dna"></i>
-                    </div>
-                    <h4>Differential Diagnosis</h4>
-                    <p>Generates ranked list of potential conditions based on symptom patterns</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 92%"></div>
-                        <span>92% Accuracy</span>
-                    </div>
-                </div>
-                
-                <div class="capability-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="capability-icon">
-                        <i class="fas fa-tachometer-alt"></i>
-                    </div>
-                    <h4>Real-Time Triage</h4>
-                    <p>Emergency level detection with recommended action timelines</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 95%"></div>
-                        <span>95% Accuracy</span>
-                    </div>
-                </div>
-                
-                <div class="capability-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="capability-icon">
-                        <i class="fas fa-project-diagram"></i>
-                    </div>
-                    <h4>Symptom Correlation</h4>
-                    <p>Identifies hidden connections between seemingly unrelated symptoms</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 88%"></div>
-                        <span>88% Accuracy</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Demo Section -->
-    <section id="demo" class="interactive-demo">
-        <div class="container">
-            <h3 class="section-title">Experience Our AI In Action</h3>
-            
-            <div class="demo-container">
-                <div class="symptom-input-panel">
-                    <div class="input-group">
-                        <label for="demo-symptoms"><i class="fas fa-comment-medical"></i> Enter Example Symptoms</label>
-                        <input type="text" id="demo-symptoms" placeholder="e.g. headache, fever, dizziness">
+            <section class="symptom-form-section">
+                <form id="symptomForm" class="symptom-form">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="1" max="120" required>
                     </div>
                     
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="demo-age"><i class="fas fa-birthday-cake"></i> Age</label>
-                            <input type="number" id="demo-age" min="1" max="120" value="35">
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="demo-gender"><i class="fas fa-venus-mars"></i> Gender</label>
-                            <select id="demo-gender">
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
                     </div>
                     
-                    <button id="demo-analyze" class="cta-button primary">
-                        <i class="fas fa-brain"></i> Simulate AI Analysis
-                    </button>
+                    <div class="form-group">
+                        <label for="symptoms">Primary Symptoms (comma separated)</label>
+                        <textarea id="symptoms" name="symptoms" rows="3" required placeholder="e.g. headache, fever, nausea"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duration">Duration of Symptoms</label>
+                        <select id="duration" name="duration" required>
+                            <option value="">Select</option>
+                            <option value="less than 1 hour">Less than 1 hour</option>
+                            <option value="1-6 hours">1-6 hours</option>
+                            <option value="6-24 hours">6-24 hours</option>
+                            <option value="1-3 days">1-3 days</option>
+                            <option value="3-7 days">3-7 days</option>
+                            <option value="1-2 weeks">1-2 weeks</option>
+                            <option value="more than 2 weeks">More than 2 weeks</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="severity">Severity (1-10 scale)</label>
+                        <input type="range" id="severity" name="severity" min="1" max="10" value="5">
+                        <span id="severityValue">5</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additionalInfo">Additional Information</label>
+                        <textarea id="additionalInfo" name="additionalInfo" rows="2" placeholder="Any other relevant information about your symptoms"></textarea>
+                    </div>
+                    
+                    <button type="submit" id="analyzeBtn" class="cta-button analyze-btn">Analyze Symptoms</button>
+                </form>
+            </section>
+
+            <section id="resultsSection" class="results-section hidden">
+                <div class="results-header">
+                    <h3>AI Analysis Results</h3>
+                    <div class="triage-level" id="triageLevel"></div>
                 </div>
                 
-                <div class="demo-results-panel">
-                    <div class="results-placeholder">
-                        <div class="scanning-animation">
-                            <div class="scan-line"></div>
-                            <p>AI Analysis Results Will Appear Here</p>
-                        </div>
+                <div class="results-content">
+                    <div class="possible-conditions">
+                        <h4>Possible Conditions</h4>
+                        <ul id="possibleConditions"></ul>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h4>Recommendations</h4>
+                        <div id="recommendations"></div>
+                    </div>
+                    
+                    <div class="emergency-warning hidden" id="emergencyWarning">
+                        <div class="warning-icon">⚠️</div>
+                        <h4>Emergency Warning</h4>
+                        <p id="emergencyMessage"></p>
                     </div>
                 </div>
-            </div>
+                
+                <div class="disclaimer-box">
+                    <p><strong>Disclaimer:</strong> This AI analysis is for informational purposes only and does not constitute medical advice. Always consult with a healthcare professional for proper diagnosis and treatment.</p>
+                </div>
+            </section>
         </div>
-    </section>
+    </main>
 
-    <!-- Footer with Advanced Features -->
     <footer class="main-footer">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-column">
-                    <h5>Clinical Tools</h5>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-procedures"></i> Emergency Symptoms</a></li>
-                        <li><a href="#"><i class="fas fa-pills"></i> Medication Checker</a></li>
-                        <li><a href="#"><i class="fas fa-allergies"></i> Allergy Advisor</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h5>Healthcare Providers</h5>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-hospital"></i> Hospital Integration</a></li>
-                        <li><a href="#"><i class="fas fa-file-medical"></i> EHR Compatibility</a></li>
-                        <li><a href="#"><i class="fas fa-clinic-medical"></i> Clinic Dashboard</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h5>Company</h5>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-research"></i> Our Research</a></li>
-                        <li><a href="#"><i class="fas fa-user-tie"></i> Leadership</a></li>
-                        <li><a href="#"><i class="fas fa-certificate"></i> Certifications</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <div class="newsletter">
-                        <h5>Medical Insights</h5>
-                        <p>Subscribe to our clinical newsletter</p>
-                        <form class="newsletter-form">
-                            <input type="email" placeholder="professional@healthcare.org">
-                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <div class="certifications">
-                    <img src="https://via.placeholder.com/80x40?text=HIPAA" alt="HIPAA Compliant">
-                    <img src="https://via.placeholder.com/80x40?text=FDA" alt="FDA Registered">
-                    <img src="https://via.placeholder.com/80x40?text=ISO13485" alt="ISO 13485 Certified">
-                </div>
-                
-                <div class="legal-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Medical Disclaimer</a>
-                </div>
-                
-                <div class="copyright">
-                    <p>© 2023 RapidHealth AI Technologies. All rights reserved.</p>
-                    <p class="disclaimer">This AI does not replace professional medical diagnosis. Always consult a physician.</p>
-                </div>
-            </div>
+            <p>© 2023 Rapid Health Checker AI. All rights reserved.</p>
+            <p class="disclaimer">Disclaimer: This tool does not provide medical advice. It is intended for informational purposes only.</p>
         </div>
     </footer>
 
-    <!-- Modern JavaScript Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="./app.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html> 
