@@ -3,36 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Symptom Checker | Rapid Health Checker AI</title>
+  <title>Rapid Health Checker AI - Symptom Checker</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <header class="header">
+<body class="checker-body">
+  <header class="checker-header">
     <div class="container">
-      <h1>Symptom Checker</h1>
-      <p>Enter your symptoms and receive instant smart advice.</p>
-      <a href="index.html" class="btn btn-secondary">← Back to Home</a>
+      <a href="index.html" class="back-button">← Back to Home</a>
+      <h1>Rapid Symptom Checker</h1>
     </div>
   </header>
 
-  <main>
-    <section class="checker-form container">
-      <textarea id="symptomInput" placeholder="Describe your symptoms... e.g. 'Fever, chills, shortness of breath'"></textarea>
-      <button class="btn btn-primary" onclick="analyzeSymptoms()">Analyze Symptoms</button>
-
-      <div id="results" class="results hidden">
-        <div id="loading" class="loading hidden">Analyzing...</div>
-        <div id="output"></div>
+  <main class="checker-main">
+    <div id="chat-window" class="chat-window">
+      <div class="chat-message ai">
+        <p>👋 Hi! I’m your Rapid Health Assistant. Tell me your symptoms, and I'll help you instantly!</p>
       </div>
-    </section>
+    </div>
+
+    <div class="chat-controls">
+      <input type="text" id="user-input" placeholder="Type your symptoms..." autocomplete="off">
+      <button id="speak-btn" class="speak-btn">🎤</button>
+      <button id="analyze-btn" class="analyze-btn">Analyze</button>
+    </div>
+
+    <div id="result-section" class="result-section hidden">
+      <h2>🩺 Health Analysis Result</h2>
+      <p id="ai-analysis"></p>
+      <button id="download-btn" class="download-btn">📄 Download Report</button>
+      <button id="restart-btn" class="restart-btn">🔄 New Check</button>
+    </div>
   </main>
 
-  <footer class="footer">
-    <div class="container">
-      <p>Rapid Health Checker AI does not replace professional medical advice. Always consult a licensed physician.</p>
-    </div>
+  <footer class="checker-footer">
+    <p>© 2025 Rapid Health Checker AI | Stay Safe. Stay Informed.</p>
   </footer>
 
+  <script src="html2pdf.bundle.min.js"></script> <!-- for PDF export -->
   <script src="script.js"></script>
 </body>
 </html> 
