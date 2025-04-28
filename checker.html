@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Symptom Checker | Rapid Health Checker AI</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
@@ -17,8 +17,8 @@
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="checker.html" class="active">Symptom Checker</a></li>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./checker.html" class="active">Symptom Checker</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#about">About</a></li>
                 </ul>
@@ -87,24 +87,18 @@
             <section id="resultsSection" class="results-section hidden">
                 <div class="results-header">
                     <h3>AI Analysis Results</h3>
-                    <div class="triage-level" id="triageLevel">
-                        <!-- Will be filled by JS -->
-                    </div>
+                    <div class="triage-level" id="triageLevel"></div>
                 </div>
                 
                 <div class="results-content">
                     <div class="possible-conditions">
                         <h4>Possible Conditions</h4>
-                        <ul id="possibleConditions">
-                            <!-- Will be filled by JS -->
-                        </ul>
+                        <ul id="possibleConditions"></ul>
                     </div>
                     
                     <div class="recommendations">
                         <h4>Recommendations</h4>
-                        <div id="recommendations">
-                            <!-- Will be filled by JS -->
-                        </div>
+                        <div id="recommendations"></div>
                     </div>
                     
                     <div class="emergency-warning hidden" id="emergencyWarning">
@@ -128,6 +122,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html> 
