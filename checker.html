@@ -1,39 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rapid Health Checker AI - Symptom Checker</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Checker | Rapid Health Checker AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
-<body class="checker-page">
-  
-  <nav class="navbar fade-in-down">
-    <div class="logo">🩺 Rapid Health Checker AI</div>
-    <div class="nav-links">
-      <a href="index.html" class="btn-primary">Home</a>
+<body>
+    <div class="preloader">
+        <div class="preloader-spinner"></div>
     </div>
-  </nav>
 
-  <section class="checker-section fade-in">
-    <h1>🩻 Symptom Checker</h1>
-    <form id="symptomForm" class="symptom-form">
-      <label for="symptoms">📝 Describe your symptoms:</label>
-      <textarea id="symptoms" name="symptoms" placeholder="e.g. fever, cough, chest pain..." required></textarea>
-      <button id="submitBtn" type="submit" class="btn-analyze">Analyze</button>
-    </form>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo-container">
+                <h1 class="logo">Rapid Health<span class="ai-text">AI</span></h1>
+                <p class="tagline">Advanced Medical Symptom Analysis</p>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="checker.html" class="active">Symptom Checker</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <div id="loader" class="loader" style="display: none;"></div>
+    <main class="checker-main">
+        <section class="checker-hero">
+            <div class="container">
+                <h2 class="checker-title">AI-Powered Symptom Analysis</h2>
+                <p class="checker-subtitle">Enter your symptoms below for immediate AI assessment</p>
+            </div>
+        </section>
 
-    <div id="result" class="result-container"></div>
-  </section>
+        <section class="checker-form-section">
+            <div class="container">
+                <div class="checker-form-container">
+                    <form id="symptomForm" class="symptom-form">
+                        <div class="form-group">
+                            <label for="symptoms">Describe Your Symptoms*</label>
+                            <textarea id="symptoms" name="symptoms" placeholder="E.g. Headache, fever, and nausea for 3 days..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="duration">Duration*</label>
+                            <select id="duration" name="duration" required>
+                                <option value="">Select duration...</option>
+                                <option value="less-than-day">Less than a day</option>
+                                <option value="1-2-days">1-2 days</option>
+                                <option value="3-7-days">3-7 days</option>
+                                <option value="1-2-weeks">1-2 weeks</option>
+                                <option value="more-than-2-weeks">More than 2 weeks</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="severity">Severity*</label>
+                            <select id="severity" name="severity" required>
+                                <option value="">Select severity...</option>
+                                <option value="mild">Mild - noticeable but not limiting</option>
+                                <option value="moderate">Moderate - interferes with daily activities</option>
+                                <option value="severe">Severe - prevents normal activities</option>
+                                <option value="very-severe">Very severe - requires immediate attention</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="additional-info">Additional Information</label>
+                            <textarea id="additional-info" name="additional-info" placeholder="Any other relevant information about your symptoms, medical history, or current medications..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" id="analyzeBtn" class="btn-primary analyze-btn">
+                                <span class="btn-text">Analyze Symptoms</span>
+                                <span class="btn-loader"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
 
-  <footer class="footer">
-    <p>© 2025 Rapid Health Checker AI | Powered by Care Intelligence</p>
-  </footer>
+        <section id="resultsSection" class="results-section hidden">
+            <div class="container">
+                <div class="results-container">
+                    <div class="results-header">
+                        <h3>AI Analysis Results</h3>
+                        <div class="triage-level">
+                            <span class="triage-label">Triage Level:</span>
+                            <span id="triageLevel" class="triage-value">Analyzing...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="results-content">
+                        <div class="result-card">
+                            <h4>Possible Conditions</h4>
+                            <ul id="possibleConditions" class="conditions-list">
+                                <!-- AI will populate this -->
+                            </ul>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h4>Recommended Actions</h4>
+                            <div id="recommendedActions" class="recommendations">
+                                <!-- AI will populate this -->
+                            </div>
+                        </div>
+                        
+                        <div class="result-card full-width">
+                            <h4>Medical Guidance</h4>
+                            <div id="medicalGuidance" class="guidance">
+                                <!-- AI will populate this -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="results-footer">
+                        <p class="disclaimer"><strong>Important:</strong> This AI analysis is for informational purposes only and does not replace professional medical advice.</p>
+                        <button id="newAnalysisBtn" class="btn-secondary">Start New Analysis</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-  <!-- LINK THE SCRIPT -->
-  <script src="script.js"></script>
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Rapid Health<span class="ai-text">AI</span></h3>
+                    <p>Advanced Medical Symptom Analysis</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="checker.html">Symptom Checker</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-disclaimer">
+                    <p><strong>Disclaimer:</strong> This tool does not provide medical diagnosis. Always consult a healthcare professional for medical advice.</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Rapid Health Checker AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
+    <script src="script.js"></script>
+    <script src="ai-engine.js"></script>
 </body>
 </html> 
