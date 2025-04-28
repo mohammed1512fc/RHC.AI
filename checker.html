@@ -2,161 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rapid Health Checker AI - Symptom Checker</title>
   <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
-
-  <!-- HEADER -->
-  <header class="header">
-    <div class="container">
-      <div class="logo">Rapid Health Checker <span class="highlight">AI</span></div>
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="#about">About</a>
-        <a href="#features">Features</a>
-        <a href="#stats">Stats</a>
-        <a href="#contact">Contact</a>
-      </nav>
+<body class="checker-page">
+  
+  <nav class="navbar fade-in-down">
+    <div class="logo">🩺 Rapid Health Checker AI</div>
+    <div class="nav-links">
+      <a href="index.html" class="btn-primary">Home</a>
     </div>
-  </header>
+  </nav>
 
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div class="hero-content fade-in-up">
-      <h1>Advanced Symptom Analysis</h1>
-      <p>Your health, powered by intelligent AI. Get personalized triage, guidance, and peace of mind instantly.</p>
-      <a href="#checker" class="cta-button fade-in-up" style="margin-top: 2rem;">Start Checking</a>
-    </div>
-    <div class="hero-decor" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 30% 30%, rgba(116, 192, 252, 0.2), transparent 60%), radial-gradient(circle at 70% 70%, rgba(255, 168, 168, 0.2), transparent 60%);"></div>
+  <section class="checker-section fade-in">
+    <h1>🩻 Symptom Checker</h1>
+    <form id="symptomForm" class="symptom-form">
+      <label for="symptoms">📝 Describe your symptoms:</label>
+      <textarea id="symptoms" name="symptoms" placeholder="e.g. fever, cough, chest pain..." required></textarea>
+      <button id="submitBtn" type="submit" class="btn-analyze">Analyze</button>
+    </form>
+
+    <div id="loader" class="loader" style="display: none;"></div>
+
+    <div id="result" class="result-container"></div>
   </section>
 
-  <!-- CHECKER SECTION -->
-  <section class="section" id="checker">
-    <div class="container fade-in-up">
-      <h2>🩺 Symptom Checker</h2>
-      
-      <div class="shadow-box" style="max-width: 800px; margin: auto;">
-        <form id="symptomForm">
-          <div class="form-group" style="margin-bottom: 2rem;">
-            <label for="symptoms" style="font-weight: bold; font-size: 1.2rem;">Describe your symptoms:</label>
-            <textarea id="symptoms" rows="7" placeholder="E.g., headache, fever, sore throat..." style="width: 100%; padding: 1rem; border-radius: 12px; border: 1px solid #ddd;"></textarea>
-          </div>
-          <div style="text-align: center;">
-            <button type="submit" class="cta-button">Analyze</button>
-          </div>
-        </form>
-      </div>
-
-      <div id="result" class="fade-in-up" style="margin-top: 3rem; font-size: 1.3rem; text-align: center;"></div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="section" style="background-color: #e7f5ff;">
-    <div class="container fade-in-up">
-      <h2>🚀 How It Works</h2>
-
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>Input Your Symptoms</h3>
-          <p>Type your symptoms clearly and completely.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>AI Analyzes Instantly</h3>
-          <p>Our engine cross-checks over 500 conditions with smart triage rules.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>Get Recommendations</h3>
-          <p>You'll receive urgency advice (ER, Urgent Care, or Self-Care) and detailed guidance.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STATS COUNTERS -->
-  <section class="section" id="stats" style="background: linear-gradient(to right, #74c0fc, #ffa8a8); color: white;">
-    <div class="container fade-in-up">
-      <h2>📈 Rapid AI Stats</h2>
-      <div class="features-grid">
-        <div class="feature-card" style="background: rgba(255,255,255,0.1);">
-          <h3><span id="conditionsCount">0</span>+</h3>
-          <p>Medical Conditions Trained</p>
-        </div>
-        <div class="feature-card" style="background: rgba(255,255,255,0.1);">
-          <h3><span id="accuracyRate">0</span>%</h3>
-          <p>Prediction Accuracy</p>
-        </div>
-        <div class="feature-card" style="background: rgba(255,255,255,0.1);">
-          <h3><span id="usersHelped">0</span>+</h3>
-          <p>Users Helped Globally</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT SECTION -->
-  <section class="section" id="about">
-    <div class="container fade-in-up">
-      <h2>🤖 About Our Technology</h2>
-      <p class="about">
-        Rapid Health Checker AI is powered by a custom, expansive health rules engine that simulates expert clinical reasoning.  
-        Our models continuously learn, validate, and adapt to real-world outcomes, ensuring unmatched diagnostic precision and recommendation quality.
-      </p>
-    </div>
-  </section>
-
-  <!-- CONTACT SECTION -->
-  <section class="section" id="contact" style="background-color: #f1f3f5;">
-    <div class="container fade-in-up">
-      <h2>📬 Contact Us</h2>
-      <p class="contact">
-        Need help? Send us an email at <strong>support@rapidhealthai.com</strong> or visit our FAQ section.
-      </p>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer class="footer">
-    <div class="container">
-      <p>&copy; 2025 Rapid Health Checker AI. Crafted with ❤️ by the best minds.</p>
-    </div>
+    <p>© 2025 Rapid Health Checker AI | Powered by Care Intelligence</p>
   </footer>
 
+  <!-- LINK THE SCRIPT -->
   <script src="script.js"></script>
-  <script>
-    // Animate counters
-    window.addEventListener('scroll', function() {
-      const counters = document.querySelectorAll('#conditionsCount, #accuracyRate, #usersHelped');
-      counters.forEach(counter => {
-        if (!counter.classList.contains('counted') && counter.getBoundingClientRect().top < window.innerHeight) {
-          counter.classList.add('counted');
-          let target = 0;
-          if (counter.id === 'conditionsCount') target = 500;
-          if (counter.id === 'accuracyRate') target = 95;
-          if (counter.id === 'usersHelped') target = 10000;
-          let current = 0;
-          const increment = Math.ceil(target / 100);
-
-          const updateCounter = () => {
-            current += increment;
-            if (current >= target) {
-              counter.innerText = target;
-            } else {
-              counter.innerText = current;
-              setTimeout(updateCounter, 20);
-            }
-          };
-          updateCounter();
-        }
-      });
-    });
-  </script>
 
 </body>
 </html> 
