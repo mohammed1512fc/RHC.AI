@@ -4,234 +4,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Symptom Checker | Rapid Health Checker AI</title>
-    <meta name="description" content="Advanced AI symptom checker providing instant health assessment and recommendations">
+    <meta name="description" content="Advanced AI-powered medical symptom analysis with clinical-grade accuracy">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="checker-header">
-        <div class="header-container">
-            <nav>
+        <div class="container">
+            <nav class="main-nav">
                 <div class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-heartbeat"></i>
-                    </div>
-                    <span>Rapid Health Checker AI</span>
+                    <i class="fas fa-heartbeat logo-icon"></i>
+                    <span class="logo-text">Rapid Health Checker AI</span>
                 </div>
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="checker.html" class="active">Symptom Checker</a></li>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
                 </ul>
-                <div class="mobile-menu-btn">
-                    <i class="fas fa-bars"></i>
-                </div>
             </nav>
         </div>
     </header>
 
     <main class="checker-container">
-        <div class="checker-header-content">
-            <h1><i class="fas fa-stethoscope"></i> AI Symptom Checker</h1>
-            <p>Describe your symptoms to receive an instant AI-powered health assessment</p>
-            <div class="progress-bar">
-                <div class="progress-step active" id="step-1">
-                    <div class="step-number">1</div>
-                    <div class="step-label">Describe Symptoms</div>
-                </div>
-                <div class="progress-step" id="step-2">
-                    <div class="step-number">2</div>
-                    <div class="step-label">Follow-up Questions</div>
-                </div>
-                <div class="progress-step" id="step-3">
-                    <div class="step-number">3</div>
-                    <div class="step-label">Get Results</div>
-                </div>
+        <div class="container">
+            <div class="checker-header">
+                <h1><i class="fas fa-stethoscope"></i> AI Symptom Assessment</h1>
+                <p class="subtitle">Describe your symptoms to receive a professional medical analysis</p>
             </div>
-        </div>
 
-        <div class="checker-flow">
-            <!-- Step 1: Symptom Description -->
-            <div class="checker-step active" id="description-step">
-                <div class="step-content">
-                    <div class="input-card">
-                        <h2><i class="fas fa-comment-medical"></i> What symptoms are you experiencing?</h2>
-                        <p>Describe your symptoms in detail for the most accurate assessment. Include duration, severity, and any other relevant information.</p>
-                        
-                        <div class="symptom-input-container">
-                            <textarea id="symptom-description" placeholder="Example: 'I've had severe dizziness when standing up, along with nausea for the past 2 days...'"></textarea>
-                            <div class="input-footer">
-                                <div class="voice-input-btn">
-                                    <i class="fas fa-microphone"></i>
-                                    <span>Voice Input</span>
-                                </div>
-                                <div class="char-count">
-                                    <span id="char-count">0</span>/500
+            <div class="checker-flow">
+                <!-- Step 1: Symptom Input -->
+                <div class="checker-step active" id="symptom-step">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <h2>Symptom Description</h2>
+                        </div>
+                        <div class="step-content">
+                            <div class="form-group">
+                                <label for="symptom-input">Describe your symptoms in detail:</label>
+                                <textarea id="symptom-input" rows="5" placeholder="Example: 'I've had severe chest pain for the past hour that radiates to my left arm...'"></textarea>
+                                <div class="input-footer">
+                                    <div class="char-counter"><span id="char-count">0</span>/500 characters</div>
+                                    <button class="voice-btn" id="voice-btn">
+                                        <i class="fas fa-microphone"></i> Voice Input
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="common-symptoms">
-                            <h3>Common Symptoms</h3>
                             <div class="symptom-tags">
-                                <div class="symptom-tag">Headache</div>
-                                <div class="symptom-tag">Dizziness</div>
-                                <div class="symptom-tag">Nausea</div>
-                                <div class="symptom-tag">Chest Pain</div>
-                                <div class="symptom-tag">Fever</div>
-                                <div class="symptom-tag">Fatigue</div>
-                                <div class="symptom-tag">Shortness of Breath</div>
-                                <div class="symptom-tag">Palpitations</div>
+                                <h3>Common Symptoms:</h3>
+                                <div class="tags-container">
+                                    <div class="symptom-tag">Chest Pain</div>
+                                    <div class="symptom-tag">Headache</div>
+                                    <div class="symptom-tag">Dizziness</div>
+                                    <div class="symptom-tag">Nausea</div>
+                                    <div class="symptom-tag">Shortness of Breath</div>
+                                    <div class="symptom-tag">Fatigue</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button id="next-btn" class="cta-button primary" disabled>
-                            Continue <i class="fas fa-arrow-right"></i>
-                        </button>
+                        <div class="step-actions">
+                            <button id="next-btn" class="btn-primary" disabled>
+                                Continue <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Step 2: Follow-up Questions -->
-            <div class="checker-step" id="questions-step">
-                <div class="step-content">
-                    <div class="input-card">
-                        <h2><i class="fas fa-question-circle"></i> Additional Questions</h2>
-                        <p>To provide the most accurate assessment, please answer these follow-up questions.</p>
-                        
-                        <div class="questions-container" id="questions-container">
-                            <!-- Dynamic questions will be inserted here -->
-                            <div class="loading-questions">
-                                <div class="spinner"></div>
-                                <p>Our AI is generating personalized questions based on your symptoms...</p>
+                <!-- Step 2: Follow-up Questions -->
+                <div class="checker-step" id="questions-step">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <h2>Additional Questions</h2>
+                        </div>
+                        <div class="step-content">
+                            <div id="questions-container">
+                                <div class="loading-state">
+                                    <div class="spinner"></div>
+                                    <p>Our AI is generating personalized questions based on your symptoms...</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button id="back-btn" class="cta-button secondary">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                        <button id="analyze-btn" class="cta-button primary">
-                            Analyze Symptoms <i class="fas fa-bolt"></i>
-                        </button>
+                        <div class="step-actions">
+                            <button id="back-btn" class="btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button id="analyze-btn" class="btn-primary">
+                                Analyze Symptoms <i class="fas fa-bolt"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Step 3: Results -->
-            <div class="checker-step" id="results-step">
-                <div class="step-content">
-                    <div class="results-header">
-                        <h2><i class="fas fa-file-medical-alt"></i> Your AI Health Assessment</h2>
-                        <p>Generated on <span id="report-date"></span> at <span id="report-time"></span></p>
-                    </div>
-                    
-                    <div class="triage-card" id="triage-card">
-                        <div class="triage-header">
-                            <h3>Triage Level</h3>
-                            <div class="triage-level emergency hidden" id="emergency-level">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <span>Emergency</span>
-                            </div>
-                            <div class="triage-level urgent hidden" id="urgent-level">
-                                <i class="fas fa-ambulance"></i>
-                                <span>Urgent Care Needed</span>
-                            </div>
-                            <div class="triage-level routine hidden" id="routine-level">
-                                <i class="fas fa-calendar-check"></i>
-                                <span>Routine Care</span>
-                            </div>
-                            <div class="triage-level self-care hidden" id="selfcare-level">
-                                <i class="fas fa-home"></i>
-                                <span>Self Care</span>
+                <!-- Step 3: Results -->
+                <div class="checker-step" id="results-step">
+                    <div class="step-card">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <h2>AI Health Assessment</h2>
+                            <div class="report-meta">
+                                Generated: <span id="report-date"></span> at <span id="report-time"></span>
                             </div>
                         </div>
-                        <div class="triage-recommendation" id="triage-recommendation">
-                            <!-- Recommendation will be inserted here -->
-                        </div>
-                    </div>
-                    
-                    <div class="results-card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-diagnoses"></i> Possible Conditions</h3>
-                            <p>Based on your symptoms and responses</p>
-                        </div>
-                        <div class="conditions-list" id="conditions-list">
-                            <!-- Conditions will be inserted here -->
-                        </div>
-                    </div>
-                    
-                    <div class="results-card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-clipboard-list"></i> AI Recommendations</h3>
-                            <p>Personalized guidance based on your assessment</p>
-                        </div>
-                        <div class="recommendations-list" id="recommendations-list">
-                            <!-- Recommendations will be inserted here -->
-                        </div>
-                    </div>
-                    
-                    <div class="emergency-warning hidden" id="emergency-warning">
-                        <div class="warning-content">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <div>
-                                <h3>Seek Emergency Care Immediately</h3>
-                                <p id="emergency-reason">Based on your symptoms, you may be experiencing a medical emergency that requires immediate attention.</p>
+                        <div class="step-content">
+                            <!-- Triage Level -->
+                            <div class="triage-card" id="triage-card">
+                                <div class="triage-header">
+                                    <h3><i class="fas fa-triage"></i> Triage Level</h3>
+                                    <div class="triage-level emergency hidden" id="emergency-level">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>EMERGENCY</span>
+                                    </div>
+                                    <div class="triage-level urgent hidden" id="urgent-level">
+                                        <i class="fas fa-ambulance"></i>
+                                        <span>URGENT CARE NEEDED</span>
+                                    </div>
+                                    <div class="triage-level routine hidden" id="routine-level">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span>ROUTINE CARE</span>
+                                    </div>
+                                    <div class="triage-level self-care hidden" id="selfcare-level">
+                                        <i class="fas fa-home"></i>
+                                        <span>SELF CARE</span>
+                                    </div>
+                                </div>
+                                <div class="triage-recommendation" id="triage-recommendation">
+                                    <!-- Filled by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Emergency Warning -->
+                            <div class="emergency-warning hidden" id="emergency-warning">
+                                <div class="warning-content">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <div>
+                                        <h3>Seek Emergency Care Immediately</h3>
+                                        <p id="emergency-reason"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Conditions -->
+                            <div class="results-section">
+                                <h3><i class="fas fa-diagnoses"></i> Possible Conditions</h3>
+                                <div class="conditions-list" id="conditions-list">
+                                    <!-- Filled by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Recommendations -->
+                            <div class="results-section">
+                                <h3><i class="fas fa-clipboard-list"></i> Recommendations</h3>
+                                <div class="recommendations-list" id="recommendations-list">
+                                    <!-- Filled by JS -->
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button id="new-assessment-btn" class="cta-button secondary">
-                            <i class="fas fa-redo"></i> New Assessment
-                        </button>
-                        <button id="download-report-btn" class="cta-button primary">
-                            <i class="fas fa-download"></i> Download Report
-                        </button>
+                        <div class="step-actions">
+                            <button id="new-assessment-btn" class="btn-secondary">
+                                <i class="fas fa-redo"></i> New Assessment
+                            </button>
+                            <button id="download-btn" class="btn-primary">
+                                <i class="fas fa-download"></i> Download Report
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="checker-sidebar">
+    </main>
+
+    <aside class="checker-sidebar">
+        <div class="container">
             <div class="sidebar-card">
-                <h3><i class="fas fa-lightbulb"></i> Tips for Best Results</h3>
+                <h3><i class="fas fa-lightbulb"></i> Tips for Accurate Results</h3>
                 <ul class="tips-list">
-                    <li>Describe symptoms in detail</li>
+                    <li>Describe symptoms in your own words</li>
                     <li>Include duration and severity</li>
-                    <li>Mention any worsening factors</li>
-                    <li>Note associated symptoms</li>
+                    <li>Note any patterns or triggers</li>
+                    <li>Mention associated symptoms</li>
                 </ul>
             </div>
             <div class="sidebar-card">
                 <h3><i class="fas fa-shield-alt"></i> Your Privacy</h3>
                 <p>All health information is processed securely and never stored permanently.</p>
             </div>
-            <div class="sidebar-card">
-                <h3><i class="fas fa-book-medical"></i> Medical Disclaimer</h3>
-                <p>This tool provides information only, not medical advice. Always consult a healthcare professional.</p>
-            </div>
         </div>
-    </main>
-
-    <div class="disclaimer-bar">
-        <p><strong>Disclaimer:</strong> Rapid Health Checker AI is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
-    </div>
+    </aside>
 
     <footer class="checker-footer">
-        <div class="footer-container">
-            <p>&copy; 2025 Rapid Health Checker AI. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Contact Us</a>
+        <div class="container">
+            <div class="footer-content">
+                <p class="disclaimer"><strong>Disclaimer:</strong> This tool does not provide medical diagnosis. Always consult a healthcare professional for medical advice.</p>
+                <p class="copyright">© 2025 Rapid Health Checker AI. All rights reserved.</p>
             </div>
         </div>
     </footer>
