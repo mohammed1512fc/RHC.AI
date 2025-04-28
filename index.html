@@ -1,53 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rapid Health Checker AI</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2838/2838912.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid Health Checker AI - Professional Medical Symptom Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
-
-  <!-- Navbar -->
-  <header class="navbar">
-    <div class="logo">Rapid Health Checker AI</div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="checker.html">Symptom Checker</a>
-    </nav>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <h1>Instant Health Guidance with AI</h1>
-    <p>Your personal AI health assistant — helping you quickly understand your symptoms.</p>
-    <a href="checker.html" class="btn-secondary">Check Your Symptoms</a>
-  </section>
-
-  <!-- Features Section -->
-  <section class="features-section">
-    <div class="feature fade-in-up">
-      <img src="https://cdn-icons-png.flaticon.com/512/4149/4149634.png" alt="Fast Analysis" class="feature-icon">
-      <h3>Fast AI Analysis</h3>
-      <p>Get a preliminary health analysis in seconds with our cutting-edge AI engine.</p>
+    <div class="preloader">
+        <div class="preloader-spinner"></div>
     </div>
-    <div class="feature fade-in-up">
-      <img src="https://cdn-icons-png.flaticon.com/512/2920/2920436.png" alt="Secure Data" class="feature-icon">
-      <h3>Private & Secure</h3>
-      <p>Your information stays private. We prioritize your safety and confidentiality.</p>
-    </div>
-    <div class="feature fade-in-up">
-      <img src="https://cdn-icons-png.flaticon.com/512/1665/1665731.png" alt="Health Tips" class="feature-icon">
-      <h3>Personalized Health Tips</h3>
-      <p>Receive smart advice and actionable health recommendations tailored to you.</p>
-    </div>
-  </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; 2025 Rapid Health Checker AI. All rights reserved.</p>
-  </footer>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo-container">
+                <h1 class="logo">Rapid Health<span class="ai-text">AI</span></h1>
+                <p class="tagline">Advanced Medical Symptom Analysis</p>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="checker.html">Symptom Checker</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content animate__animated animate__fadeInLeft">
+                    <h2>Advanced AI-Powered Health Assessment</h2>
+                    <p class="hero-text">Our cutting-edge AI analyzes your symptoms with medical-grade accuracy, providing instant triage levels and professional recommendations.</p>
+                    <div class="cta-buttons">
+                        <a href="checker.html" class="btn-primary">Check Symptoms Now</a>
+                        <a href="#how-it-works" class="btn-secondary">Learn More</a>
+                    </div>
+                </div>
+                <div class="hero-image animate__animated animate__fadeInRight">
+                    <img src="https://via.placeholder.com/600x400/0077b6/ffffff?text=AI+Health" alt="AI Health Analysis" class="hero-img">
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="features-section">
+            <div class="container">
+                <h2 class="section-title">How Rapid Health<span class="ai-text">AI</span> Works</h2>
+                <div class="features-grid">
+                    <div class="feature-card animate__animated animate__fadeInUp">
+                        <div class="feature-icon">1</div>
+                        <h3>Describe Your Symptoms</h3>
+                        <p>Enter your symptoms, duration, and severity in our intuitive interface.</p>
+                    </div>
+                    <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                        <div class="feature-icon">2</div>
+                        <h3>AI Analysis</h3>
+                        <p>Our medical AI cross-references your symptoms with thousands of conditions.</p>
+                    </div>
+                    <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                        <div class="feature-icon">3</div>
+                        <h3>Get Results</h3>
+                        <p>Receive immediate triage level assessment and professional recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials-section">
+            <div class="container">
+                <h2 class="section-title">Trusted by Medical Professionals</h2>
+                <div class="testimonials-slider">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"The most accurate symptom checker I've encountered in my 15 years of practice."</p>
+                            <div class="testimonial-author">
+                                <div class="author-image"></div>
+                                <div class="author-info">
+                                    <h4>Dr. Sarah Johnson</h4>
+                                    <p>Emergency Medicine Specialist</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Rapid Health<span class="ai-text">AI</span></h3>
+                    <p>Advanced Medical Symptom Analysis</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="checker.html">Symptom Checker</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-disclaimer">
+                    <p><strong>Disclaimer:</strong> This tool does not provide medical diagnosis. Always consult a healthcare professional for medical advice.</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Rapid Health Checker AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html> 
