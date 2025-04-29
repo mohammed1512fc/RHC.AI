@@ -6,8 +6,9 @@
     <title>Rapid Health Checker AI</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        /* Enhanced Inline Styles for Initial Impression */
+        /* Unique and Fancy Inline Styles for Initial Impression */
         body {
             font-family: 'Montserrat', sans-serif;
             margin: 0;
@@ -16,20 +17,17 @@
             color: #333;
             line-height: 1.7;
             overflow-x: hidden;
-            animation: fadeIn 1s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
         header {
-            background-color: rgba(34, 34, 34, 0.9); /* Semi-transparent dark header */
+            background-color: rgba(34, 34, 34, 0.95); /* Semi-transparent dark header */
             color: #fff;
             padding: 30px 20px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            position: sticky; /* Make header stick to the top */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            position: fixed; /* Fixed header for a modern feel */
             top: 0;
+            left: 0;
+            width: 100%;
             z-index: 1000;
         }
         nav ul {
@@ -40,29 +38,44 @@
         }
         nav ul li {
             display: inline;
-            margin: 0 25px;
+            margin: 0 30px;
+            position: relative;
         }
         nav a {
             text-decoration: none;
             color: #eee;
             font-weight: 500;
-            font-size: 1.1em;
+            font-size: 1.15em;
             transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
         }
+        nav a:before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0%;
+            height: 2px;
+            background-color: #64b5f6;
+            transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+        }
         nav a:hover {
-            color: #64b5f6; /* Light blue hover */
-            transform: scale(1.05);
+            color: #64b5f6;
+            transform: translateY(-2px);
+        }
+        nav a:hover:before {
+            width: 100%;
+            left: 0;
         }
         .hero {
+            position: relative;
+            height: 80vh; /* Full viewport height for impact */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            padding: 120px 30px;
-            background-image: url('hero-background.jpg'); /* Replace with a fancy background image */
-            background-size: cover;
-            background-position: center;
             color: #fff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-            position: relative;
-            overflow: hidden;
         }
         .hero::before {
             content: '';
@@ -71,79 +84,110 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for better text visibility */
+            background: url('hero-background-unique.jpg') center/cover no-repeat; /* Replace with a unique image */
+            animation: kenburns 15s infinite alternate; /* Subtle zoom animation */
+        }
+        @keyframes kenburns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            z-index: 1;
         }
         .hero-content {
             position: relative;
-            z-index: 10;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out 0.5s;
+            opacity: 0;
         }
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 4em;
+            font-size: 5em; /* Even larger title */
             margin-bottom: 30px;
             letter-spacing: 2px;
         }
         .hero p {
-            font-size: 1.5em;
-            margin-bottom: 50px;
+            font-size: 1.7em;
+            margin-bottom: 60px;
             font-weight: 300;
+            line-height: 1.9;
         }
         .button {
             display: inline-block;
-            padding: 20px 40px;
-            background-color: #ff6e40; /* Vibrant orange button */
+            padding: 22px 45px;
+            background-color: #ff6e40;
             color: white;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: bold;
-            font-size: 1.3em;
+            font-size: 1.35em;
             transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
         .button:hover {
             background-color: #f4511e;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         .features {
-            padding: 80px 30px;
+            padding: 100px 30px;
             background-color: #f9f9f9;
             border-top: 1px solid #eee;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Wider feature boxes */
+            gap: 60px; /* More space between features */
+            background: linear-gradient(to bottom, #f9f9f9, #fff);
         }
         .feature {
-            text-align: center;
+            text-align: left; /* Align text to the left for a different layout */
             padding: 40px;
-            border-radius: 12px;
+            border-radius: 15px;
             background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            display: flex; /* Use flexbox for icon and text alignment */
+            align-items: center;
         }
         .feature:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
-        .feature h3 {
-            color: #64b5f6; /* Light blue feature heading */
+        .feature i {
+            font-size: 2.8em; /* Larger icons */
+            color: #64b5f6;
+            margin-right: 30px; /* Space between icon and text */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .feature-text {
+            flex-grow: 1; /* Allow text to take up remaining space */
+        }
+        .feature-text h3 {
+            color: #3f51b5;
             margin-bottom: 15px;
-            font-size: 1.8em;
+            font-size: 2em;
+            font-weight: 600;
         }
-        .feature p {
+        .feature-text p {
             color: #555;
-            line-height: 1.7;
+            line-height: 1.8;
         }
         footer {
             text-align: center;
-            padding: 30px;
+            padding: 40px;
             background-color: #222;
             color: #ddd;
-            border-top: 3px solid #ff6e40; /* Orange accent */
+            border-top: 4px solid #ff6e40;
             position: relative;
         }
         footer p {
-            font-size: 0.9em;
+            font-size: 1em;
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -161,29 +205,42 @@
     </header>
 
     <section class="hero">
+        <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>Experience Intelligent Health Insights</h1>
-            <p>Our advanced AI analyzes your symptoms to provide potential conditions and guidance, quickly and efficiently.</p>
-            <a href="checker.html" class="button">Begin Symptom Check</a>
+            <h1>Intelligent Health Insights, Instantly.</h1>
+            <p>Experience a new way to understand your health concerns with our advanced AI-powered symptom analysis.</p>
+            <a href="checker.html" class="button">Explore Symptom Checker</a>
         </div>
     </section>
 
     <section class="features">
         <div class="feature">
-            <h3><i class="fas fa-bolt"></i> Instant Analysis</h3>
-            <p>Receive potential insights based on your symptoms in moments.</p>
+            <i class="fas fa-microscope"></i>
+            <div class="feature-text">
+                <h3>Deep Analysis</h3>
+                <p>Our AI algorithms delve deep into your symptoms to provide potential insights beyond simple keywords.</p>
+            </div>
         </div>
         <div class="feature">
-            <h3><i class="fas fa-brain"></i> Advanced AI Logic</h3>
-            <p>Sophisticated algorithms designed to understand and interpret your health concerns.</p>
+            <i class="fas fa-chart-line"></i>
+            <div class="feature-text">
+                <h3>Progress Tracking</h3>
+                <p>Monitor your symptom history and identify patterns to better understand your health journey.</p>
+            </div>
         </div>
         <div class="feature">
-            <h3><i class="fas fa-user-shield"></i> Privacy Focused</h3>
-            <p>Your health information is handled with the utmost confidentiality.</p>
+            <i class="fas fa-user-md"></i>
+            <div class="feature-text">
+                <h3>Expert Recommendations</h3>
+                <p>Receive guidance based on potential conditions, including when to seek professional medical advice.</p>
+            </div>
         </div>
         <div class="feature">
-            <h3><i class="fas fa-mobile-alt"></i> Accessible Anywhere</h3>
-            <p>Use our symptom checker on any device, anytime you need it.</p>
+            <i class="fas fa-shield-alt"></i>
+            <div class="feature-text">
+                <h3>Secure & Private</h3>
+                <p>Your health data is encrypted and handled with the utmost respect for your privacy.</p>
+            </div>
         </div>
     </section>
 
@@ -192,5 +249,12 @@
     </footer>
 
     <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroContent = document.querySelector('.hero-content');
+            heroContent.classList.add('animate__animated', 'animate__fadeInUp');
+        });
+    </script>
 </body>
 </html> 
