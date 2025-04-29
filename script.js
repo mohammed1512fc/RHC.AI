@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const triageLevelElement = document.getElementById('triage-level');
     const recommendationsContainer = document.getElementById('recommendations');
 
+    // --- ATTACH EVENT LISTENER TO THE ANALYZE BUTTON ---
+    analyzeButton.addEventListener('click', analyzeSymptoms);
+
     // --- SUPER STRONG AI CORE (Simplified Example) ---
     const healthDatabase = {
         "headache, fever, cough": {
@@ -276,4 +279,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FANCY ANIMATION LIBRARY INTEGRATION (Example with Animate.css) ---
     // You'd need to include the Animate.css library in your HTML's <head>:
     // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-}); 
+});
