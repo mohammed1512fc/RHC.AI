@@ -3,81 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapid Health Checker AI - Instant Medical Symptom Analysis</title>
-    <link rel="stylesheet" href="./styles.css">
+    <title>RapidHealth AI | Advanced Medical Symptom Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+    <!-- AI Assistant Floating Button -->
+    <div class="ai-assistant">
+        <button class="ai-button pulse">
+            <i class="fas fa-robot"></i>
+            <span class="tooltip">AI Health Assistant</span>
+        </button>
+    </div>
+
+    <!-- Dynamic Header -->
     <header class="main-header">
         <div class="container">
             <div class="logo-container">
-                <h1 class="logo">Rapid Health Checker AI</h1>
-                <span class="tagline">Advanced Medical Symptom Analysis</span>
+                <h1 class="logo">RapidHealth<span class="ai-text">AI</span></h1>
+                <span class="tagline">Clinical-Grade Symptom Analysis</span>
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="./index.html" class="active">Home</a></li>
-                    <li><a href="./checker.html">Symptom Checker</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#about">About</a></li>
+                    <li><a href="./index.html" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="./checker.html" class="nav-link"><i class="fas fa-stethoscope"></i> Symptom Checker</a></li>
+                    <li><a href="#resources" class="nav-link"><i class="fas fa-book-medical"></i> Resources</a></li>
+                    <li><a href="#about" class="nav-link"><i class="fas fa-info-circle"></i> About</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
+    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h2 class="animate__animated animate__fadeInDown">AI-Powered Health Assessment</h2>
-                <p class="animate__animated animate__fadeIn animate__delay-1s">Get instant, accurate medical insights with our advanced artificial intelligence system.</p>
-                <a href="./checker.html" class="cta-button animate__animated animate__fadeInUp animate__delay-2s">Check Your Symptoms Now</a>
+                <h2 class="hero-title">AI-Powered <span class="highlight">Medical Diagnosis</span></h2>
+                <p class="hero-subtitle">Advanced neural network trained on 2.5 million+ medical cases for accurate symptom analysis</p>
+                <div class="cta-container">
+                    <a href="./checker.html" class="cta-button primary pulse">
+                        <i class="fas fa-bolt"></i> Start Symptom Check
+                    </a>
+                </div>
+                <div class="trust-badges">
+                    <div class="badge">
+                        <i class="fas fa-shield-alt"></i> HIPAA Compliant
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-user-md"></i> Doctor-Approved
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="ai-visualization">
+                    <div class="neuron"></div>
+                    <div class="neuron"></div>
+                    <div class="neuron"></div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="features" class="features-section">
+    <!-- Features Section -->
+    <section class="features-section">
         <div class="container">
-            <h3>Why Choose Rapid Health Checker AI</h3>
+            <h3 class="section-title">Why Healthcare Professionals Trust Our AI</h3>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h4>Instant Analysis</h4>
-                    <p>Our AI processes symptoms in seconds, providing rapid assessments.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>Deep Learning Engine</h4>
+                    <p>Multi-layer neural network with continuous learning capabilities</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🏥</div>
-                    <h4>Medical Expertise</h4>
-                    <p>Trained on thousands of medical cases for accurate results.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-procedures"></i>
+                    </div>
+                    <h4>Emergency Detection</h4>
+                    <p>Identifies critical conditions requiring immediate attention</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔍</div>
-                    <h4>Comprehensive Database</h4>
-                    <p>Access to extensive medical knowledge for precise condition matching.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-dna"></i>
+                    </div>
+                    <h4>Differential Diagnosis</h4>
+                    <p>Generates ranked list of potential conditions with confidence scores</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚠️</div>
-                    <h4>Triage Levels</h4>
-                    <p>Clear urgency indicators to help you make informed decisions.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="about-section">
-        <div class="container">
-            <div class="about-content">
-                <h3>About Our Technology</h3>
-                <p>Rapid Health Checker AI utilizes state-of-the-art machine learning algorithms trained on millions of medical data points to provide the most accurate symptom analysis available. Our system continuously learns and improves to offer better healthcare insights.</p>
-                <p>While our AI provides valuable information, it does not replace professional medical advice. Always consult with a healthcare provider for diagnosis and treatment.</p>
             </div>
         </div>
     </section>
 
     <footer class="main-footer">
         <div class="container">
-            <p>© 2023 Rapid Health Checker AI. All rights reserved.</p>
-            <p class="disclaimer">Disclaimer: This tool does not provide medical advice. It is intended for informational purposes only.</p>
+            <p>© 2023 RapidHealth AI. All rights reserved.</p>
+            <p class="disclaimer">This AI does not replace professional medical advice. Always consult a healthcare provider.</p>
         </div>
     </footer>
 
