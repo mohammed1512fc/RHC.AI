@@ -9,15 +9,6 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <!-- AI Assistant Floating Button -->
-    <div class="ai-assistant">
-        <button class="ai-button pulse">
-            <i class="fas fa-robot"></i>
-            <span class="tooltip">AI Health Assistant</span>
-        </button>
-    </div>
-
-    <!-- Main Header -->
     <header class="main-header">
         <div class="container">
             <div class="logo-container">
@@ -28,18 +19,16 @@
                 <ul>
                     <li><a href="./index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
                     <li><a href="./checker.html" class="nav-link active"><i class="fas fa-stethoscope"></i> Symptom Checker</a></li>
-                    <li><a href="#resources" class="nav-link"><i class="fas fa-book-medical"></i> Resources</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Main Checker Content -->
     <main class="checker-container">
         <div class="container">
             <div class="checker-header">
                 <h2><i class="fas fa-stethoscope"></i> AI Symptom Analyzer</h2>
-                <p>Enter your symptoms below for a comprehensive health assessment powered by our clinical AI</p>
+                <p>Enter your symptoms for a comprehensive health assessment</p>
             </div>
 
             <form id="symptomForm" class="symptom-form">
@@ -61,7 +50,7 @@
                     
                     <div class="form-group full-width">
                         <label for="symptoms"><i class="fas fa-comment-medical"></i> Primary Symptoms</label>
-                        <textarea id="symptoms" name="symptoms" rows="3" required placeholder="Describe your symptoms (e.g. headache, fever, nausea)"></textarea>
+                        <textarea id="symptoms" name="symptoms" rows="3" required placeholder="e.g. headache, fever, nausea"></textarea>
                     </div>
                     
                     <div class="form-group">
@@ -88,7 +77,7 @@
                     
                     <div class="form-group full-width">
                         <label for="additionalInfo"><i class="fas fa-notes-medical"></i> Additional Notes</label>
-                        <textarea id="additionalInfo" name="additionalInfo" rows="2" placeholder="Any other relevant information (medications, existing conditions, etc.)"></textarea>
+                        <textarea id="additionalInfo" name="additionalInfo" rows="2" placeholder="Any other relevant information"></textarea>
                     </div>
                 </div>
 
@@ -110,7 +99,6 @@
                         <h4><i class="fas fa-disease"></i> Possible Conditions</h4>
                         <div class="confidence-meter">
                             <div class="confidence-bar" id="confidenceBar"></div>
-                            <span>AI Confidence Level</span>
                         </div>
                         <ul id="possibleConditions">
                             <!-- Filled by JS -->
@@ -123,40 +111,23 @@
                             <!-- Filled by JS -->
                         </div>
                     </div>
-                    
-                    <div class="emergency-warning hidden" id="emergencyWarning">
-                        <div class="warning-header">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <h4>Emergency Alert</h4>
-                        </div>
-                        <p id="emergencyMessage"></p>
-                    </div>
                 </div>
                 
                 <div class="disclaimer-box">
-                    <p><strong><i class="fas fa-info-circle"></i> Disclaimer:</strong> This AI analysis is for informational purposes only and does not constitute medical advice. Always consult with a healthcare professional for proper diagnosis and treatment.</p>
+                    <p><strong><i class="fas fa-info-circle"></i> Disclaimer:</strong> This AI analysis is for informational purposes only.</p>
                 </div>
             </section>
         </div>
     </main>
 
-    <footer class="main-footer">
-        <div class="container">
-            <p>© 2023 RapidHealth AI. All rights reserved.</p>
-            <p class="disclaimer">This AI does not replace professional medical advice. Always consult a healthcare provider.</p>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+            <p>AI is analyzing your symptoms...</p>
         </div>
-    </footer>
+    </div>
 
     <script src="./script.js"></script>
-    <!-- Add this right before the closing </body> tag -->
-<div id="loadingOverlay" class="loading-overlay hidden">
-  <div class="loading-content">
-    <i class="fas fa-circle-notch fa-spin fa-3x"></i>
-    <p>AI is analyzing your symptoms...</p>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="./script.js"></script> 
 </body>
 </html> 
