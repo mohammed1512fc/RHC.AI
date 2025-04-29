@@ -1,3 +1,5 @@
+/* styles.css for Rapid Health Checker AI - Super Fancy Styles */
+
 /* Global Styles */
 body {
     font-family: 'Montserrat', sans-serif;
@@ -22,40 +24,42 @@ body {
 
 /* Header Styles */
 header {
-    background-color: rgba(34, 34, 34, 0.95); /* Slightly darker header */
+    background-color: rgba(34, 34, 34, 0.97); /* Slightly darker and more opaque header */
     color: #fff;
     padding: 30px 20px;
     text-align: center;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    position: sticky;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
-    transition: background-color 0.4s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
 }
 
 header:hover {
-    background-color: #222;
+    background-color: #1a1a1a; /* Darker on hover */
 }
 
 header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 3.2em;
+    font-size: 3.5em; /* Slightly larger title */
     margin-bottom: 5px;
     letter-spacing: 1.5px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Navigation Styles */
 nav ul {
     list-style: none;
     padding: 0;
-    margin: 20px 0 0 0;
+    margin: 25px 0 0 0; /* Increased top margin */
     text-align: center;
 }
 
 nav ul li {
     display: inline;
-    margin: 0 30px; /* Increased spacing */
+    margin: 0 35px; /* Increased spacing */
     position: relative;
 }
 
@@ -63,41 +67,42 @@ nav a {
     text-decoration: none;
     color: #eee;
     font-weight: 500;
-    font-size: 1.15em; /* Slightly larger font */
+    font-size: 1.2em; /* Slightly larger font */
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
 nav a:before {
     content: '';
     position: absolute;
-    bottom: -5px;
-    left: 0;
+    bottom: -8px; /* Moved down slightly */
+    left: 50%;
     width: 0%;
-    height: 2px;
+    height: 3px; /* Thicker underline */
     background-color: #64b5f6;
-    transition: width 0.3s ease-in-out;
+    transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
 }
 
 nav a:hover {
     color: #64b5f6;
-    transform: translateY(-2px);
+    transform: translateY(-3px); /* More pronounced lift */
 }
 
 nav a:hover:before {
     width: 100%;
+    left: 0;
 }
 
 /* Hero Section (on index.html) */
 .hero {
+    position: relative;
+    height: 85vh; /* Slightly taller hero */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    padding: 150px 30px; /* Increased padding */
-    background-image: url('hero-background.jpg');
-    background-size: cover;
-    background-position: center;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-    position: relative;
-    overflow: hidden;
 }
 
 .hero::before {
@@ -107,19 +112,40 @@ nav a:hover:before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Slightly darker overlay */
+    background: url('hero-background-unique.jpg') center/cover no-repeat;
+    animation: kenburns 12s infinite alternate; /* Slightly faster Ken Burns */
+}
+
+@keyframes kenburns {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.15); /* More zoom */
+    }
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+    z-index: 1;
 }
 
 .hero-content {
     position: relative;
-    z-index: 10;
-    animation: fadeInUp 1s ease-out 0.3s;
+    z-index: 2;
+    animation: fadeInUp 1s ease-out 0.5s;
     opacity: 0;
 }
 
 @keyframes fadeInUp {
     from {
-        transform: translateY(30px);
+        transform: translateY(40px); /* More initial distance */
         opacity: 0;
     }
 
@@ -131,95 +157,102 @@ nav a:hover:before {
 
 .hero h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 4.5em; /* Larger title */
+    font-size: 5.5em; /* Even larger title */
     margin-bottom: 35px;
     letter-spacing: 2px;
 }
 
 .hero p {
-    font-size: 1.6em;
-    margin-bottom: 60px;
+    font-size: 1.8em; /* Slightly larger paragraph */
+    margin-bottom: 70px; /* More space below paragraph */
     font-weight: 300;
-    line-height: 1.9;
+    line-height: 2; /* Increased line height */
 }
 
 .button {
     display: inline-block;
-    padding: 22px 45px; /* Larger button */
+    padding: 25px 50px; /* Larger button */
     background-color: #ff6e40;
     color: white;
     text-decoration: none;
-    border-radius: 12px;
+    border-radius: 15px; /* More rounded button */
     font-weight: bold;
-    font-size: 1.35em;
+    font-size: 1.4em; /* Larger button text */
     transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25); /* More pronounced shadow */
 }
 
 .button:hover {
     background-color: #f4511e;
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-7px); /* More pronounced lift */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35); /* Deeper shadow on hover */
 }
 
 /* Features Section (on index.html) */
 .features {
-    padding: 100px 30px; /* Increased padding */
+    padding: 120px 30px; /* Increased padding */
     background-color: #f9f9f9;
-    border-top: 1px solid #eee;
+    border-top: 2px solid #eee; /* Thicker border */
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider min-width */
-    gap: 50px; /* Increased gap */
-    background: linear-gradient(to bottom, #f9f9f9, #fff); /* Subtle gradient */
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Even wider feature boxes */
+    gap: 70px; /* More space between features */
+    background: linear-gradient(to bottom, #f9f9f9, #fff);
 }
 
 .feature {
-    text-align: center;
+    text-align: left;
     padding: 50px; /* Increased padding */
-    border-radius: 15px;
+    border-radius: 18px; /* More rounded */
     background-color: white;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12); /* More noticeable shadow */
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
 }
 
 .feature:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-10px); /* More pronounced lift */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18); /* Deeper shadow on hover */
 }
 
 .feature i {
-    font-size: 2.5em;
+    font-size: 3em; /* Even larger icons */
     color: #64b5f6;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    margin-right: 40px; /* More space between icon and text */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.feature h3 {
-    color: #3f51b5; /* Deeper blue */
+.feature-text {
+    flex-grow: 1;
+}
+
+.feature-text h3 {
+    color: #3f51b5;
     margin-bottom: 20px;
-    font-size: 2em;
+    font-size: 2.2em; /* Larger heading */
     font-weight: 600;
 }
 
-.feature p {
+.feature-text p {
     color: #555;
-    line-height: 1.8;
+    line-height: 1.9; /* Increased line height */
+    font-size: 1.1em; /* Slightly larger paragraph */
 }
 
 /* Symptom Checker Container (on checker.html) */
 .checker-container {
-    max-width: 950px; /* Slightly wider */
-    margin: 60px auto; /* Increased top margin */
-    padding: 50px; /* Increased padding */
+    max-width: 1000px; /* Even wider */
+    margin: 70px auto; /* Increased top margin */
+    padding: 60px; /* Increased padding */
     background-color: white;
-    border-radius: 18px; /* More rounded */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); /* Deeper shadow */
-    animation: slideIn 0.6s ease-out;
+    border-radius: 20px; /* More rounded */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3); /* Deeper shadow */
+    animation: slideIn 0.7s ease-out;
 }
 
 @keyframes slideIn {
     from {
-        transform: translateY(-30px);
+        transform: translateY(-40px);
         opacity: 0;
     }
 
@@ -233,32 +266,32 @@ nav a:hover:before {
     font-family: 'Playfair Display', serif;
     color: #333;
     text-align: center;
-    margin-bottom: 40px;
-    font-size: 2.8em;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    margin-bottom: 50px; /* More space below heading */
+    font-size: 3em; /* Larger heading */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .input-group {
-    margin-bottom: 40px; /* Increased margin */
+    margin-bottom: 50px; /* Increased margin */
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     color: #444;
     font-weight: 600;
-    font-size: 1.2em;
+    font-size: 1.25em; /* Larger label */
 }
 
 .input-group input[type="text"],
 .input-group textarea,
 .input-group select {
-    width: calc(100% - 30px);
-    padding: 18px; /* Increased padding */
+    width: calc(100% - 40px);
+    padding: 20px; /* Increased padding */
     border: 1px solid #ccc;
-    border-radius: 10px; /* More rounded */
+    border-radius: 12px; /* More rounded */
     box-sizing: border-box;
-    font-size: 1.1em;
+    font-size: 1.15em; /* Larger input text */
     transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
@@ -266,57 +299,58 @@ nav a:hover:before {
 .input-group textarea:focus,
 .input-group select:focus {
     border-color: #64b5f6;
-    box-shadow: 0 0 10px rgba(100, 181, 246, 0.6);
+    box-shadow: 0 0 12px rgba(100, 181, 246, 0.7); /* More pronounced focus shadow */
     outline: none;
 }
 
 /* Analyze Button (on checker.html) */
 #analyze-button {
     display: block;
-    width: 280px; /* Wider button */
-    padding: 20px; /* Increased padding */
+    width: 300px; /* Wider button */
+    padding: 22px; /* Increased padding */
     background-color: #64b5f6;
     color: white;
     border: none;
-    border-radius: 12px; /* More rounded */
-    font-size: 1.3em;
+    border-radius: 15px; /* More rounded */
+    font-size: 1.4em; /* Larger button text */
     cursor: pointer;
-    margin: 40px auto; /* Increased margin */
+    margin: 50px auto; /* Increased margin */
     font-weight: bold;
     transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25); /* More pronounced shadow */
 }
 
 #analyze-button:hover {
     background-color: #42a5f5;
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-7px); /* More pronounced lift */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35); /* Deeper shadow on hover */
 }
 
 /* Result Container (on checker.html) */
 #result-container {
-    margin-top: 50px; /* Increased margin */
-    padding: 40px; /* Increased padding */
-    border: 1px solid #ddd;
-    border-radius: 15px; /* More rounded */
+    margin-top: 60px; /* Increased margin */
+    padding: 50px; /* Increased padding */
+    border: 2px solid #ddd; /* Thicker border */
+    border-radius: 18px; /* More rounded */
     background-color: #f9f9f9;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-    animation: fadeIn 0.6s ease-out;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* More noticeable shadow */
+    animation: fadeIn 0.7s ease-out;
 }
 
 #result-container h3 {
     font-family: 'Playfair Display', serif;
     color: #ff6e40;
-    margin-bottom: 30px;
-    font-size: 2.2em;
+    margin-bottom: 35px; /* More space below heading */
+    font-size: 2.5em; /* Larger heading */
     font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 #result-container p {
     color: #555;
-    line-height: 1.9;
-    margin-bottom: 20px;
-    font-size: 1.1em;
+    line-height: 2; /* Increased line height */
+    margin-bottom: 25px; /* More space below paragraph */
+    font-size: 1.15em; /* Slightly larger paragraph */
 }
 
 #result-container p strong {
@@ -325,37 +359,38 @@ nav a:hover:before {
 }
 
 .recommendation {
-    margin-top: 25px;
-    padding: 25px;
+    margin-top: 30px; /* Increased margin */
+    padding: 30px; /* Increased padding */
     background-color: #e1f5fe;
-    border-left: 7px solid #64b5f6; /* Thicker border */
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-left: 8px solid #64b5f6; /* Thicker border */
+    border-radius: 10px; /* More rounded */
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.08); /* Subtle shadow */
 }
 
 .recommendation h4 {
-    color: #3f51b5; /* Deeper blue */
-    margin-bottom: 12px;
-    font-size: 1.15em;
+    color: #3f51b5;
+    margin-bottom: 15px;
+    font-size: 1.2em; /* Slightly larger heading */
     font-weight: bold;
 }
 
 .recommendation p {
     color: #555;
-    line-height: 1.7;
+    line-height: 1.8;
+    font-size: 1.1em; /* Slightly larger paragraph */
 }
 
 /* Footer Styles */
 footer {
     text-align: center;
-    padding: 40px; /* Increased padding */
+    padding: 50px; /* Increased padding */
     background-color: #222;
     color: #ddd;
-    border-top: 4px solid #ff6e40; /* Thicker accent */
+    border-top: 5px solid #ff6e40; /* Thicker accent */
     position: relative;
 }
 
 footer p {
-    font-size: 1em;
+    font-size: 1.1em; /* Slightly larger text */
     opacity: 0.8;
 } 
