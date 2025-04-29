@@ -3,131 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symptom Checker | RapidHealth AI</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css">
+    <title>Rapid Health Checker AI - Symptom Checker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;500;600&display=swap">
+    <style>
+        /* Enhanced Inline Styles for Initial Impression */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+            color: #333;
+            line-height: 1.7;
+            overflow-x: hidden;
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        header {
+            background-color: rgba(34, 34, 34, 0.9);
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+            text-align: center;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 25px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #eee;
+            font-weight: 500;
+            font-size: 1.1em;
+            transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        nav a:hover {
+            color: #64b5f6;
+            transform: scale(1.05);
+        }
+        .checker-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .input-group {
+            margin-bottom: 30px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .input-group input[type="text"],
+        .input-group textarea,
+        .input-group select {
+            width: calc(100% - 20px);
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .input-group input[type="text"]:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            border-color: #64b5f6;
+            box-shadow: 0 0 8px rgba(100, 181, 246, 0.5);
+            outline: none;
+        }
+        #analyze-button {
+            display: block;
+            width: 250px;
+            padding: 18px;
+            background-color: #64b5f6; /* Light blue button */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 30px auto;
+            font-weight: bold;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        #analyze-button:hover {
+            background-color: #42a5f5;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        #result-container {
+            margin-top: 40px;
+            padding: 30px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease-out;
+        }
+        #result-container h3 {
+            font-family: 'Playfair Display', serif;
+            color: #ff6e40; /* Orange result heading */
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        #result-container p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .recommendation {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e1f5fe; /* Very light blue recommendation background */
+            border-left: 5px solid #64b5f6;
+            border-radius: 5px;
+        }
+        .recommendation h4 {
+            color: #64b5f6;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            background-color: #222;
+            color: #ddd;
+            border-top: 3px solid #ff6e40;
+            position: relative;
+        }
+        footer p {
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="container">
-            <div class="logo-container">
-                <h1 class="logo">RapidHealth<span class="ai-text">AI</span></h1>
-                <span class="tagline">Clinical Symptom Analysis</span>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="./index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="./checker.html" class="nav-link active"><i class="fas fa-stethoscope"></i> Symptom Checker</a></li>
-                </ul>
-            </nav>
-        </div>
+    <header>
+        <h1>Rapid Health Checker AI</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="checker.html">Symptom Checker</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main class="checker-container">
-        <div class="container">
-            <div class="checker-header">
-                <h2><i class="fas fa-stethoscope"></i> AI Symptom Analyzer</h2>
-                <p>Enter your symptoms for a comprehensive health assessment</p>
-            </div>
-
-            <form id="symptomForm" class="symptom-form">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="age"><i class="fas fa-birthday-cake"></i> Age</label>
-                        <input type="number" id="age" name="age" min="1" max="120" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
-                        <select id="gender" name="gender" required>
-                            <option value="">Select</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label for="symptoms"><i class="fas fa-comment-medical"></i> Primary Symptoms</label>
-                        <textarea id="symptoms" name="symptoms" rows="3" required placeholder="e.g. headache, fever, nausea"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="duration"><i class="fas fa-clock"></i> Duration</label>
-                        <select id="duration" name="duration" required>
-                            <option value="">Select</option>
-                            <option value="<1 hour">Less than 1 hour</option>
-                            <option value="1-6 hours">1-6 hours</option>
-                            <option value="6-24 hours">6-24 hours</option>
-                            <option value="1-3 days">1-3 days</option>
-                            <option value="3-7 days">3-7 days</option>
-                            <option value="1-2 weeks">1-2 weeks</option>
-                            <option value=">2 weeks">More than 2 weeks</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="severity"><i class="fas fa-exclamation-triangle"></i> Severity</label>
-                        <div class="severity-container">
-                            <input type="range" id="severity" name="severity" min="1" max="10" value="5">
-                            <span id="severityValue">5/10</span>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label for="additionalInfo"><i class="fas fa-notes-medical"></i> Additional Notes</label>
-                        <textarea id="additionalInfo" name="additionalInfo" rows="2" placeholder="Any other relevant information"></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" id="analyzeBtn" class="cta-button primary pulse">
-                    <i class="fas fa-brain"></i> Analyze Symptoms
-                </button>
-            </form>
-
-            <section id="resultsSection" class="results-section hidden">
-                <div class="results-header">
-                    <h3><i class="fas fa-diagnoses"></i> AI Analysis Results</h3>
-                    <div class="triage-level" id="triageLevel">
-                        <span id="triageText">Analyzing...</span>
-                    </div>
-                </div>
-                
-                <div class="results-content">
-                    <div class="conditions-card">
-                        <h4><i class="fas fa-disease"></i> Possible Conditions</h4>
-                        <div class="confidence-meter">
-                            <div class="confidence-bar" id="confidenceBar"></div>
-                        </div>
-                        <ul id="possibleConditions">
-                            <!-- Filled by JS -->
-                        </ul>
-                    </div>
-                    
-                    <div class="recommendations-card">
-                        <h4><i class="fas fa-clipboard-check"></i> Recommended Actions</h4>
-                        <div id="recommendations">
-                            <!-- Filled by JS -->
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="disclaimer-box">
-                    <p><strong><i class="fas fa-info-circle"></i> Disclaimer:</strong> This AI analysis is for informational purposes only.</p>
-                </div>
-            </section>
+    <div class="checker-container">
+        <h2>Symptom Analysis Center</h2>
+        <div class="input-group">
+            <label for="symptoms">Describe your symptoms in detail:</label>
+            <textarea id="symptoms" rows="7" placeholder="Enter all your symptoms, including when they started, their severity, and any other relevant information."></textarea>
         </div>
-    </main>
+        <button id="analyze-button" onclick="analyzeSymptoms()">Initiate Analysis</button>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay hidden">
-        <div class="loading-content">
-            <i class="fas fa-circle-notch fa-spin fa-3x"></i>
-            <p>AI is analyzing your symptoms...</p>
+        <div id="result-container" style="display: none;">
+            <h3><i class="fas fa-stethoscope"></i> Analysis Outcome:</h3>
+            <p><strong>Potential Condition:</strong> <span id="condition" style="font-weight: bold; color: #ff6e40;"></span></p>
+            <p><strong>Triage Level:</strong> <span id="triage-level" style="font-weight: bold; color: #f44336;"></span></p>
+            <div id="recommendations">
+                <h4><i class="fas fa-lightbulb"></i> Guidance and Recommendations:</h4>
+                </div>
         </div>
     </div>
 
-    <script src="./script.js"></script>
+    <footer>
+        <p>&copy; 2025 Rapid Health Checker AI. All rights reserved.</p>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/your-f ontawesome-kit.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
 </body>
-</html> 
+</html>
