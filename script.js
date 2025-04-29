@@ -1,18 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('RapidHealth AI initialized');
+    console.log('Document loaded - initializing symptom checker');
     
     // Initialize symptom checker
-    const symptomForm = document.getElementById('symptomForm');
-    if (symptomForm) {
-        symptomForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            analyzeSymptoms();
-        });
+    if (document.getElementById('symptomForm')) {
+        initSymptomChecker();
     }
-
+    
     // Initialize severity slider
     const severitySlider = document.getElementById('severity');
     const severityValue = document.getElementById('severityValue');
+    
     if (severitySlider && severityValue) {
         severityValue.textContent = severitySlider.value + '/10';
         severitySlider.addEventListener('input', function() {
@@ -21,63 +18,67 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function analyzeSymptoms() {
-    console.log('Starting analysis...');
+function initSymptomChecker() {
+    const symptomForm = document.getElementById('symptomForm');
     
-    // Show loading overlay
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    loadingOverlay.classList.remove('hidden');
-    
-    // Get form values
-    const formData = {
-        age: document.getElementById('age').value,
-        gender: document.getElementById('gender').value,
-        symptoms: document.getElementById('symptoms').value,
-        duration: document.getElementById('duration').value,
-        severity: document.getElementById('severity').value,
-        additionalInfo: document.getElementById('additionalInfo').value
-    };
-    
-    // Validate required fields
-    if (!formData.symptoms || !formData.age || !formData.gender || !formData.duration) {
-        showError("Please fill in all required fields");
-        loadingOverlay.classList.add('hidden');
-        return;
-    }
-    
-    // Process symptoms after short delay (simulating AI processing)
-    setTimeout(() => {
-        try {
-            const results = processSymptoms(formData);
-            displayResults(results);
-        } catch (error) {
-            console.error("Analysis error:", error);
-            showError("Analysis failed. Please try again.");
-        } finally {
+    symptomForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Analysis started');
+        
+        // Show loading overlay
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.classList.remove('hidden');
+        
+        // Get form values
+        const formData = {
+            age: document.getElementById('age').value,
+            gender: document.getElementById('gender').value,
+            symptoms: document.getElementById('symptoms').value,
+            duration: document.getElementById('duration').value,
+            severity: document.getElementById('severity').value,
+            additionalInfo: document.getElementById('additionalInfo').value
+        };
+        
+        // Validate required fields
+        if (!formData.symptoms || !formData.age || !formData.gender || !formData.duration) {
             loadingOverlay.classList.add('hidden');
+            alert('Please fill in all required fields');
+            return;
         }
-    }, 1500);
+        
+        // Process after short delay (simulating AI processing)
+        setTimeout(() => {
+            try {
+                const results = analyzeSymptoms(formData);
+                displayResults(results);
+                console.log('Analysis completed successfully');
+            } catch (error) {
+                console.error('Analysis error:', error);
+                alert('Analysis failed. Please try again.');
+            } finally {
+                loadingOverlay.classList.add('hidden');
+            }
+        }, 1500);
+    });
 }
 
-function processSymptoms(formData) {
-    console.log('Processing symptoms:', formData);
-    
-    // Convert symptoms to array
-    const symptomsList = formData.symptoms.split(',')
+function analyzeSymptoms(formData) {
+    // Process symptoms into array
+    const symptoms = formData.symptoms.split(',')
         .map(s => s.trim().toLowerCase())
         .filter(s => s !== '');
     
-    // Get possible conditions
-    const possibleConditions = getPossibleConditions(symptomsList, formData);
+    // Get possible conditions based on symptoms
+    const possibleConditions = getPossibleConditions(symptoms, formData);
     
     // Determine triage level
-    const triageLevel = determineTriageLevel(possibleConditions, formData);
+    const triageLevel = getTriageLevel(possibleConditions, formData);
     
     // Generate recommendations
-    const recommendations = generateRecommendations(possibleConditions, triageLevel);
+    const recommendations = getRecommendations(possibleConditions, triageLevel);
     
-    // Calculate confidence
-    const confidence = calculateConfidence(symptomsList);
+    // Calculate confidence score
+    const confidence = calculateConfidence(symptoms);
     
     return {
         possibleConditions,
@@ -88,120 +89,59 @@ function processSymptoms(formData) {
 }
 
 function getPossibleConditions(symptoms, formData) {
-    // Enhanced condition database
-    const conditions =  [];
-    'Common Cold': {
-            name: 'Common Cold',
-            symptoms: ['cough', 'sore throat', 'runny nose', 'congestion', 'sneezing'],
-            keywords: ['cold', 'congested', 'sniffles'],
-            triage: 'mild',
-            confidence: 0.85,
-            ageRisk: false,
-            recommendations: [
-                'Rest and drink fluids',
-                'Use OTC medications',
-                'Consult doctor if over 10 days'
-            ]
+    // Condition database with symptom matches
+    const conditions = [
+        {
+            name: "Common Cold",
+            matches: ["cough", "sore throat", "runny nose", "congestion"],
+            triage: "mild"
         },
-        'Influenza': {
-            name: 'Influenza',
-            symptoms: ['fever', 'chills', 'fatigue', 'headache', 'muscle aches'],
-            keywords: ['flu', 'influenza', 'body aches'],
-            triage: 'routine',
-            confidence: 0.88,
-            ageRisk: true,
-            recommendations: [
-                'Take antivirals if early',
-                'Stay isolated',
-                'Seek care if respiratory symptoms worsen'
-            ]
+        {
+            name: "Influenza (Flu)",
+            matches: ["fever", "chills", "body aches", "fatigue"],
+            triage: formData.age > 65 ? "urgent" : "routine"
         },
-        'COVID-19': {
-            name: 'COVID-19',
-            symptoms: ['fever', 'cough', 'fatigue', 'loss of taste', 'shortness of breath'],
-            keywords: ['covid', 'coronavirus', 'loss of smell'],
-            triage: 'urgent',
-            confidence: 0.90,
-            ageRisk: true,
-            recommendations: [
-                'Self-isolate and test',
-                'Contact doctor',
-                'Go to ER if breathing worsens'
-            ]
+        {
+            name: "Migraine",
+            matches: ["headache", "nausea", "light sensitivity"],
+            triage: "routine"
         },
-        'Pneumonia': {
-            name: 'Pneumonia',
-            symptoms: ['cough', 'fever', 'chest pain', 'fatigue', 'shortness of breath'],
-            keywords: ['lung infection', 'productive cough'],
-            triage: 'urgent',
-            confidence: 0.78,
-            ageRisk: true,
-            recommendations: [
-                'Seek urgent evaluation',
-                'Chest X-ray may be needed',
-                'Antibiotics if bacterial'
-            ]
+        {
+            name: "Urinary Tract Infection",
+            matches: ["painful urination", "frequent urination"],
+            triage: "routine"
         },
-        'Appendicitis': {
-            name: 'Appendicitis',
-            symptoms: ['abdominal pain', 'nausea', 'vomiting', 'fever', 'loss of appetite'],
-            keywords: ['rlq pain', 'rebound tenderness'],
-            triage: 'emergency',
-            confidence: 0.92,
-            ageRisk: false,
-            recommendations: [
-                'Seek emergency care',
-                'Do not eat or drink',
-                'CT scan may confirm diagnosis'
-            ]
+        {
+            name: "COVID-19",
+            matches: ["fever", "cough", "loss of taste", "shortness of breath"],
+            triage: formData.severity > 7 ? "urgent" : "routine"
         },
-        'Migraine': {
-            name: 'Migraine',
-            symptoms: ['headache', 'nausea', 'light sensitivity', 'aura', 'vomiting'],
-            keywords: ['migraine', 'throbbing pain'],
-            triage: 'routine',
-            confidence: 0.84,
-            ageRisk: false,
-            recommendations: [
-                'Rest in dark room',
-                'Use prescribed meds',
-                'Identify and avoid triggers'
-            ]
-        },
-        'Heart Attack': {
-            name: 'Heart Attack',
-            symptoms: ['chest pain', 'shortness of breath', 'nausea', 'jaw pain', 'sweating'],
-            keywords: ['myocardial infarction', 'heart', 'tight chest'],
-            triage: 'emergency',
-            confidence: 0.95,
-            ageRisk: true,
-            recommendations: [
-                'CALL 911 IMMEDIATELY',
-                'Chew aspirin (if not allergic)',
-                'Stay calm and seated'
-            ]
-        },
+        {
+            name: "Acute Appendicitis",
+            matches: ["abdominal pain", "nausea", "vomiting", "fever"],
+            triage: "emergency"
+        }
+    ];
 
-    // Calculate match scores
-    const scoredConditions = conditions.map(condition => {
+    // Calculate matching conditions
+    const matchedConditions = conditions.map(condition => {
         const matchedSymptoms = symptoms.filter(symptom => 
-            condition.symptoms.some(cs => cs.includes(symptom) || symptom.includes(cs))
+            condition.matches.some(match => match.includes(symptom) || 
+            symptom.includes(match)
         );
         return {
-            ...condition,
-            score: matchedSymptoms.length / condition.symptoms.length
+            name: condition.name,
+            score: matchedSymptoms.length / condition.matches.length,
+            triage: condition.triage
         };
-    });
+    }).filter(cond => cond.score > 0.3)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
 
-    // Filter and sort conditions
-    return scoredConditions
-        .filter(c => c.score > 0.3)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 3)
-        .map(c => c.name);
+    return matchedConditions.map(cond => cond.name);
 }
 
-function determineTriageLevel(conditions, formData) {
+function getTriageLevel(conditions, formData) {
     if (conditions.includes("Acute Appendicitis")) {
         return {
             level: "emergency",
@@ -222,35 +162,36 @@ function determineTriageLevel(conditions, formData) {
     };
 }
 
-function generateRecommendations(conditions, triage) {
+function getRecommendations(conditions, triage) {
     const recommendations = [];
     
-    // Triage recommendation
+    // Add triage recommendation
     recommendations.push(`<strong>Triage Level:</strong> ${triage.description}`);
     
-    // General recommendations
+    // Add general recommendations
     recommendations.push("<strong>General Advice:</strong>");
-    recommendations.push("- Stay hydrated");
-    recommendations.push("- Rest as needed");
+    recommendations.push("- Stay hydrated and get plenty of rest");
     
-    // Condition-specific recommendations
+    // Add condition-specific recommendations
     if (conditions.includes("Common Cold")) {
-        recommendations.push("<strong>For Cold:</strong> Use OTC cold remedies");
+        recommendations.push("<strong>For Cold:</strong> Use OTC cold remedies as needed");
     }
     if (conditions.includes("Influenza (Flu)")) {
-        recommendations.push("<strong>For Flu:</strong> Consider antiviral medication");
+        recommendations.push("<strong>For Flu:</strong> Consider antiviral medication if early in illness");
+    }
+    if (conditions.includes("COVID-19")) {
+        recommendations.push("<strong>For COVID-19:</strong> Isolate and get tested");
     }
     
     return recommendations;
 }
 
 function calculateConfidence(symptoms) {
+    // More symptoms = higher confidence (capped at 95%)
     return Math.min(0.7 + (symptoms.length * 0.05), 0.95).toFixed(2);
 }
 
 function displayResults(results) {
-    console.log('Displaying results:', results);
-    
     // Show results section
     const resultsSection = document.getElementById('resultsSection');
     resultsSection.classList.remove('hidden');
@@ -278,10 +219,12 @@ function displayResults(results) {
         recommendationsElement.appendChild(p);
     });
     
+    // Set confidence meter
+    const confidenceBar = document.getElementById('confidenceBar');
+    if (confidenceBar) {
+        confidenceBar.style.width = `${results.confidence * 100}%`;
+    }
+    
     // Scroll to results
     resultsSection.scrollIntoView({ behavior: 'smooth' });
-}
-
-function showError(message) {
-    alert("Error: " + message);
 } 
