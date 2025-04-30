@@ -3,258 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapid Health Checker AI</title>
+    <title>Rapid Health Checker AI - Advanced Medical Symptom Analysis</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;500;600&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <style>
-        /* Unique and Fancy Inline Styles for Initial Impression */
-        body {
-            font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #e0f7fa, #fce4ec); /* Subtle gradient background */
-            color: #333;
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-        header {
-            background-color: rgba(34, 34, 34, 0.95); /* Semi-transparent dark header */
-            color: #fff;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-            position: fixed; /* Fixed header for a modern feel */
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0 0 0;
-            text-align: center;
-        }
-        nav ul li {
-            display: inline;
-            margin: 0 30px;
-            position: relative;
-        }
-        nav a {
-            text-decoration: none;
-            color: #eee;
-            font-weight: 500;
-            font-size: 1.15em;
-            transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
-        }
-        nav a:before {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            width: 0%;
-            height: 2px;
-            background-color: #64b5f6;
-            transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
-        }
-        nav a:hover {
-            color: #64b5f6;
-            transform: translateY(-2px);
-        }
-        nav a:hover:before {
-            width: 100%;
-            left: 0;
-        }
-        .hero {
-            position: relative;
-            height: 80vh; /* Full viewport height for impact */
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('hero-background-unique.jpg') center/cover no-repeat; /* Replace with a unique image */
-            animation: kenburns 15s infinite alternate; /* Subtle zoom animation */
-        }
-        @keyframes kenburns {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
-            z-index: 1;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            animation: fadeInUp 1s ease-out 0.5s;
-            opacity: 0;
-        }
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 5em; /* Even larger title */
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-        }
-        .hero p {
-            font-size: 1.7em;
-            margin-bottom: 60px;
-            font-weight: 300;
-            line-height: 1.9;
-        }
-        .button {
-            display: inline-block;
-            padding: 22px 45px;
-            background-color: #ff6e40;
-            color: white;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 1.35em;
-            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        .button:hover {
-            background-color: #f4511e;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        .features {
-            padding: 100px 30px;
-            background-color: #f9f9f9;
-            border-top: 1px solid #eee;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Wider feature boxes */
-            gap: 60px; /* More space between features */
-            background: linear-gradient(to bottom, #f9f9f9, #fff);
-        }
-        .feature {
-            text-align: left; /* Align text to the left for a different layout */
-            padding: 40px;
-            border-radius: 15px;
-            background-color: white;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            display: flex; /* Use flexbox for icon and text alignment */
-            align-items: center;
-        }
-        .feature:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-        .feature i {
-            font-size: 2.8em; /* Larger icons */
-            color: #64b5f6;
-            margin-right: 30px; /* Space between icon and text */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-        .feature-text {
-            flex-grow: 1; /* Allow text to take up remaining space */
-        }
-        .feature-text h3 {
-            color: #3f51b5;
-            margin-bottom: 15px;
-            font-size: 2em;
-            font-weight: 600;
-        }
-        .feature-text p {
-            color: #555;
-            line-height: 1.8;
-        }
-        footer {
-            text-align: center;
-            padding: 40px;
-            background-color: #222;
-            color: #ddd;
-            border-top: 4px solid #ff6e40;
-            position: relative;
-        }
-        footer p {
-            font-size: 1em;
-            opacity: 0.8;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body>
-    <header>
-        <h1>Rapid Health Checker AI</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="checker.html">Symptom Checker</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+    
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">⚕️</span>
+                <h1>Rapid Health Checker AI</h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="checker.html">Symptom Checker</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
     </header>
 
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>Intelligent Health Insights, Instantly.</h1>
-            <p>Experience a new way to understand your health concerns with our advanced AI-powered symptom analysis.</p>
-            <a href="checker.html" class="button">Explore Symptom Checker</a>
-        </div>
-    </section>
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2 class="animate__animated animate__fadeInDown">Advanced AI-Powered Health Assessment</h2>
+                    <p class="animate__animated animate__fadeInUp">Get instant, accurate health insights with our cutting-edge artificial intelligence symptom checker.</p>
+                    <a href="checker.html" class="btn-primary animate__animated animate__fadeInUp animate__delay-1s">Check Symptoms Now</a>
+                </div>
+                <div class="hero-image animate__animated animate__fadeInRight">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Medical AI">
+                </div>
+            </div>
+        </section>
 
-    <section class="features">
-        <div class="feature">
-            <i class="fas fa-microscope"></i>
-            <div class="feature-text">
-                <h3>Deep Analysis</h3>
-                <p>Our AI algorithms delve deep into your symptoms to provide potential insights beyond simple keywords.</p>
+        <section id="features" class="features">
+            <div class="container">
+                <h3>Why Choose Rapid Health Checker AI?</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h4>Advanced AI Analysis</h4>
+                        <p>Our proprietary algorithm analyzes thousands of data points to provide accurate health assessments.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h4>Instant Results</h4>
+                        <p>Get triage recommendations and potential conditions in seconds, not days.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🩺</div>
+                        <h4>Medical Expertise</h4>
+                        <p>Built with guidance from board-certified physicians and medical professionals.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h4>Secure & Private</h4>
+                        <p>Your health data is encrypted and never stored without your permission.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="feature">
-            <i class="fas fa-chart-line"></i>
-            <div class="feature-text">
-                <h3>Progress Tracking</h3>
-                <p>Monitor your symptom history and identify patterns to better understand your health journey.</p>
-            </div>
-        </div>
-        <div class="feature">
-            <i class="fas fa-user-md"></i>
-            <div class="feature-text">
-                <h3>Expert Recommendations</h3>
-                <p>Receive guidance based on potential conditions, including when to seek professional medical advice.</p>
-            </div>
-        </div>
-        <div class="feature">
-            <i class="fas fa-shield-alt"></i>
-            <div class="feature-text">
-                <h3>Secure & Private</h3>
-                <p>Your health data is encrypted and handled with the utmost respect for your privacy.</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <footer>
-        <p>&copy; 2025 Rapid Health Checker AI. All rights reserved.</p>
+        <section class="testimonials">
+            <div class="container">
+                <h3>Trusted by Thousands</h3>
+                <div class="testimonial-slider">
+                    <div class="testimonial">
+                        <p>"This AI symptom checker helped identify my appendicitis when I wasn't sure if I should go to the ER. It literally saved my life!"</p>
+                        <div class="testimonial-author">
+                            <strong>Sarah J.</strong>
+                            <span>New York, NY</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <h3>About Our Technology</h3>
+                    <p>Rapid Health Checker AI utilizes state-of-the-art machine learning algorithms trained on millions of medical cases, peer-reviewed research, and clinical guidelines to provide the most accurate symptom analysis available to consumers.</p>
+                    <p>Our system continuously learns and improves, incorporating the latest medical knowledge to ensure you receive up-to-date health information.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="AI Technology">
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="cta">
+            <div class="container">
+                <h3>Ready to Check Your Symptoms?</h3>
+                <p>Get started with our advanced AI health checker now.</p>
+                <a href="checker.html" class="btn-primary">Start Symptom Check</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">⚕️</span>
+                    <h4>Rapid Health Checker AI</h4>
+                    <p>Advanced AI for better health decisions.</p>
+                </div>
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="checker.html">Symptom Checker</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-disclaimer">
+                    <p><strong>Disclaimer:</strong> This tool does not provide medical advice. It is intended for informational purposes only. Always consult a physician for medical advice.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Rapid Health Checker AI. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
 
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const heroContent = document.querySelector('.hero-content');
-            heroContent.classList.add('animate__animated', 'animate__fadeInUp');
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html> 
