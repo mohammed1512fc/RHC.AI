@@ -120,16 +120,28 @@ const symptomForm = document.getElementById('symptomForm');
 const analyzeBtn = document.getElementById('analyzeBtn');
 const resultsSection = document.getElementById('resultsSection');
 
-symptomForm.addEventListener('submit', function(e) {
+// Configuration - Replace with your actual OpenAI API key
+const OPENAI_API_KEY = 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
+
+; // Replace with your actual key
+const AI_ENABLED = true; // Set to false to use the simulated version
+
+symptomForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // Show loading state
     analyzeBtn.innerHTML = '<span class="loader-btn"></span> Analyzing...';
     analyzeBtn.disabled = true;
     
-    // Simulate API call delay
-    setTimeout(() => {
-        processSymptoms();
+    try {
+        if (AI_ENABLED && OPENAI_API_KEY && OPENAI_API_KEY !== 'your-api-key-here') {
+            await processSymptomsWithAI();
+        } else {
+            // Fallback to simulated version if AI is disabled or no API key
+            setTimeout(() => {
+                processSymptoms();
+            }, 1500);
+        }
         
         // Hide form and show results
         symptomForm.style.display = 'none';
@@ -137,9 +149,197 @@ symptomForm.addEventListener('submit', function(e) {
         
         // Scroll to results
         resultsSection.scrollIntoView({ behavior: 'smooth' });
-    }, 1500);
+    } catch (error) {
+        console.error('Error analyzing symptoms:', error);
+        analyzeBtn.innerHTML = 'Analyze Symptoms';
+        analyzeBtn.disabled = false;
+        
+        // Show error message to user
+        alert('There was an error analyzing your symptoms. Please try again later.');
+    }
 });
 
+async function processSymptomsWithAI() {
+    // Get form values
+    const age = document.getElementById('age').value;
+    const gender = document.getElementById('gender').value;
+    const symptoms = document.getElementById('symptoms').value;
+    const duration = document.getElementById('duration').value;
+    const severity = document.getElementById('severity').value;
+    const additionalInfo = document.getElementById('additionalInfo').value;
+    
+    // Display user info in results
+    document.getElementById('resultAge').textContent = age;
+    document.getElementById('resultGender').textContent = gender.charAt(0).toUpperCase() + gender.slice(1);
+    document.getElementById('resultSymptoms').textContent = symptoms;
+    
+    // Prepare the prompt for OpenAI
+    const prompt = `Act as a medical professional analyzing patient symptoms. Provide a detailed analysis in JSON format with the following structure:
+    {
+        "triage": {
+            "level": "Emergency/Urgent/Routine/Self-care",
+            "description": "Detailed explanation of triage level",
+            "urgency": "How quickly medical attention is needed"
+        },
+        "potential_conditions": [
+            {
+                "name": "Condition name",
+                "probability": "low/medium/high or percentage",
+                "description": "Brief description",
+                "common_symptoms": ["list of matching symptoms"]
+            }
+        ],
+        "recommendations": ["list of recommendations"],
+        "next_steps": ["list of next steps"],
+        "warning_signs": ["list of warning signs to watch for"]
+    }
+    
+    Patient details:
+    - Age: ${age}
+    - Gender: ${gender}
+    - Symptoms: ${symptoms}
+    - Duration: ${duration}
+    - Severity: ${severity}/10
+    - Additional info: ${additionalInfo || 'None provided'}`;
+    
+    // Call OpenAI API
+    const response = await callOpenAI(prompt);
+    
+    // Parse the response (assuming it's in JSON format)
+    let analysisResults;
+    try {
+        // Try to extract JSON from the response
+        const jsonStart = response.indexOf('{');
+        const jsonEnd = response.lastIndexOf('}') + 1;
+        const jsonString = response.slice(jsonStart, jsonEnd);
+        analysisResults = JSON.parse(jsonString);
+    } catch (e) {
+        console.error('Error parsing AI response:', e);
+        // Fallback to simulated version if parsing fails
+        analysisResults = analyzeSymptoms(age, gender, symptoms, duration, severity, additionalInfo);
+    }
+    
+    // Display triage level
+    const triageValue = document.getElementById('triageValue');
+    triageValue.textContent = analysisResults.triage.level;
+    
+    // Determine class based on triage level
+    let triageClass = 'triage-self-care';
+    if (analysisResults.triage.level.toLowerCase().includes('emergency')) {
+        triageClass = 'triage-emergency';
+    } else if (analysisResults.triage.level.toLowerCase().includes('urgent')) {
+        triageClass = 'triage-urgent';
+    } else if (analysisResults.triage.level.toLowerCase().includes('routine')) {
+        triageClass = 'triage-routine';
+    }
+    
+    triageValue.className = 'triage-value ' + triageClass;
+    document.getElementById('triageDescription').textContent = analysisResults.triage.description;
+    
+    // Display potential conditions
+    const conditionsList = document.getElementById('conditionsList');
+    conditionsList.innerHTML = '';
+    
+    const conditions = analysisResults.potential_conditions || analysisResults.conditions || [];
+    conditions.forEach(condition => {
+        const div = document.createElement('div');
+        div.className = 'condition-item fade-in';
+        
+        // Handle different probability formats (low/medium/high or percentage)
+        let probabilityText = condition.probability;
+        if (typeof condition.probability === 'number') {
+            probabilityText = `${condition.probability}%`;
+        } else if (!['low', 'medium', 'high'].includes(condition.probability.toLowerCase())) {
+            probabilityText = 'Medium'; // Default if format is unexpected
+        }
+        
+        div.innerHTML = `
+            <div class="condition-name">${condition.name}</div>
+            <div class="condition-probability">Probability: ${probabilityText}</div>
+            ${condition.description ? `<div class="condition-description">${condition.description}</div>` : ''}
+        `;
+        conditionsList.appendChild(div);
+    });
+    
+    // Display recommendations
+    const recommendationsContent = document.getElementById('recommendationsContent');
+    const recommendations = analysisResults.recommendations || [];
+    recommendationsContent.innerHTML = recommendations.map(rec => 
+        `<p>• ${rec}</p>`
+    ).join('');
+    
+    // Display next steps
+    const nextStepsContent = document.getElementById('nextStepsContent');
+    const nextSteps = analysisResults.next_steps || analysisResults.nextSteps || [];
+    nextStepsContent.innerHTML = nextSteps.map(step => 
+        `<p>• ${step}</p>`
+    ).join('');
+    
+    // Display warning signs if available
+    const warningSignsContent = document.getElementById('warningSignsContent');
+    if (analysisResults.warning_signs) {
+        document.getElementById('warningSigns').style.display = 'block';
+        warningSignsContent.innerHTML = analysisResults.warning_signs.map(sign => 
+            `<p>• ${sign}</p>`
+        ).join('');
+    } else {
+        document.getElementById('warningSigns').style.display = 'none';
+    }
+    
+    // Reset button state
+    analyzeBtn.innerHTML = 'Analyze Symptoms';
+    analyzeBtn.disabled = false;
+}
+
+async function callOpenAI(prompt) {
+    // Show loading state
+    analyzeBtn.innerHTML = '<span class="loader-btn"></span> Consulting AI...';
+    
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo", // or "gpt-4" if you have access
+                messages: [
+                    {
+                        role: "system",
+                        content: "You are a medical professional analyzing patient symptoms. Provide accurate, helpful information in JSON format. Include triage level, potential conditions with probabilities, recommendations, and next steps."
+                    },
+                    {
+                        role: "user",
+                        content: prompt
+                    }
+                ],
+                temperature: 0.3, // Lower temperature for more focused responses
+                max_tokens: 1000
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data.choices[0].message.content;
+    } catch (error) {
+        console.error('Error calling OpenAI API:', error);
+        // Fallback to simulated version
+        return JSON.stringify(analyzeSymptoms(
+            document.getElementById('age').value,
+            document.getElementById('gender').value,
+            document.getElementById('symptoms').value,
+            document.getElementById('duration').value,
+            document.getElementById('severity').value,
+            document.getElementById('additionalInfo').value
+        ));
+    }
+}
+
+// Fallback symptom analysis (simulated)
 function processSymptoms() {
     // Get form values
     const age = document.getElementById('age').value;
@@ -187,6 +387,10 @@ function processSymptoms() {
     nextStepsContent.innerHTML = analysisResults.nextSteps.map(step => 
         `<p>• ${step}</p>`
     ).join('');
+    
+    // Reset button state
+    analyzeBtn.innerHTML = 'Analyze Symptoms';
+    analyzeBtn.disabled = false;
 }
 
 // Advanced AI Symptom Analysis (simulated)
