@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <!-- Added preconnect for OpenAI API -->
-    <link rel="preconnect" href="https://api.openai.com">
 </head>
 <body>
     <div class="preloader">
@@ -61,12 +59,11 @@
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="other">Other</option>
-                                <option value="prefer-not-to-say">Prefer not to say</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="symptoms">Primary Symptoms (comma separated)</label>
-                            <input type="text" id="symptoms" name="symptoms" placeholder="e.g. headache, fever, nausea" required>
+                            <textarea id="symptoms" name="symptoms" placeholder="e.g. headache, fever, nausea" required></textarea>
                             <div class="suggestions-container" id="symptomSuggestions"></div>
                         </div>
                         <div class="form-group">
@@ -84,10 +81,8 @@
                         </div>
                         <div class="form-group">
                             <label for="severity">Severity (1-10 scale)</label>
-                            <div class="severity-container">
-                                <input type="range" id="severity" name="severity" min="1" max="10" value="5">
-                                <span id="severityValue">5</span>
-                            </div>
+                            <input type="range" id="severity" name="severity" min="1" max="10" value="5">
+                            <span id="severityValue">5</span>
                         </div>
                         <div class="form-group">
                             <label for="additionalInfo">Additional Information</label>
@@ -130,15 +125,9 @@
                         <h4>Next Steps</h4>
                         <div class="next-steps-content" id="nextStepsContent"></div>
                     </div>
-
-                    <div id="warningSigns" style="display: none;">
-                        <h4>Warning Signs to Watch For</h4>
-                        <div class="warning-signs-content" id="warningSignsContent"></div>
-                    </div>
                     
                     <div class="disclaimer-box">
                         <p><strong>Disclaimer:</strong> This AI-powered health assessment is for informational purposes only and should not be considered a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
-                        <p class="ai-disclaimer">AI analysis provided by OpenAI models. Results should be verified by a medical professional.</p>
                     </div>
                 </div>
             </div>
@@ -164,7 +153,6 @@
                 </div>
                 <div class="footer-disclaimer">
                     <p><strong>Disclaimer:</strong> This tool does not provide medical advice. It is intended for informational purposes only. Always consult a physician for medical advice.</p>
-                    <p class="ai-disclaimer">AI analysis provided by OpenAI models. Results should be verified by a medical professional.</p>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -173,8 +161,7 @@
         </div>
     </footer>
 
-    <!-- Updated script loading with defer attribute -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
 </body>
 </html> 
