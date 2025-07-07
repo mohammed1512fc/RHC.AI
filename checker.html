@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="preloader">
@@ -39,8 +40,11 @@
     <main class="checker-main">
         <section class="checker-hero">
             <div class="container">
-                <h2>AI Symptom Checker</h2>
-                <p>Enter your symptoms and get an instant AI-powered health assessment with potential conditions and triage recommendations.</p>
+                <h2>AI-Powered Symptom Checker</h2>
+                <p>Get instant health insights powered by Gemini AI. Enter your symptoms for a comprehensive assessment with potential conditions and triage recommendations.</p>
+                <div class="ai-badge">
+                    <i class="fas fa-robot"></i> Powered by Gemini AI
+                </div>
             </div>
         </section>
 
@@ -59,12 +63,14 @@
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
                                 <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="symptoms">Primary Symptoms (comma separated)</label>
                             <textarea id="symptoms" name="symptoms" placeholder="e.g. headache, fever, nausea" required></textarea>
                             <div class="suggestions-container" id="symptomSuggestions"></div>
+                            <div class="symptom-examples">Common: fever, cough, headache, dizziness, nausea</div>
                         </div>
                         <div class="form-group">
                             <label for="duration">Duration of Symptoms</label>
@@ -77,18 +83,29 @@
                                 <option value="1-2 weeks">1-2 weeks</option>
                                 <option value="2-4 weeks">2-4 weeks</option>
                                 <option value="more than 1 month">More than 1 month</option>
+                                <option value="chronic">Chronic (ongoing)</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="severity">Severity (1-10 scale)</label>
+                            <label for="severity">Severity (1-10 scale) <span id="severityValue">5</span></label>
                             <input type="range" id="severity" name="severity" min="1" max="10" value="5">
-                            <span id="severityValue">5</span>
+                            <div class="severity-labels">
+                                <span>Mild</span>
+                                <span>Moderate</span>
+                                <span>Severe</span>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="additionalInfo">Additional Information</label>
+                            <label for="additionalInfo">Additional Information <small>(Optional)</small></label>
                             <textarea id="additionalInfo" name="additionalInfo" placeholder="Any other relevant information about your symptoms or health history"></textarea>
                         </div>
-                        <button type="submit" id="analyzeBtn" class="btn-primary">Analyze Symptoms</button>
+                        <button type="submit" id="analyzeBtn" class="btn-primary">
+                            <span class="btn-text">Analyze Symptoms with AI</span>
+                            <i class="fas fa-robot btn-icon"></i>
+                        </button>
+                        <div class="privacy-notice">
+                            <i class="fas fa-lock"></i> Your information is secure and will not be stored.
+                        </div>
                     </form>
                 </div>
             </div>
@@ -97,6 +114,11 @@
         <section class="checker-results-section" id="resultsSection" style="display: none;">
             <div class="container">
                 <div class="results-container">
+                    <div id="apiWarning" class="api-warning" style="display: none;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span class="warning-text">Showing results from our local database. For enhanced AI analysis, please try again later.</span>
+                    </div>
+                    
                     <h3>AI Health Assessment</h3>
                     <div class="results-header">
                         <div class="user-info">
@@ -104,15 +126,18 @@
                             <p><strong>Gender:</strong> <span id="resultGender"></span></p>
                             <p><strong>Reported Symptoms:</strong> <span id="resultSymptoms"></span></p>
                         </div>
-                        <div class="triage-level" id="triageLevel">
+                        <div class="triage-level">
                             <h4>Triage Level</h4>
-                            <div class="triage-value" id="triageValue"></div>
+                            <div class="triage-value-container">
+                                <div id="triageValue" class="triage-value"></div>
+                                <div id="triageIcon" class="triage-icon"></div>
+                            </div>
                             <p class="triage-description" id="triageDescription"></p>
                         </div>
                     </div>
                     
                     <div class="potential-conditions">
-                        <h4>Potential Conditions</h4>
+                        <h4>Potential Conditions <small>(AI Analysis)</small></h4>
                         <div class="conditions-list" id="conditionsList"></div>
                     </div>
                     
@@ -126,8 +151,19 @@
                         <div class="next-steps-content" id="nextStepsContent"></div>
                     </div>
                     
+                    <div class="results-actions">
+                        <button id="printResults" class="btn-secondary">
+                            <i class="fas fa-print"></i> Print Results
+                        </button>
+                        <button id="newAssessment" class="btn-primary">
+                            <i class="fas fa-redo"></i> New Assessment
+                        </button>
+                    </div>
+                    
                     <div class="disclaimer-box">
-                        <p><strong>Disclaimer:</strong> This AI-powered health assessment is for informational purposes only and should not be considered a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+                        <h5><i class="fas fa-exclamation-circle"></i> Important Disclaimer</h5>
+                        <p>This AI-powered health assessment is for informational purposes only and should not be considered a substitute for professional medical advice, diagnosis, or treatment. The accuracy of the assessment may vary and it may not account for all individual health factors. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+                        <p class="disclaimer-note">Results generated by Gemini AI may not be 100% accurate. Never disregard professional medical advice or delay seeking it because of something you have read on this website.</p>
                     </div>
                 </div>
             </div>
@@ -149,10 +185,12 @@
                         <li><a href="#features">Features</a></li>
                         <li><a href="#about">About</a></li>
                         <li><a href="#contact">Contact</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="footer-disclaimer">
                     <p><strong>Disclaimer:</strong> This tool does not provide medical advice. It is intended for informational purposes only. Always consult a physician for medical advice.</p>
+                    <p class="ai-disclaimer">AI analysis powered by Gemini. Results may vary.</p>
                 </div>
             </div>
             <div class="footer-bottom">
