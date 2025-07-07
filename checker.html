@@ -3,1019 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Symptom Checker | MediCheck Pro</title>
+    <title>Symptom Checker | Rapid Health Checker AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap">
-    <style>
-        :root {
-            --primary: #2a7fba;
-            --primary-dark: #1a5f8b;
-            --primary-light: #e1f0f8;
-            --secondary: #ff7e33;
-            --secondary-dark: #e65c1a;
-            --success: #4caf50;
-            --warning: #ff9800;
-            --danger: #f44336;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --white: #ffffff;
-            --body-font: 'Open Sans', sans-serif;
-            --heading-font: 'Poppins', sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--body-font);
-            color: var(--dark);
-            line-height: 1.6;
-            background-color: #f5f9fc;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: var(--heading-font);
-            font-weight: 600;
-            color: var(--primary-dark);
-            margin-bottom: 1rem;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Preloader */
-        .preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 0%;
-            background-color: var(--white);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-
-        .preloader.fade-out {
-            opacity: 0;
-        }
-
-        .preloader-logo {
-            width: 0px;
-            height: 0px;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
-        }
-
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 0;
-            background-color: var(--white);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .header.scrolled {
-            padding: 15px 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .header.scrolled-down {
-            transform: translateY(-100%);
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
-
-        .logo-img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .logo-text {
-            font-family: var(--heading-font);
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .logo-text span {
-            color: var(--secondary);
-        }
-
-        /* Navigation */
-        .nav {
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-list {
-            display: flex;
-            list-style: none;
-        }
-
-        .nav-item {
-            margin-left: 30px;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 600;
-            font-size: 1rem;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-link:hover {
-            color: var(--primary);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            text-decoration: none;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            font-family: var(--heading-font);
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(42, 127, 186, 0.3);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary);
-            color: var(--white);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--secondary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(255, 126, 51, 0.3);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 1001;
-        }
-
-        .mobile-menu-btn .bar {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background-color: var(--primary);
-            margin: 5px 0;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu-btn.active .bar:nth-child(1) {
-            transform: translateY(8px) rotate(45deg);
-        }
-
-        .mobile-menu-btn.active .bar:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-btn.active .bar:nth-child(3) {
-            transform: translateY(-8px) rotate(-45deg);
-        }
-
-        /* Checker Hero */
-        .checker-hero {
-            padding: 150px 0 80px;
-            background: linear-gradient(135deg, rgba(42, 127, 186, 0.9) 0%, rgba(26, 95, 139, 0.95) 100%);
-            color: var(--white);
-            text-align: center;
-        }
-
-        .checker-hero h1 {
-            color: var(--white);
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .checker-hero p {
-            max-width: 700px;
-            margin: 0 auto 30px;
-            font-size: 1.1rem;
-        }
-
-        /* Symptom Form */
-        .symptom-form-container {
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin: -50px auto 80px;
-            max-width: 800px;
-            position: relative;
-            z-index: 100;
-        }
-
-        .form-title {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-title h2 {
-            font-size: 2rem;
-            color: var(--primary-dark);
-            position: relative;
-            display: inline-block;
-        }
-
-        .form-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background-color: var(--secondary);
-            border-radius: 2px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary-dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: var(--body-font);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(42, 127, 186, 0.2);
-            outline: none;
-        }
-
-        .form-control.error {
-            border-color: var(--danger);
-        }
-
-        .error-message {
-            color: var(--danger);
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .form-control.error + .error-message {
-            display: block;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        /* Symptom Suggestions */
-        .symptom-suggestions {
-            position: absolute;
-            width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: var(--white);
-            border: 1px solid #ddd;
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-            display: none;
-        }
-
-        .symptom-suggestions.show {
-            display: block;
-        }
-
-        .symptom-suggestion {
-            padding: 10px 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .symptom-suggestion:hover, .symptom-suggestion.highlighted {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        /* Severity Slider */
-        .severity-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .severity-slider {
-            flex: 1;
-            -webkit-appearance: none;
-            height: 8px;
-            border-radius: 4px;
-            background: #ddd;
-            outline: none;
-        }
-
-        .severity-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .severity-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        .severity-value {
-            font-weight: 700;
-            font-size: 1.2rem;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .severity-indicator {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background-color: var(--success);
-            margin-left: 5px;
-        }
-
-        /* Loader Button */
-        .loader-btn {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--white);
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Results Section */
-        .results-section {
-            display: none;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin: -50px auto 80px;
-            max-width: 800px;
-        }
-
-        .results-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .results-header h2 {
-            font-size: 2rem;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
-        }
-
-        .results-header p {
-            color: var(--gray);
-        }
-
-        .results-container {
-            margin-top: 30px;
-        }
-
-        .result-card {
-            background-color: #f8fafc;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .result-card-title {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .result-card-title h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0;
-        }
-
-        .result-card-title .icon {
-            width: 30px;
-            height: 30px;
-            background-color: var(--primary-light);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
-            color: var(--primary);
-        }
-
-        .user-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .user-info-item {
-            background-color: var(--primary-light);
-            padding: 10px 15px;
-            border-radius: 5px;
-        }
-
-        .user-info-item strong {
-            display: block;
-            font-size: 0.9rem;
-            color: var(--primary-dark);
-            margin-bottom: 5px;
-        }
-
-        /* Triage Level */
-        .triage-value {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: 700;
-            margin-left: 10px;
-        }
-
-        .triage-emergency {
-            background-color: rgba(244, 67, 54, 0.1);
-            color: var(--danger);
-            animation: pulseEmergency 1.5s infinite;
-        }
-
-        .triage-urgent {
-            background-color: rgba(255, 152, 0, 0.1);
-            color: var(--warning);
-        }
-
-        .triage-routine {
-            background-color: rgba(42, 127, 186, 0.1);
-            color: var(--primary);
-        }
-
-        .triage-self-care {
-            background-color: rgba(76, 175, 80, 0.1);
-            color: var(--success);
-        }
-
-        @keyframes pulseEmergency {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Conditions List */
-        .condition-item {
-            background-color: var(--white);
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--primary);
-        }
-
-        .condition-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .condition-probability {
-            display: flex;
-            align-items: center;
-        }
-
-        .probability-bar {
-            height: 8px;
-            background-color: var(--primary);
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-
-        .condition-icd {
-            font-size: 0.8rem;
-            color: var(--gray);
-            margin-top: 5px;
-        }
-
-        /* Recommendations */
-        .recommendations-list p {
-            margin-bottom: 10px;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .recommendations-list p::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        /* Toast Notifications */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            background-color: var(--dark);
-            color: var(--white);
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1100;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast-error {
-            background-color: var(--danger);
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .nav {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 80%;
-                max-width: 300px;
-                height: 100vh;
-                background-color: var(--white);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transition: right 0.3s ease;
-                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-            }
-            
-            .nav.active {
-                right: 0;
-            }
-            
-            .nav-list {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .nav-item {
-                margin: 15px 0;
-            }
-            
-            .checker-hero {
-                padding: 130px 0 60px;
-            }
-            
-            .checker-hero h1 {
-                font-size: 2rem;
-            }
-            
-            .symptom-form-container, .results-section {
-                padding: 30px 20px;
-                margin-bottom: 50px;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-            
-            .user-info {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .checker-hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .form-title h2 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
 </head>
 <body>
-    <!-- Preloader -->
     <div class="preloader">
-        <div class="preloader-logo">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary)" width="120px" height="120px">
-                <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1.06 13.54L7.4 12l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41-5.64 5.66z"/>
-            </svg>
-        </div>
+        <div class="loader"></div>
     </div>
-
-    <!-- Header -->
+    
     <header class="header">
-        <div class="container header-container">
-            <a href="index.html" class="logo">
-                <img src="https://via.placeholder.com/40x40" alt="MediCheck Logo" class="logo-img">
-                <span class="logo-text">Medi<span>Check</span></span>
-            </a>
-            
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">⚕️</span>
+                <h1>Rapid Health Checker AI</h1>
+            </div>
             <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="checker.html" class="nav-link active">Symptom Checker</a></li>
-                    <li class="nav-item"><a href="index.html#features" class="nav-link">Features</a></li>
-                    <li class="nav-item"><a href="index.html#about" class="nav-link">About</a></li>
-                    <li class="nav-item"><a href="index.html#contact" class="nav-link">Contact</a></li>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="checker.html" class="active">Symptom Checker</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
-            
-            <button class="mobile-menu-btn">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </header>
 
-    <!-- Checker Hero -->
-    <section class="checker-hero">
-        <div class="container">
-            <h1 class="animate__animated animate__fadeInDown">Symptom Checker</h1>
-            <p class="animate__animated animate__fadeInUp">Enter your symptoms and health information to receive a personalized assessment and care recommendations.</p>
-        </div>
-    </section>
+    <main class="checker-main">
+        <section class="checker-hero">
+            <div class="container">
+                <h2>AI Symptom Checker</h2>
+                <p>Enter your symptoms and get an instant AI-powered health assessment with potential conditions and triage recommendations.</p>
+            </div>
+        </section>
 
-    <!-- Symptom Form -->
-    <div class="container">
-        <div class="symptom-form-container animate__animated animate__fadeIn">
-            <div class="form-title">
-                <h2>Tell Us About Your Symptoms</h2>
-                <p>Please provide accurate information for the best results</p>
-            </div>
-            
-            <form id="symptomForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="age" class="form-label">Age</label>
-                        <input type="number" id="age" class="form-control" min="1" max="120" required>
-                        <div class="error-message">Please enter a valid age</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="gender" class="form-label">Gender</label>
-                        <select id="gender" class="form-control" required>
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other/Prefer not to say</option>
-                        </select>
-                        <div class="error-message">Please select your gender</div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="symptoms" class="form-label">Symptoms (comma separated)</label>
-                    <input type="text" id="symptoms" class="form-control" placeholder="e.g. headache, fever, cough" required>
-                    <div id="symptomSuggestions" class="symptom-suggestions"></div>
-                    <div class="error-message">Please enter at least one symptom</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="duration" class="form-label">Duration of Symptoms</label>
-                    <select id="duration" class="form-control" required>
-                        <option value="">Select Duration</option>
-                        <option value="less than 24 hours">Less than 24 hours</option>
-                        <option value="1-3 days">1-3 days</option>
-                        <option value="3-7 days">3-7 days</option>
-                        <option value="1-2 weeks">1-2 weeks</option>
-                        <option value="more than 2 weeks">More than 2 weeks</option>
-                    </select>
-                    <div class="error-message">Please select duration</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Symptom Severity (1-10)</label>
-                    <div class="severity-container">
-                        <span>1</span>
-                        <input type="range" id="severity" class="severity-slider" min="1" max="10" value="5">
-                        <span>10</span>
-                        <span id="severityValue" class="severity-value">5</span>
-                        <div class="severity-indicator"></div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="medicalHistory" class="form-label">Medical History (optional)</label>
-                    <textarea id="medicalHistory" class="form-control" rows="3" placeholder="Any chronic conditions, past surgeries, etc."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="medications" class="form-label">Current Medications (optional)</label>
-                    <textarea id="medications" class="form-control" rows="2" placeholder="List any medications you're currently taking"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="allergies" class="form-label">Allergies (optional)</label>
-                    <textarea id="allergies" class="form-control" rows="2" placeholder="List any known allergies"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="additionalInfo" class="form-label">Additional Information (optional)</label>
-                    <textarea id="additionalInfo" class="form-control" rows="3" placeholder="Any other relevant information about your symptoms"></textarea>
-                </div>
-                
-                <div class="form-group" style="text-align: center; margin-top: 30px;">
-                    <button type="submit" id="analyzeBtn" class="btn btn-primary btn-lg">Analyze Symptoms</button>
-                </div>
-            </form>
-        </div>
-        
-        <!-- Results Section -->
-        <div class="results-section" id="resultsSection">
-            <div class="results-header">
-                <h2>Your Symptom Analysis</h2>
-                <p>Based on the information you provided, here are your results</p>
-            </div>
-            
-            <div class="results-container">
-                <div class="result-card">
-                    <div class="result-card-title">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                            </svg>
+        <section class="checker-form-section">
+            <div class="container">
+                <div class="checker-form-container">
+                    <form id="symptomForm" class="checker-form">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" min="1" max="120" required>
                         </div>
-                        <h3>Patient Information</h3>
-                    </div>
-                    
-                    <div class="user-info">
-                        <div class="user-info-item">
-                            <strong>Age</strong>
-                            <span id="resultAge">--</span>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
-                        <div class="user-info-item">
-                            <strong>Gender</strong>
-                            <span id="resultGender">--</span>
+                        <div class="form-group">
+                            <label for="symptoms">Primary Symptoms (comma separated)</label>
+                            <textarea id="symptoms" name="symptoms" placeholder="e.g. headache, fever, nausea" required></textarea>
+                            <div class="suggestions-container" id="symptomSuggestions"></div>
                         </div>
-                    </div>
-                    
-                    <div class="user-info-item">
-                        <strong>Reported Symptoms</strong>
-                        <span id="resultSymptoms">--</span>
-                    </div>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-card-title">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
-                                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-6 15h-2v-2h2v2zm0-4h-2V8h2v6z"/>
-                            </svg>
+                        <div class="form-group">
+                            <label for="duration">Duration of Symptoms</label>
+                            <select id="duration" name="duration" required>
+                                <option value="">Select</option>
+                                <option value="less than 1 hour">Less than 1 hour</option>
+                                <option value="1-24 hours">1-24 hours</option>
+                                <option value="1-3 days">1-3 days</option>
+                                <option value="4-7 days">4-7 days</option>
+                                <option value="1-2 weeks">1-2 weeks</option>
+                                <option value="2-4 weeks">2-4 weeks</option>
+                                <option value="more than 1 month">More than 1 month</option>
+                            </select>
                         </div>
-                        <h3>Triage Level: <span id="triageValue" class="triage-value">--</span></h3>
-                    </div>
-                    
-                    <p id="triageDescription">Based on your symptoms, our algorithm will give you results that are asure of 80% correct.</p>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-card-title">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
-                                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-                            </svg>
+                        <div class="form-group">
+                            <label for="severity">Severity (1-10 scale)</label>
+                            <input type="range" id="severity" name="severity" min="1" max="10" value="5">
+                            <span id="severityValue">5</span>
                         </div>
-                        <h3>Potential Conditions</h3>
-                    </div>
-                    
-                    <div id="conditionsList">
-                        <p>Our analysis will list potential conditions based on your symptoms.</p>
-                    </div>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-card-title">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
-                                <path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
-                            </svg>
+                        <div class="form-group">
+                            <label for="additionalInfo">Additional Information</label>
+                            <textarea id="additionalInfo" name="additionalInfo" placeholder="Any other relevant information about your symptoms or health history"></textarea>
                         </div>
-                        <h3>Recommendations</h3>
-                    </div>
-                    
-                    <div id="recommendationsContent" class="recommendations-list">
-                        <p>Based on your triage level, we'll provide specific recommendations.</p>
-                    </div>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-card-title">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
-                                <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
-                            </svg>
-                        </div>
-                        <h3>Next Steps</h3>
-                    </div>
-                    
-                    <div id="nextStepsContent" class="recommendations-list">
-                        <p>We'll guide you through the appropriate next steps for your situation.</p>
-                    </div>
-                </div>
-                
-                <!-- For Clinics: Clinical Guidelines -->
-                <div class="result-card" id="clinicalGuidelines" style="display: none;">
-                    <div class="result-card-title">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--primary)">
-                                <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
-                            </svg>
-                        </div>
-                        <h3>Clinical Guidelines</h3>
-                    </div>
-                    
-                    <div id="guidelinesContent" class="recommendations-list">
-                        <p>For healthcare providers: Relevant clinical guidelines will appear here.</p>
-                    </div>
+                        <button type="submit" id="analyzeBtn" class="btn-primary">Analyze Symptoms</button>
+                    </form>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Footer -->
+        <section class="checker-results-section" id="resultsSection" style="display: none;">
+            <div class="container">
+                <div class="results-container">
+                    <h3>AI Health Assessment</h3>
+                    <div class="results-header">
+                        <div class="user-info">
+                            <p><strong>Age:</strong> <span id="resultAge"></span></p>
+                            <p><strong>Gender:</strong> <span id="resultGender"></span></p>
+                            <p><strong>Reported Symptoms:</strong> <span id="resultSymptoms"></span></p>
+                        </div>
+                        <div class="triage-level" id="triageLevel">
+                            <h4>Triage Level</h4>
+                            <div class="triage-value" id="triageValue"></div>
+                            <p class="triage-description" id="triageDescription"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="potential-conditions">
+                        <h4>Potential Conditions</h4>
+                        <div class="conditions-list" id="conditionsList"></div>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h4>Recommendations</h4>
+                        <div class="recommendations-content" id="recommendationsContent"></div>
+                    </div>
+                    
+                    <div class="next-steps">
+                        <h4>Next Steps</h4>
+                        <div class="next-steps-content" id="nextStepsContent"></div>
+                    </div>
+                    
+                    <div class="disclaimer-box">
+                        <p><strong>Disclaimer:</strong> This AI-powered health assessment is for informational purposes only and should not be considered a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
     <footer class="footer">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <div class="footer-logo">
-                        <img src="https://via.placeholder.com/30x30" alt="MediCheck Logo" class="footer-logo-img">
-                        <span class="footer-logo-text">Medi<span>Check</span></span>
-                    </div>
-                    <p>Advanced AI-powered symptom analysis for better healthcare decisions.</p>
-                    <div class="social-links">
-                        <a href="#" class="social-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--white)">
-                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="social-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--white)">
-                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="social-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--white)">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-                            </svg>
-                        </a>
-                    </div>
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">⚕️</span>
+                    <h4>Rapid Health Checker AI</h4>
+                    <p>Advanced AI for better health decisions.</p>
                 </div>
-                
                 <div class="footer-links">
-                    <h3>Quick Links</h3>
                     <ul>
                         <li><a href="index.html">Home</a></li>
                         <li><a href="checker.html">Symptom Checker</a></li>
-                        <li><a href="index.html#features">Features</a></li>
-                        <li><a href="index.html#about">About</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-links">
-                    <h3>Resources</h3>
-                    <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Clinical Guidelines</a></li>
-                        <li><a href="#">Research Papers</a></li>
-                        <li><a href="#">For Clinics</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-contact">
-                    <h3>Contact Us</h3>
-                    <p>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--secondary)">
-                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                        </svg>
-                        mmohammed22028@gmail.com
-                    </p>
-                    <p>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--secondary)">
-                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                        </svg>
-                        (800) 555-1234
-                    </p>
-                    <p>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="var(--secondary)">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                        </svg>
-                        123 Medical Drive, Boston, MA 02115
-                    </p>
+                <div class="footer-disclaimer">
+                    <p><strong>Disclaimer:</strong> This tool does not provide medical advice. It is intended for informational purposes only. Always consult a physician for medical advice.</p>
                 </div>
             </div>
-            
             <div class="footer-bottom">
-                <p>&copy; 2023 MediCheck Pro. All rights reserved. This tool does not provide medical advice and is not a substitute for professional medical care.</p>
+                <p>&copy; 2025 Rapid Health Checker AI. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html> 
