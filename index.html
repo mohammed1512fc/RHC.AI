@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="preloader">
@@ -41,8 +42,15 @@
             <div class="container">
                 <div class="hero-content">
                     <h2 class="animate__animated animate__fadeInDown">Advanced AI-Powered Health Assessment</h2>
-                    <p class="animate__animated animate__fadeInUp">Get instant, accurate health insights with our cutting-edge artificial intelligence symptom checker.</p>
-                    <a href="checker.html" class="btn-primary animate__animated animate__fadeInUp animate__delay-1s">Check Symptoms Now</a>
+                    <p class="animate__animated animate__fadeInUp">Get instant, accurate health insights powered by Gemini AI technology.</p>
+                    <div class="hero-buttons">
+                        <a href="checker.html" class="btn-primary animate__animated animate__fadeInUp animate__delay-1s">
+                            <i class="fas fa-robot"></i> Check Symptoms Now
+                        </a>
+                        <div class="ai-badge animate__animated animate__fadeIn animate__delay-2s">
+                            <i class="fas fa-bolt"></i> Powered by Gemini AI
+                        </div>
+                    </div>
                 </div>
                 <div class="hero-image animate__animated animate__fadeInRight">
                     <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Medical AI">
@@ -55,24 +63,53 @@
                 <h3>Why Choose Rapid Health Checker AI?</h3>
                 <div class="features-grid">
                     <div class="feature-card">
-                        <div class="feature-icon">🤖</div>
-                        <h4>Advanced AI Analysis</h4>
-                        <p>Our proprietary algorithm analyzes thousands of data points to provide accurate health assessments.</p>
+                        <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                        <h4>Gemini AI Technology</h4>
+                        <p>Our advanced AI analyzes symptoms with cutting-edge natural language processing for more accurate assessments.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
                         <h4>Instant Results</h4>
-                        <p>Get triage recommendations and potential conditions in seconds, not days.</p>
+                        <p>Get triage recommendations and potential conditions in seconds with real-time AI processing.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🩺</div>
+                        <div class="feature-icon"><i class="fas fa-user-md"></i></div>
                         <h4>Medical Expertise</h4>
-                        <p>Built with guidance from board-certified physicians and medical professionals.</p>
+                        <p>AI trained on millions of medical cases and peer-reviewed research for reliable results.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🔒</div>
+                        <div class="feature-icon"><i class="fas fa-lock"></i></div>
                         <h4>Secure & Private</h4>
-                        <p>Your health data is encrypted and never stored without your permission.</p>
+                        <p>Your health data is processed securely and never stored permanently.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <div class="container">
+                <h3>How Our AI Symptom Checker Works</h3>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Enter Your Symptoms</h4>
+                            <p>Describe what you're feeling with our smart suggestion system</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>AI Analysis</h4>
+                            <p>Gemini AI processes your symptoms against medical knowledge</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Get Results</h4>
+                            <p>Receive triage level, potential conditions, and recommendations</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -83,11 +120,52 @@
                 <h3>Trusted by Thousands</h3>
                 <div class="testimonial-slider">
                     <div class="testimonial">
-                        <p>"This AI symptom checker helped identify my appendicitis when I wasn't sure if I should go to the ER. It literally saved my life!"</p>
-                        <div class="testimonial-author">
-                            <strong>Ahmed J.</strong>
-                            <span>Columbia, MO</span>
+                        <div class="testimonial-header">
+                            <i class="fas fa-quote-left"></i>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
                         </div>
+                        <p>"The AI accurately identified my symptoms as potentially serious and recommended I seek immediate care. At the ER, they confirmed it was indeed a medical emergency."</p>
+                        <div class="testimonial-author">
+                            <strong>Sarah M.</strong>
+                            <span>Chicago, IL</span>
+                        </div>
+                    </div>
+                    <div class="testimonial">
+                        <div class="testimonial-header">
+                            <i class="fas fa-quote-left"></i>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                        <p>"As a busy mom, I love being able to check symptoms quickly at home. The AI gives me peace of mind about whether I need to take my kids to the doctor."</p>
+                        <div class="testimonial-author">
+                            <strong>James L.</strong>
+                            <span>Austin, TX</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <i class="fas fa-user-shield"></i>
+                        <span>HIPAA Compliant</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure Data</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verified AI</span>
                     </div>
                 </div>
             </div>
@@ -97,20 +175,36 @@
             <div class="container">
                 <div class="about-content">
                     <h3>About Our Technology</h3>
-                    <p>Rapid Health Checker AI utilizes state-of-the-art machine learning algorithms trained on millions of medical cases, peer-reviewed research, and clinical guidelines to provide the most accurate symptom analysis available to consumers.</p>
-                    <p>Our system continuously learns and improves, incorporating the latest medical knowledge to ensure you receive up-to-date health information.</p>
+                    <p>Rapid Health Checker AI utilizes Google's Gemini artificial intelligence combined with medical expertise to provide the most accurate symptom analysis available.</p>
+                    <p>Our system combines:</p>
+                    <ul class="tech-features">
+                        <li><i class="fas fa-check"></i> Natural language processing for symptom understanding</li>
+                        <li><i class="fas fa-check"></i> Medical knowledge graph with thousands of conditions</li>
+                        <li><i class="fas fa-check"></i> Continuous learning from the latest research</li>
+                        <li><i class="fas fa-check"></i> Triage algorithms developed with physicians</li>
+                    </ul>
                 </div>
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="AI Technology">
+                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="AI Technology" class="ai-tech-image">
+                    <div class="ai-label">
+                        <i class="fas fa-robot"></i> Gemini AI Engine
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="contact" class="cta">
             <div class="container">
-                <h3>Ready to Check Your Symptoms?</h3>
-                <p>Get started with our advanced AI health checker now.</p>
-                <a href="checker.html" class="btn-primary">Start Symptom Check</a>
+                <div class="cta-box">
+                    <h3>Try Our AI Symptom Checker Now</h3>
+                    <p>Get started with our advanced health assessment powered by Gemini AI technology.</p>
+                    <a href="checker.html" class="btn-primary btn-large">
+                        <i class="fas fa-robot"></i> Start Free Assessment
+                    </a>
+                    <div class="cta-note">
+                        <i class="fas fa-info-circle"></i> No account required - your privacy is protected
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -122,6 +216,9 @@
                     <span class="logo-icon">⚕️</span>
                     <h4>Rapid Health Checker AI</h4>
                     <p>Advanced AI for better health decisions.</p>
+                    <div class="footer-ai-badge">
+                        <i class="fas fa-bolt"></i> Powered by Gemini
+                    </div>
                 </div>
                 <div class="footer-links">
                     <ul>
@@ -130,14 +227,22 @@
                         <li><a href="#features">Features</a></li>
                         <li><a href="#about">About</a></li>
                         <li><a href="#contact">Contact</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Use</a></li>
                     </ul>
                 </div>
                 <div class="footer-disclaimer">
                     <p><strong>Disclaimer:</strong> This tool does not provide medical advice. It is intended for informational purposes only. Always consult a physician for medical advice.</p>
+                    <p class="ai-disclaimer"><i class="fas fa-robot"></i> AI analysis powered by Gemini. Results may vary and should not replace professional medical evaluation.</p>
                 </div>
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 Rapid Health Checker AI. All rights reserved.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
             </div>
         </div>
     </footer>
