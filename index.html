@@ -4,929 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapid Health Checker AI - Advanced Medical Symptom Analysis</title>
+    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Preloader */
-        .preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-
-        .preloader.fade-out {
-            opacity: 0;
-        }
-
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.3);
-            border-top: 5px solid #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Header */
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 1rem 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .header.scrolled {
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .header .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            font-size: 2rem;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
-        .logo h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav a:hover,
-        .nav a.active {
-            color: #667eea;
-        }
-
-        .nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #667eea;
-            transition: width 0.3s ease;
-        }
-
-        .nav a:hover::after,
-        .nav a.active::after {
-            width: 100%;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .mobile-menu-btn span {
-            width: 25px;
-            height: 3px;
-            background: #333;
-            transition: all 0.3s ease;
-        }
-
-        .mobile-menu-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .mobile-menu-btn.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
-
-        /* Main Content */
-        main {
-            padding-top: 100px;
-        }
-
-        .hero {
-            padding: 4rem 0 6rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-        }
-
-        .hero-content h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            color: white;
-            padding: 1rem 2rem;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #333;
-            padding: 1rem 2rem;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Symptom Checker Form */
-        .symptom-checker {
-            background: white;
-            padding: 3rem 0;
-            margin: 2rem 0;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .symptom-form {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .severity-slider {
-            position: relative;
-            margin: 1rem 0;
-        }
-
-        .severity-slider input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: #ddd;
-            outline: none;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-
-        .severity-slider input[type="range"]:hover {
-            opacity: 1;
-        }
-
-        .severity-slider input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background: #667eea;
-            cursor: pointer;
-        }
-
-        .severity-slider input[type="range"]::-moz-range-thumb {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background: #667eea;
-            cursor: pointer;
-            border: none;
-        }
-
-        .severity-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .symptom-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 2px solid #e9ecef;
-            border-top: none;
-            border-radius: 0 0 10px 10px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none;
-        }
-
-        .symptom-suggestions.show {
-            display: block;
-        }
-
-        .symptom-suggestion {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            border-bottom: 1px solid #f8f9fa;
-            transition: background-color 0.2s ease;
-        }
-
-        .symptom-suggestion:hover {
-            background-color: #f8f9fa;
-        }
-
-        .symptom-suggestion strong {
-            color: #667eea;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        .loading-text {
-            margin-left: 10px;
-        }
-
-        .btn-primary.loading {
-            opacity: 0.8;
-            cursor: not-allowed;
-        }
-
-        /* Results Section */
-        .results-section {
-            background: white;
-            padding: 3rem 0;
-            margin: 2rem 0;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-
-        .results-section.fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .results-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .patient-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .patient-info h3 {
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 1rem;
-        }
-
-        .patient-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
-        .patient-detail {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        .patient-detail strong {
-            display: block;
-            margin-bottom: 0.5rem;
-            opacity: 0.9;
-        }
-
-        .triage-assessment {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .triage-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .triage-emergency {
-            background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
-            animation: pulse 2s infinite;
-        }
-
-        .triage-urgent {
-            background: linear-gradient(135deg, #ffa502 0%, #ff6348 100%);
-        }
-
-        .triage-routine {
-            background: linear-gradient(135deg, #2ed573 0%, #1e90ff 100%);
-        }
-
-        .triage-selfcare {
-            background: linear-gradient(135deg, #70a1ff 0%, #5352ed 100%);
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .confidence-level {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-        }
-
-        .confidence-high {
-            color: #2ed573;
-        }
-
-        .confidence-medium {
-            color: #ffa502;
-        }
-
-        .confidence-low {
-            color: #ff4757;
-        }
-
-        .conditions-section {
-            margin-bottom: 2rem;
-        }
-
-        .conditions-section h3 {
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 1rem;
-            color: #333;
-        }
-
-        .condition-item {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border-left: 5px solid #667eea;
-            transition: transform 0.3s ease;
-        }
-
-        .condition-item:hover {
-            transform: translateX(10px);
-        }
-
-        .condition-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .condition-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .condition-badges {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .badge-emergency {
-            background: #ff4757;
-            color: white;
-        }
-
-        .badge-urgent {
-            background: #ffa502;
-            color: white;
-        }
-
-        .badge-routine {
-            background: #2ed573;
-            color: white;
-        }
-
-        .badge-cardio {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .badge-resp {
-            background: #4ecdc4;
-            color: white;
-        }
-
-        .badge-neuro {
-            background: #a55eea;
-            color: white;
-        }
-
-        .badge-gi {
-            background: #26de81;
-            color: white;
-        }
-
-        .badge-infectious {
-            background: #fd79a8;
-            color: white;
-        }
-
-        .badge-musculo {
-            background: #fdcb6e;
-            color: white;
-        }
-
-        .badge-other {
-            background: #636e72;
-            color: white;
-        }
-
-        .condition-details {
-            color: #666;
-        }
-
-        .condition-probability {
-            margin-bottom: 1rem;
-        }
-
-        .probability-bar {
-            width: 100%;
-            height: 8px;
-            background: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-
-        .probability-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.5s ease;
-        }
-
-        .matched-symptoms {
-            margin-bottom: 0.5rem;
-        }
-
-        .symptoms-list {
-            font-style: italic;
-            color: #667eea;
-        }
-
-        .risk-factor-match {
-            color: #ff6b6b;
-            font-weight: 600;
-        }
-
-        .risk-assessment {
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .risk-factors {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        .risk-factor {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            background: white;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .risk-low {
-            color: #2ed573;
-            font-weight: 600;
-        }
-
-        .risk-moderate {
-            color: #ffa502;
-            font-weight: 600;
-        }
-
-        .risk-high {
-            color: #ff4757;
-            font-weight: 600;
-        }
-
-        .recommendations-section {
-            background: linear-gradient(135deg, #2ed573 0%, #1e90ff 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .recommendations-section h3 {
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 1rem;
-        }
-
-        .recommendation-item,
-        .next-step-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        .recommendation-icon,
-        .step-icon {
-            font-size: 1.2rem;
-            margin-top: 0.2rem;
-        }
-
-        .medical-disclaimer {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .disclaimer-content h4 {
-            color: #856404;
-            margin-bottom: 1rem;
-        }
-
-        .disclaimer-content p {
-            color: #856404;
-            margin-bottom: 1rem;
-        }
-
-        .disclaimer-content ul {
-            color: #856404;
-            padding-left: 1.5rem;
-        }
-
-        .disclaimer-content li {
-            margin-bottom: 0.5rem;
-        }
-
-        .clinical-insights {
-            margin-bottom: 2rem;
-        }
-
-        .insights-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-        }
-
-        .insight-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 1px solid #e9ecef;
-            transition: transform 0.3s ease;
-        }
-
-        .insight-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .insight-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .insight-content h4 {
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-
-        .insight-content p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .back-button {
-            margin-top: 2rem;
-            text-align: center;
-        }
-
-        .no-conditions {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 2rem;
-        }
-
-        /* Features Section */
-        .features {
-            background: white;
-            padding: 4rem 0;
-            margin: 2rem 0;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .features h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            color: #333;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 2rem;
-            border-radius: 15px;
-            background: #f8f9fa;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h4 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: #333;
-        }
-
-        .feature-card p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        /* Footer */
-        .footer {
-            background: #2d3748;
-            color: white;
-            padding: 3rem 0 1rem;
-            margin-top: 4rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-logo h4 {
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 1rem;
-        }
-
-        .footer-logo p {
-            opacity: 0.8;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            opacity: 1;
-        }
-
-        .footer-disclaimer {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 10px;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0.8;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: flex;
-            }
-
-            .nav {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                padding: 1rem;
-            }
-
-            .nav.active {
-                display: block;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .hero-content h2 {
-                font-size: 2.5rem;
-            }
-
-            .hero-content p {
-                font-size: 1rem;
-            }
-
-            .condition-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .patient-details {
-                grid-template-columns: 1fr;
-            }
-
-            .risk-factors {
-                grid-template-columns: 1fr;
-            }
-
-            .insights-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="preloader">
@@ -941,8 +21,8 @@
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href="#home" class="active">Home</a></li>
-                    <li><a href="#checker">Symptom Checker</a></li>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="checker.html">Symptom Checker</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
@@ -957,75 +37,112 @@
     </header>
 
     <main>
-        <section id="home" class="hero">
+        <section class="hero">
             <div class="container">
                 <div class="hero-content">
                     <h2 class="animate__animated animate__fadeInDown">Advanced AI-Powered Health Assessment</h2>
                     <p class="animate__animated animate__fadeInUp">Get instant, accurate health insights with our cutting-edge artificial intelligence symptom checker.</p>
-                    <a href="#checker" class="btn-primary animate__animated animate__fadeInUp animate__delay-1s">Check Symptoms Now</a>
+                    <a href="checker.html" class="btn-primary animate__animated animate__fadeInUp animate__delay-1s">Check Symptoms Now</a>
+                </div>
+                <div class="hero-image animate__animated animate__fadeInRight">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Medical AI">
                 </div>
             </div>
         </section>
 
-        <section id="checker" class="symptom-checker">
+        <section id="features" class="features">
             <div class="container">
-                <form id="symptomForm" class="symptom-form">
-                    <h2 style="text-align: center; margin-bottom: 2rem; font-family: 'Playfair Display', serif; color: #333;">AI Symptom Analysis</h2>
-                    
-                    <div class="form-group">
-                        <label for="age">Age</label>
-                        <input type="number" id="age" name="age" min="1" max="120" required>
+                <h3>Why Choose Rapid Health Checker AI?</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h4>Advanced AI Analysis</h4>
+                        <p>Our proprietary algorithm analyzes thousands of data points to provide accurate health assessments.</p>
                     </div>
-
-                    <div class="form-group">
-                        <label for="gender">Gender</label>
-                        <select id="gender" name="gender" required>
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h4>Instant Results</h4>
+                        <p>Get triage recommendations and potential conditions in seconds, not days.</p>
                     </div>
-
-                    <div class="form-group">
-                        <label for="symptoms">Describe Your Symptoms</label>
-                        <textarea id="symptoms" name="symptoms" placeholder="Enter your symptoms separated by commas (e.g., headache, fever, nausea)" required></textarea>
-                        <div id="symptomSuggestions" class="symptom-suggestions"></div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🩺</div>
+                        <h4>Medical Expertise</h4>
+                        <p>Built with guidance from board-certified physicians and medical professionals.</p>
                     </div>
-
-                    <div class="form-group">
-                        <label for="duration">How long have you had these symptoms?</label>
-                        <select id="duration" name="duration">
-                            <option value="">Select Duration</option>
-                            <option value="less-than-1-day">Less than 1 day</option>
-                            <option value="1-3-days">1-3 days</option>
-                            <option value="4-7-days">4-7 days</option>
-                            <option value="1-2-weeks">1-2 weeks</option>
-                            <option value="more-than-2-weeks">More than 2 weeks</option>
-                        </select>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h4>Secure & Private</h4>
+                        <p>Your health data is encrypted and never stored without your permission.</p>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="form-group">
-                        <label for="severity">Symptom Severity (1-10)</label>
-                        <div class="severity-slider">
-                            <input type="range" id="severity" name="severity" min="1" max="10" value="5">
-                            <div class="severity-labels">
-                                <span>Mild (1)</span>
-                                <span id="severityValue">5</span>
-                                <span>Severe (10)</span>
-                            </div>
+        <section class="testimonials">
+            <div class="container">
+                <h3>Trusted by Thousands</h3>
+                <div class="testimonial-slider">
+                    <div class="testimonial">
+                        <p>"This AI symptom checker helped identify my appendicitis when I wasn't sure if I should go to the ER. It literally saved my life!"</p>
+                        <div class="testimonial-author">
+                            <strong>Ahmed J.</strong>
+                            <span>Columbia, MO</span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="form-group">
-                        <label for="medicalHistory">Medical History</label>
-                        <textarea id="medicalHistory" name="medicalHistory" placeholder="List any existing medical conditions, allergies, or past surgeries (optional)"></textarea>
-                    </div>
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <h3>About Our Technology</h3>
+                    <p>Rapid Health Checker AI utilizes state-of-the-art machine learning algorithms trained on millions of medical cases, peer-reviewed research, and clinical guidelines to provide the most accurate symptom analysis available to consumers.</p>
+                    <p>Our system continuously learns and improves, incorporating the latest medical knowledge to ensure you receive up-to-date health information.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="AI Technology">
+                </div>
+            </div>
+        </section>
 
-                    <div class="form-group">
-                        <label for="medications">Current Medications</label>
-                        <textarea id="medications" name="medications" placeholder="List any medications you're currently taking (optional)"></textarea>
-                    </div>
+        <section id="contact" class="cta">
+            <div class="container">
+                <h3>Ready to Check Your Symptoms?</h3>
+                <p>Get started with our advanced AI health checker now.</p>
+                <a href="checker.html" class="btn-primary">Start Symptom Check</a>
+            </div>
+        </section>
+    </main>
 
-                    <div class="form-group">
-                        <label for="lifestyle">Lifestyle 
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-icon">⚕️</span>
+                    <h4>Rapid Health Checker AI</h4>
+                    <p>Advanced AI for better health decisions.</p>
+                </div>
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="checker.html">Symptom Checker</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-disclaimer">
+                    <p><strong>Disclaimer:</strong> This tool does not provide medical advice. It is intended for informational purposes only. Always consult a physician for medical advice.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Rapid Health Checker AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
