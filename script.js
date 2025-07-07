@@ -1,4 +1,4 @@
- // Preloader
+// Preloader
 window.addEventListener('load', function() {
     const preloader = document.querySelector('.preloader');
     preloader.classList.add('fade-out');
@@ -115,21 +115,24 @@ severitySlider.addEventListener('input', function() {
     severityValue.textContent = this.value;
 });
 
+// Gemini API Integration
+const GEMINI_API_KEY = 'AIzaSyChqoxkLn5RviAleTg1-rONge4HFwH2pZU'; // ⚠️ WARNING: Only for development!
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
 // Symptom Checker Form Submission
 const symptomForm = document.getElementById('symptomForm');
 const analyzeBtn = document.getElementById('analyzeBtn');
 const resultsSection = document.getElementById('resultsSection');
 
-symptomForm.addEventListener('submit', function(e) {
+symptomForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // Show loading state
     analyzeBtn.innerHTML = '<span class="loader-btn"></span> Analyzing...';
     analyzeBtn.disabled = true;
     
-    // Simulate API call delay
-    setTimeout(() => {
-        processSymptoms();
+    try {
+        await processSymptoms();
         
         // Hide form and show results
         symptomForm.style.display = 'none';
@@ -137,10 +140,15 @@ symptomForm.addEventListener('submit', function(e) {
         
         // Scroll to results
         resultsSection.scrollIntoView({ behavior: 'smooth' });
-    }, 1500);
+    } catch (error) {
+        console.error('Error:', error);
+        analyzeBtn.innerHTML = 'Try Again';
+        analyzeBtn.disabled = false;
+        alert('There was an error analyzing your symptoms. Please try again.');
+    }
 });
 
-function processSymptoms() {
+async function processSymptoms() {
     // Get form values
     const age = document.getElementById('age').value;
     const gender = document.getElementById('gender').value;
@@ -154,9 +162,106 @@ function processSymptoms() {
     document.getElementById('resultGender').textContent = gender.charAt(0).toUpperCase() + gender.slice(1);
     document.getElementById('resultSymptoms').textContent = symptoms;
     
-    // Process symptoms with AI (simulated)
-    const analysisResults = analyzeSymptoms(age, gender, symptoms, duration, severity, additionalInfo);
+    try {
+        // Try Gemini API first
+        const analysisResults = await analyzeWithGemini(age, gender, symptoms, duration, severity, additionalInfo);
+        displayResults(analysisResults);
+    } catch (apiError) {
+        console.warn('API failed, using fallback:', apiError);
+        // Fallback to local analysis
+        const analysisResults = analyzeSymptoms(age, gender, symptoms, duration, severity, additionalInfo);
+        displayResults(analysisResults);
+        
+        // Show warning to user
+        const warning = document.createElement('div');
+        warning.className = 'api-warning';
+        warning.innerHTML = '<p>⚠️ Showing results from our local database. For more accurate analysis, please try again later.</p>';
+        resultsSection.prepend(warning);
+    }
+}
+
+async function analyzeWithGemini(age, gender, symptoms, duration, severity, additionalInfo) {
+    const prompt = `You are a medical triage assistant. Analyze these symptoms and provide:
+1. Triage level (Emergency, Urgent, Routine, or Self-care)
+2. Top 3-5 potential conditions with probability percentages
+3. Practical recommendations
+4. Clear next steps
+
+Patient details:
+- Age: ${age}
+- Gender: ${gender}
+- Symptoms: ${symptoms}
+- Duration: ${duration}
+- Severity: ${severity}/10
+- Additional info: ${additionalInfo || 'none'}
+
+Format your response as valid JSON with this exact structure:
+{
+    "triage": {
+        "level": "Emergency/Urgent/Routine/Self-care",
+        "description": "1-2 sentence explanation"
+    },
+    "conditions": [
+        {
+            "name": "condition name",
+            "probability": "percentage"
+        }
+    ],
+    "recommendations": [
+        "array of recommendations"
+    ],
+    "nextSteps": [
+        "array of next steps"
+    ]
+}
+
+Only respond with the JSON object.`;
+
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }]
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    const responseText = data.candidates[0].content.parts[0].text;
     
+    try {
+        // Clean the response and parse JSON
+        const jsonStart = responseText.indexOf('{');
+        const jsonEnd = responseText.lastIndexOf('}') + 1;
+        const jsonResponse = JSON.parse(responseText.slice(jsonStart, jsonEnd));
+        
+        // Add triage class
+        jsonResponse.triage.class = getTriageClass(jsonResponse.triage.level);
+        return jsonResponse;
+    } catch (parseError) {
+        console.error('Failed to parse response:', responseText);
+        throw new Error('Could not parse API response');
+    }
+}
+
+function getTriageClass(level) {
+    level = level.toLowerCase();
+    if (level.includes('emergency')) return 'triage-emergency';
+    if (level.includes('urgent')) return 'triage-urgent';
+    if (level.includes('routine')) return 'triage-routine';
+    return 'triage-self-care';
+}
+
+function displayResults(analysisResults) {
     // Display triage level
     const triageValue = document.getElementById('triageValue');
     triageValue.textContent = analysisResults.triage.level;
@@ -189,169 +294,9 @@ function processSymptoms() {
     ).join('');
 }
 
-// Advanced AI Symptom Analysis (simulated)
+// Local fallback analysis
 function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalInfo) {
-    // Convert symptoms to array
-    const symptomList = symptoms.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
-    
-    // Determine triage level based on symptoms and severity
-    let triageLevel = 'Self-care';
-    let triageClass = 'triage-self-care';
-    let triageDescription = 'Your symptoms suggest a mild condition that can typically be managed with self-care at home.';
-    
-    // Emergency conditions
-    const emergencyKeywords = ['chest pain', 'shortness of breath', 'severe headache', 'uncontrolled bleeding', 'sudden weakness', 'difficulty speaking'];
-    if (emergencyKeywords.some(keyword => symptoms.toLowerCase().includes(keyword)) || severity >= 9) {
-        triageLevel = 'Emergency';
-        triageClass = 'triage-emergency';
-        triageDescription = 'Your symptoms suggest a potentially life-threatening condition that requires IMMEDIATE medical attention. Call emergency services or go to the nearest emergency department.';
-    }
-    // Urgent conditions
-    else if (symptomList.includes('high fever') || symptomList.includes('severe pain') || severity >= 7) {
-        triageLevel = 'Urgent';
-        triageClass = 'triage-urgent';
-        triageDescription = 'Your symptoms suggest a condition that should be evaluated by a healthcare provider within 24 hours. Contact your doctor or visit an urgent care facility.';
-    }
-    // Routine conditions
-    else if (symptomList.length >= 3 || severity >= 5) {
-        triageLevel = 'Routine';
-        triageClass = 'triage-routine';
-        triageDescription = 'Your symptoms suggest a condition that should be evaluated by a healthcare provider, but not urgently. Schedule an appointment with your doctor.';
-    }
-    
-    // Generate potential conditions based on symptoms
-    const conditions = [];
-    
-    // Common condition database
-    const conditionDatabase = [
-        { name: "Common Cold", symptoms: ["cough", "sore throat", "runny nose", "congestion", "sneezing"], probability: 30 },
-        { name: "Influenza (Flu)", symptoms: ["fever", "cough", "fatigue", "muscle pain", "headache"], probability: 25 },
-        { name: "Migraine", symptoms: ["headache", "nausea", "dizziness", "sensitivity to light"], probability: 20 },
-        { name: "Sinusitis", symptoms: ["facial pain", "congestion", "headache", "postnasal drip"], probability: 15 },
-        { name: "Allergic Rhinitis", symptoms: ["sneezing", "runny nose", "itchy eyes", "congestion"], probability: 15 },
-        { name: "Gastroenteritis", symptoms: ["nausea", "vomiting", "diarrhea", "abdominal pain"], probability: 15 },
-        { name: "Urinary Tract Infection", symptoms: ["painful urination", "frequent urination", "abdominal pain"], probability: 10 },
-        { name: "Tension Headache", symptoms: ["headache", "stress", "neck pain"], probability: 10 },
-        { name: "COVID-19", symptoms: ["fever", "cough", "shortness of breath", "fatigue", "loss of taste or smell"], probability: 10 },
-        { name: "Anxiety Disorder", symptoms: ["anxiety", "irritability", "palpitations", "sweating"], probability: 5 }
-    ];
-    
-    // Match symptoms to conditions
-    conditionDatabase.forEach(condition => {
-        const matchingSymptoms = condition.symptoms.filter(symptom => 
-            symptomList.includes(symptom.toLowerCase())
-        ).length;
-        
-        if (matchingSymptoms > 0) {
-            // Calculate probability based on symptom matches and severity
-            let probability = condition.probability + (matchingSymptoms * 5) + (severity * 2);
-            probability = Math.min(probability, 95); // Cap at 95%
-            
-            conditions.push({
-                name: condition.name,
-                probability: probability
-            });
-        }
-    });
-    
-    // Sort conditions by probability
-    conditions.sort((a, b) => b.probability - a.probability);
-    
-    // Limit to top 5 conditions
-    const topConditions = conditions.slice(0, 5);
-    
-    // Generate recommendations based on triage level
-    let recommendations = [];
-    let nextSteps = [];
-    
-    if (triageLevel === 'Emergency') {
-        recommendations = [
-            "Call emergency services (911 or local emergency number) immediately.",
-            "Do not attempt to drive yourself to the hospital.",
-            "If experiencing chest pain, chew one adult aspirin (unless allergic).",
-            "Remain calm and try to stay still while waiting for help."
-        ];
-        
-        nextSteps = [
-            "Emergency medical team will assess your condition upon arrival.",
-            "You will likely be transported to the nearest emergency department.",
-            "Bring a list of any medications you're currently taking.",
-            "Notify family members or friends about your situation."
-        ];
-    } 
-    else if (triageLevel === 'Urgent') {
-        recommendations = [
-            "Contact your primary care physician or visit an urgent care facility within 24 hours.",
-            "Rest and stay hydrated.",
-            "Monitor your symptoms closely for any worsening.",
-            "Take over-the-counter pain relievers as needed (following package instructions)."
-        ];
-        
-        nextSteps = [
-            "Prepare a list of your symptoms, including when they started and what makes them better or worse.",
-            "Bring your insurance information and photo ID to your appointment.",
-            "Be ready to provide your medical history, including any chronic conditions and medications.",
-            "Consider having someone accompany you to your appointment."
-        ];
-    }
-    else if (triageLevel === 'Routine') {
-        recommendations = [
-            "Schedule an appointment with your healthcare provider in the next few days.",
-            "Keep a symptom diary to track patterns or triggers.",
-            "Get plenty of rest and maintain good hydration.",
-            "Use over-the-counter remedies as appropriate for symptom relief."
-        ];
-        
-        nextSteps = [
-            "Call your doctor's office to schedule an appointment.",
-            "Write down any questions you have for your healthcare provider.",
-            "Check if you need any lab tests or imaging before your appointment.",
-            "Review your family medical history for relevant conditions."
-        ];
-    }
-    else {
-        recommendations = [
-            "Your symptoms may resolve with self-care and time.",
-            "Get plenty of rest and stay hydrated.",
-            "Use over-the-counter medications as needed for symptom relief.",
-            "Practice good hygiene to prevent spreading illness if contagious."
-        ];
-        
-        nextSteps = [
-            "Monitor your symptoms for 48 hours.",
-            "If symptoms persist beyond 3-5 days or worsen, contact your healthcare provider.",
-            "Consider telemedicine options if you want professional advice without an office visit.",
-            "Maintain a healthy diet and light activity as tolerated."
-        ];
-    }
-    
-    // Add general health recommendations
-    recommendations.push(
-        "Wash your hands frequently to prevent spreading or catching infections.",
-        "Get adequate sleep to support your immune system.",
-        "Consider using a humidifier if you have respiratory symptoms.",
-        "Avoid smoking and secondhand smoke exposure."
-    );
-    
-    // Add COVID-19 specific advice if relevant
-    if (symptomList.some(s => ["fever", "cough", "shortness of breath", "loss of taste", "loss of smell"].includes(s))) {
-        recommendations.push(
-            "Consider getting tested for COVID-19.",
-            "Self-isolate until you can be tested or symptoms improve.",
-            "Wear a mask if you must be around others."
-        );
-    }
-    
-    return {
-        triage: {
-            level: triageLevel,
-            class: triageClass,
-            description: triageDescription
-        },
-        conditions: topConditions,
-        recommendations: recommendations,
-        nextSteps: nextSteps
-    };
+    // ... (keep your existing analyzeSymptoms function exactly as is) ...
 }
 
 // Back button functionality for results page
@@ -412,5 +357,4 @@ function animateOnScroll() {
 
 window.addEventListener('scroll', animateOnScroll);
 // Initial check in case elements are already in view
-animateOnScroll(); 
-
+animateOnScroll();
