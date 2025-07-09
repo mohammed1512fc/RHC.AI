@@ -4,7 +4,7 @@ window.addEventListener('load', function() {
     preloader.classList.add('fade-out');
     setTimeout(() => {
         preloader.style.display = 'none';
-    }, 500);
+    }, 0);
 });
 
 // Mobile Menu Toggle
