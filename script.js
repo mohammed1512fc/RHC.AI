@@ -280,7 +280,7 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
     
     // Common condition database
     const conditionDatabase = [
-        { 
+         { 
             name: "Common Cold", 
             symptoms: ["cough", "sore throat", "runny nose", "congestion", "sneezing"], 
             probability: 30,
@@ -499,22 +499,66 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
         { name: "Breast Cancer", symptoms: ["breast lump", "breast pain", "nipple discharge", "skin changes"], probability: 1, warning: "Requires immediate medical evaluation" },
         { name: "Lung Cancer", symptoms: ["chronic cough", "coughing blood", "chest pain", "weight loss"], probability: 1, warning: "Requires immediate medical evaluation" },
         { name: "Colorectal Cancer", symptoms: ["rectal bleeding", "abdominal pain", "change in bowel habits", "weight loss"], probability: 1, warning: "Requires immediate medical evaluation" },
+        
+        // And many more conditions can be added to reach 200+
+    ];
     
-    // Match symptoms to conditions
+    // Match symptoms to conditions with more sophisticated algorithm
     conditionDatabase.forEach(condition => {
         const matchingSymptoms = condition.symptoms.filter(symptom => 
-            symptomList.includes(symptom.toLowerCase())
+            symptomList.some(userSymptom => 
+                userSymptom.includes(symptom.toLowerCase()) || 
+                symptom.toLowerCase().includes(userSymptom)
         ).length;
         
         if (matchingSymptoms > 0) {
-            // Calculate probability based on symptom matches and severity
-            let probability = condition.probability + (matchingSymptoms * 5) + (severity * 2);
-            probability = Math.min(probability, 95); // Cap at 95%
+            // Calculate probability based on multiple factors
+            let probability = condition.probability;
             
-            conditions.push({
-                name: condition.name,
-                probability: probability
-            });
+            // Increase probability based on number of matching symptoms
+            probability += matchingSymptoms * 5;
+            
+            // Adjust based on severity
+            probability += (severity / 10) * 5;
+            
+            // Age adjustments for certain conditions
+            if (ageNum > 50) {
+                if (condition.name.includes("Arthritis") || condition.name.includes("Hypertension")) {
+                    probability += 10;
+                }
+            }
+            
+            if (ageNum < 18) {
+                if (condition.name.includes("Pediatric") || condition.name.includes("Ear Infection")) {
+                    probability += 15;
+                }
+            }
+            
+            // Gender adjustments
+            if (gender === 'female') {
+                if (condition.name.includes("PMS") || condition.name.includes("Endometriosis")) {
+                    probability += 15;
+                }
+            }
+            
+            if (gender === 'male') {
+                if (condition.name.includes("Prostate") || condition.name.includes("Erectile")) {
+                    probability += 15;
+                }
+            }
+            
+            // Cap probability
+            probability = Math.min(probability, 95);
+            
+            // Only include if probability reaches a threshold
+            if (probability >= 10) {
+                conditions.push({
+                    name: condition.name,
+                    probability: Math.round(probability),
+                    description: condition.description || "No additional description available",
+                    warning: condition.warning || ""
+                });
+            }
         }
     });
     
@@ -527,20 +571,30 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
     // Generate recommendations based on triage level
     let recommendations = [];
     let nextSteps = [];
+    let whenToSeekHelp = [];
+    let preventionTips = [];
     
     if (triageLevel === 'Emergency') {
         recommendations = [
             "Call emergency services (911 or local emergency number) immediately.",
             "Do not attempt to drive yourself to the hospital.",
             "If experiencing chest pain, chew one adult aspirin (unless allergic).",
-            "Remain calm and try to stay still while waiting for help."
+            "Remain calm and try to stay still while waiting for help.",
+            "If someone is with you, have them gather your medical information."
         ];
         
         nextSteps = [
             "Emergency medical team will assess your condition upon arrival.",
             "You will likely be transported to the nearest emergency department.",
             "Bring a list of any medications you're currently taking.",
-            "Notify family members or friends about your situation."
+            "Notify family members or friends about your situation.",
+            "Follow all instructions from emergency responders carefully."
+        ];
+        
+        whenToSeekHelp = [
+            "Immediate help is already recommended for your symptoms",
+            "If symptoms worsen while waiting for help, call emergency services again",
+            "If symptoms suddenly improve, still seek medical evaluation"
         ];
     } 
     else if (triageLevel === 'Urgent') {
@@ -548,14 +602,30 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
             "Contact your primary care physician or visit an urgent care facility within 24 hours.",
             "Rest and stay hydrated.",
             "Monitor your symptoms closely for any worsening.",
-            "Take over-the-counter pain relievers as needed (following package instructions)."
+            "Take over-the-counter pain relievers as needed (following package instructions).",
+            "Keep a log of your symptoms, including temperature if you have a fever."
         ];
         
         nextSteps = [
             "Prepare a list of your symptoms, including when they started and what makes them better or worse.",
             "Bring your insurance information and photo ID to your appointment.",
             "Be ready to provide your medical history, including any chronic conditions and medications.",
-            "Consider having someone accompany you to your appointment."
+            "Consider having someone accompany you to your appointment.",
+            "Ask your provider about any tests that might be needed."
+        ];
+        
+        whenToSeekHelp = [
+            "If symptoms worsen before your appointment",
+            "If you develop new concerning symptoms like difficulty breathing or severe pain",
+            "If you're unable to keep fluids down",
+            "If you develop a high fever (over 103°F or 39.4°C)"
+        ];
+        
+        preventionTips = [
+            "Wash hands frequently to prevent spreading infection",
+            "Cover coughs and sneezes",
+            "Stay home from work/school until evaluated",
+            "Disinfect commonly touched surfaces"
         ];
     }
     else if (triageLevel === 'Routine') {
@@ -563,14 +633,31 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
             "Schedule an appointment with your healthcare provider in the next few days.",
             "Keep a symptom diary to track patterns or triggers.",
             "Get plenty of rest and maintain good hydration.",
-            "Use over-the-counter remedies as appropriate for symptom relief."
+            "Use over-the-counter remedies as appropriate for symptom relief.",
+            "Practice stress-reduction techniques like deep breathing."
         ];
         
         nextSteps = [
             "Call your doctor's office to schedule an appointment.",
             "Write down any questions you have for your healthcare provider.",
             "Check if you need any lab tests or imaging before your appointment.",
-            "Review your family medical history for relevant conditions."
+            "Review your family medical history for relevant conditions.",
+            "Bring a list of all medications and supplements you're taking."
+        ];
+        
+        whenToSeekHelp = [
+            "If symptoms worsen before your appointment",
+            "If symptoms persist beyond 1-2 weeks",
+            "If you develop new concerning symptoms",
+            "If over-the-counter medications aren't helping"
+        ];
+        
+        preventionTips = [
+            "Maintain a healthy diet rich in fruits and vegetables",
+            "Exercise regularly as tolerated",
+            "Practice good sleep hygiene",
+            "Stay up-to-date with recommended vaccinations",
+            "Manage stress through relaxation techniques"
         ];
     }
     else {
@@ -578,14 +665,31 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
             "Your symptoms may resolve with self-care and time.",
             "Get plenty of rest and stay hydrated.",
             "Use over-the-counter medications as needed for symptom relief.",
-            "Practice good hygiene to prevent spreading illness if contagious."
+            "Practice good hygiene to prevent spreading illness if contagious.",
+            "Monitor your symptoms for any changes."
         ];
         
         nextSteps = [
             "Monitor your symptoms for 48 hours.",
             "If symptoms persist beyond 3-5 days or worsen, contact your healthcare provider.",
             "Consider telemedicine options if you want professional advice without an office visit.",
-            "Maintain a healthy diet and light activity as tolerated."
+            "Maintain a healthy diet and light activity as tolerated.",
+            "Keep a symptom log if symptoms persist."
+        ];
+        
+        whenToSeekHelp = [
+            "If symptoms worsen or don't improve in 3-5 days",
+            "If you develop new concerning symptoms",
+            "If you have underlying health conditions that might complicate recovery",
+            "If symptoms interfere significantly with daily activities"
+        ];
+        
+        preventionTips = [
+            "Wash hands frequently with soap and water",
+            "Avoid close contact with sick individuals",
+            "Don't share personal items like utensils or towels",
+            "Clean and disinfect frequently touched surfaces",
+            "Maintain a healthy lifestyle to support your immune system"
         ];
     }
     
@@ -594,7 +698,8 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
         "Wash your hands frequently to prevent spreading or catching infections.",
         "Get adequate sleep to support your immune system.",
         "Consider using a humidifier if you have respiratory symptoms.",
-        "Avoid smoking and secondhand smoke exposure."
+        "Avoid smoking and secondhand smoke exposure.",
+        "Maintain a balanced diet with plenty of fruits and vegetables."
     );
     
     // Add COVID-19 specific advice if relevant
@@ -602,7 +707,49 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
         recommendations.push(
             "Consider getting tested for COVID-19.",
             "Self-isolate until you can be tested or symptoms improve.",
-            "Wear a mask if you must be around others."
+            "Wear a mask if you must be around others.",
+            "Monitor oxygen levels with a pulse oximeter if available."
+        );
+        
+        whenToSeekHelp.push(
+            "If you develop difficulty breathing",
+            "If you have persistent chest pain or pressure",
+            "If you develop confusion or inability to stay awake",
+            "If your lips or face turn bluish"
+        );
+    }
+    
+    // Add allergy-specific advice if relevant
+    if (symptomList.some(s => ["sneezing", "runny nose", "itchy eyes", "nasal congestion"].includes(s))) {
+        recommendations.push(
+            "Try over-the-counter antihistamines if appropriate.",
+            "Use saline nasal rinses to clear allergens.",
+            "Keep windows closed during high pollen seasons.",
+            "Shower after being outdoors to remove allergens."
+        );
+        
+        preventionTips.push(
+            "Identify and avoid allergy triggers",
+            "Use allergen-proof bedding covers",
+            "Consider air purifiers with HEPA filters",
+            "Monitor pollen counts and plan activities accordingly"
+        );
+    }
+    
+    // Add mental health advice if relevant
+    if (symptomList.some(s => ["anxiety", "depression", "mood swings", "irritability"].includes(s))) {
+        recommendations.push(
+            "Practice relaxation techniques like deep breathing or meditation.",
+            "Maintain a regular sleep schedule.",
+            "Stay connected with supportive friends or family.",
+            "Consider speaking with a mental health professional."
+        );
+        
+        whenToSeekHelp.push(
+            "If you have thoughts of harming yourself or others",
+            "If symptoms interfere with daily functioning",
+            "If symptoms persist for more than two weeks",
+            "If you're using substances to cope with symptoms"
         );
     }
     
@@ -614,7 +761,9 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
         },
         conditions: topConditions,
         recommendations: recommendations,
-        nextSteps: nextSteps
+        nextSteps: nextSteps,
+        whenToSeekHelp: whenToSeekHelp,
+        preventionTips: preventionTips
     };
 }
 
@@ -676,4 +825,47 @@ function animateOnScroll() {
 
 window.addEventListener('scroll', animateOnScroll);
 // Initial check in case elements are already in view
-animateOnScroll(); 
+animateOnScroll();
+
+// Add symptom chips functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const symptomsInput = document.getElementById('symptoms');
+    
+    if (symptomsInput) {
+        symptomsInput.addEventListener('keydown', function(e) {
+            if (e.key === ',' || e.key === 'Enter') {
+                setTimeout(() => {
+                    const value = this.value.trim();
+                    if (value) {
+                        createSymptomChips(value);
+                        this.value = '';
+                    }
+                }, 10);
+            }
+        });
+    }
+});
+
+function createSymptomChips(symptomsText) {
+    const chipsContainer = document.getElementById('symptomChipsContainer');
+    if (!chipsContainer) return;
+    
+    const symptoms = symptomsText.split(',')
+        .map(s => s.trim())
+        .filter(s => s);
+    
+    symptoms.forEach(symptom => {
+        const chip = document.createElement('div');
+        chip.className = 'symptom-chip';
+        chip.innerHTML = `
+            ${symptom}
+            <span class="chip-remove">&times;</span>
+        `;
+        
+        chip.querySelector('.chip-remove').addEventListener('click', function() {
+            chip.remove();
+        });
+        
+        chipsContainer.appendChild(chip);
+    });
+} 
