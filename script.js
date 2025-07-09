@@ -1,10 +1,15 @@
-// Preloader
 window.addEventListener('load', function() {
-    const preloader = document.querySelector('.preloader');
-    preloader.classList.add('fade-out');
-    setTimeout(() => {
-        preloader.style.display = 'none';
-    }, 500);
+    try {
+        const preloader = document.querySelector('.preloader');
+        if (preloader) {
+            preloader.classList.add('fade-out');
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        }
+    } catch (e) {
+        console.error("Preloader error:", e);
+    }
 });
 
 // Mobile Menu Toggle
