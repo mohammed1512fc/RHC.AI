@@ -4,7 +4,7 @@ window.addEventListener('load', function() {
     preloader.classList.add('fade-out');
     setTimeout(() => {
         preloader.style.display = 'none';
-    }, 0);
+    }, 500);
 });
 
 // Mobile Menu Toggle
@@ -19,7 +19,7 @@ mobileMenuBtn.addEventListener('click', function() {
 // Header Scroll Effect
 window.addEventListener('scroll', function() {
     const header = document.querySelector('.header');
-    if (window.scrollY > 0) {
+    if (window.scrollY > 50) {
         header.classList.add('scrolled');
     } else {
         header.classList.remove('scrolled');
@@ -32,28 +32,64 @@ const suggestionsContainer = document.getElementById('symptomSuggestions');
 
 // Extensive list of common symptoms
 const commonSymptoms = [
-    "headache", "fever", "cough", "fatigue", "nausea", "dizziness", 
-    "shortness of breath", "chest pain", "abdominal pain", "back pain",
-    "joint pain", "muscle pain", "sore throat", "runny nose", "congestion",
-    "sneezing", "rash", "itching", "swelling", "redness", "bruising",
-    "bleeding", "diarrhea", "constipation", "vomiting", "loss of appetite",
-    "weight loss", "weight gain", "insomnia", "anxiety", "depression",
-    "irritability", "confusion", "memory loss", "blurred vision", "eye pain",
-    "ear pain", "hearing loss", "tinnitus", "nasal congestion", "nosebleed",
-    "toothache", "jaw pain", "neck pain", "shoulder pain", "arm pain",
-    "hand pain", "finger pain", "hip pain", "leg pain", "knee pain",
-    "ankle pain", "foot pain", "toe pain", "numbness", "tingling",
-    "weakness", "paralysis", "seizures", "tremors", "palpitations",
-    "irregular heartbeat", "high blood pressure", "low blood pressure",
-    "fainting", "lightheadedness", "dehydration", "excessive thirst",
-    "excessive hunger", "frequent urination", "painful urination",
-    "blood in urine", "difficulty urinating", "incontinence", "swollen lymph nodes",
-    "night sweats", "chills", "hot flashes", "cold intolerance", "heat intolerance",
-    "hair loss", "brittle nails", "dry skin", "oily skin", "acne",
-    "hives", "blisters", "ulcers", "sores", "warts", "moles", "freckles",
-    "birthmarks", "stretch marks", "varicose veins", "swollen ankles",
-    "swollen feet", "swollen hands", "swollen face", "puffiness",
-    "jaundice", "pale skin", "flushing", "cyanosis", "clubbing"
+    "fever", "chills", "fatigue", "weakness", "malaise", "night sweats", 
+    "weight loss", "weight gain", "loss of appetite", "increased appetite",
+    "dehydration", "excessive thirst", "excessive hunger", "swollen glands",
+    "swollen lymph nodes", "generalized pain", "body aches", "stiffness",
+    "headache", "migraine", "dizziness", "lightheadedness", "vertigo", 
+    "fainting", "loss of consciousness", "seizures", "tremors", "twitching",
+    "muscle spasms", "numbness", "tingling", "burning sensation", "weakness",
+    "paralysis", "coordination problems", "balance problems", "clumsiness",
+    "memory loss", "confusion", "disorientation", "difficulty concentrating",
+    "brain fog", "speech difficulty", "slurred speech", "aphasia", 
+    "vision changes", "blurred vision", "double vision", "eye pain",
+    "eye redness", "light sensitivity", "flashing lights", "floaters",
+    "hearing loss", "ringing in ears", "ear pain", "ear discharge",
+    "loss of smell", "loss of taste", "bad taste in mouth", "metallic taste",
+    "cough", "dry cough", "productive cough", "coughing blood", 
+    "shortness of breath", "difficulty breathing", "wheezing", 
+    "chest tightness", "chest pain", "rapid breathing", "shallow breathing",
+    "runny nose", "nasal congestion", "sneezing", "postnasal drip",
+    "nosebleed", "sinus pain", "sinus pressure", "hoarse voice",
+    "sore throat", "throat pain", "difficulty swallowing", 
+    "palpitations", "irregular heartbeat", "rapid heartbeat", "slow heartbeat",
+    "chest pressure", "chest discomfort", "heartburn", "high blood pressure",
+    "low blood pressure", "swelling in legs", "swelling in ankles", 
+    "cold extremities", "poor circulation", "varicose veins",
+    "nausea", "vomiting", "vomiting blood", "diarrhea", "constipation",
+    "black stools", "blood in stool", "abdominal pain", "stomach cramps",
+    "bloating", "gas", "belching", "indigestion", "acid reflux", "heartburn",
+    "loss of appetite", "increased appetite", "unintentional weight loss",
+    "unintentional weight gain", "jaundice", "pale stools", "dark urine",
+    "rectal pain", "anal itching", "hemorrhoids", "difficulty swallowing",
+    "frequent urination", "urgent urination", "painful urination", 
+    "blood in urine", "cloudy urine", "foul-smelling urine", 
+    "difficulty urinating", "incontinence", "leakage", "retention",
+    "lower back pain", "flank pain", "kidney pain",
+    "joint pain", "joint swelling", "joint stiffness", "joint redness",
+    "joint warmth", "muscle pain", "muscle weakness", "muscle cramps",
+    "back pain", "neck pain", "shoulder pain", "arm pain", "elbow pain",
+    "wrist pain", "hand pain", "finger pain", "hip pain", "leg pain",
+    "knee pain", "ankle pain", "foot pain", "toe pain", "bone pain",
+    "limited range of motion", "clicking joints", "popping joints",
+    "rash", "hives", "itching", "dry skin", "oily skin", "acne", "pimples",
+    "boils", "blisters", "ulcers", "sores", "warts", "moles", "freckles",
+    "skin discoloration", "dark spots", "light spots", "redness", 
+    "flushing", "pallor", "bruising", "easy bruising", "slow healing",
+    "hair loss", "excessive hair growth", "brittle nails", "nail changes",
+    "swelling", "edema", "puffiness", "lumps", "bumps", "skin growths,
+    "anxiety", "panic attacks", "depression", "mood swings", "irritability",
+    "agitation", "anger", "apathy", "euphoria", "hallucinations", 
+    "delusions", "paranoia", "suicidal thoughts", "self-harm", 
+    "sleep problems", "insomnia", "excessive sleep", "nightmares",
+    "daytime sleepiness", "fatigue", "lack of energy", "lethargy",
+    "irregular periods", "heavy periods", "painful periods", "missed period",
+    "vaginal discharge", "vaginal itching", "vaginal odor", "vaginal bleeding",
+    "vaginal dryness", "painful intercourse", "pelvic pain", "breast pain",
+    "breast lump", "nipple discharge", "hot flashes", "night sweats",
+    "testicular pain", "testicular swelling", "penile discharge", 
+    "painful erection", "erectile dysfunction", "premature ejaculation",
+    "prostate pain", "difficulty urinating", "decreased libido"
 ];
 
 symptomInput.addEventListener('input', function() {
@@ -224,220 +260,54 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
     
     // Common condition database
     const conditionDatabase = [
-       {  name: "Common Cold",  symptoms: ["cough", "sore throat", "runny nose", "congestion", "sneezing"], 
-            probability: 30,
-            description: "Viral infection of the upper respiratory tract",
-            warning: "Seek care if symptoms last more than 10 days or worsen"
-        },
-           
-        { 
-            name: "Influenza (Flu)", 
-            symptoms: ["fever", "cough", "fatigue", "muscle pain", "headache", "chills"], 
-            probability: 25,
-            description: "Viral infection affecting the respiratory system",
-            warning: "Can lead to serious complications in high-risk groups"
-        },
-        { 
-            name: "COVID-19", 
-            symptoms: ["fever", "cough", "shortness of breath", "fatigue", "loss of taste", "loss of smell"], 
-            probability: 15,
-            description: "Respiratory illness caused by SARS-CoV-2 virus",
-            warning: "Highly contagious - isolate and get tested"
-        },
-        { 
-            name: "Strep Throat", 
-            symptoms: ["sore throat", "fever", "swollen lymph nodes", "painful swallowing", "white patches on tonsils"], 
-            probability: 10,
-            description: "Bacterial infection of the throat and tonsils",
-            warning: "Requires antibiotics to prevent complications"
-        },
-        { 
-            name: "Pneumonia", 
-            symptoms: ["cough", "fever", "shortness of breath", "chest pain", "fatigue"], 
-            probability: 8,
-            description: "Infection that inflames air sacs in one or both lungs",
-            warning: "Can be life-threatening in severe cases"
-        },
-        
-        // Neurological Conditions
-        { 
-            name: "Migraine", 
-            symptoms: ["headache", "nausea", "sensitivity to light", "sensitivity to sound", "aura"], 
-            probability: 20,
-            description: "Recurrent headaches often accompanied by sensory disturbances"
-        },
-        { 
-            name: "Tension Headache", 
-            symptoms: ["headache", "stress", "neck pain", "pressure around forehead"], 
-            probability: 25,
-            description: "Common headache often related to stress or muscle tension"
-        },
-        { 
-            name: "Concussion", 
-            symptoms: ["headache", "confusion", "dizziness", "nausea", "memory problems", "recent head injury"], 
-            probability: 5,
-            description: "Mild traumatic brain injury",
-            warning: "Requires immediate medical evaluation"
-        },
-        
-        // Cardiovascular Conditions
-        { 
-            name: "Hypertension", 
-            symptoms: ["high blood pressure", "headache", "dizziness", "blurred vision"], 
-            probability: 15,
-            description: "Chronic condition of elevated blood pressure",
-            warning: "Silent condition that can lead to serious complications"
-        },
-        { 
-            name: "Heart Attack", 
-            symptoms: ["chest pain", "shortness of breath", "nausea", "sweating", "arm pain"], 
-            probability: 3,
-            description: "Blockage of blood flow to the heart muscle",
-            warning: "MEDICAL EMERGENCY - call 911 immediately"
-        },
-        { 
-            name: "Angina", 
-            symptoms: ["chest pain", "chest pressure", "shortness of breath", "fatigue"], 
-            probability: 5,
-            description: "Reduced blood flow to the heart",
-            warning: "May precede a heart attack"
-        },
-        
-        // Gastrointestinal Conditions
-        { 
-            name: "Gastroenteritis", 
-            symptoms: ["nausea", "vomiting", "diarrhea", "abdominal pain", "fever"], 
-            probability: 20,
-            description: "Inflammation of the stomach and intestines"
-        },
-        { 
-            name: "GERD", 
-            symptoms: ["heartburn", "acid reflux", "regurgitation", "chest pain"], 
-            probability: 18,
-            description: "Chronic acid reflux disease"
-        },
-        { 
-            name: "Irritable Bowel Syndrome", 
-            symptoms: ["abdominal pain", "bloating", "diarrhea", "constipation", "gas"], 
-            probability: 12,
-            description: "Chronic gastrointestinal disorder"
-        },
-        { 
-            name: "Appendicitis", 
-            symptoms: ["abdominal pain", "nausea", "vomiting", "loss of appetite", "fever"], 
-            probability: 4,
-            description: "Inflammation of the appendix",
-            warning: "Requires immediate medical attention"
-        },
-        
-        // Musculoskeletal Conditions
-        { 
-            name: "Osteoarthritis", 
-            symptoms: ["joint pain", "joint stiffness", "swelling", "reduced range of motion"], 
-            probability: 15,
-            description: "Degenerative joint disease"
-        },
-        { 
-            name: "Rheumatoid Arthritis", 
-            symptoms: ["joint pain", "joint swelling", "morning stiffness", "fatigue"], 
-            probability: 5,
-            description: "Autoimmune inflammatory arthritis"
-        },
-        { 
-            name: "Fibromyalgia", 
-            symptoms: ["widespread pain", "fatigue", "sleep problems", "memory issues"], 
-            probability: 6,
-            description: "Chronic pain condition"
-        },
-        
-        // Mental Health Conditions
-        { 
-            name: "Anxiety Disorder", 
-            symptoms: ["anxiety", "worry", "irritability", "palpitations", "sweating"], 
-            probability: 15,
-            description: "Excessive and persistent worry and fear"
-        },
-        { 
-            name: "Depression", 
-            symptoms: ["depressed mood", "loss of interest", "fatigue", "sleep changes", "appetite changes"], 
-            probability: 12,
-            description: "Mood disorder causing persistent sadness"
-        },
-        
-        // Endocrine Conditions
-        { 
-            name: "Diabetes Mellitus", 
-            symptoms: ["excessive thirst", "frequent urination", "fatigue", "blurred vision"], 
-            probability: 10,
-            description: "Chronic metabolic disorder",
-            warning: "Requires medical management"
-        },
-        { 
-            name: "Hypothyroidism", 
-            symptoms: ["fatigue", "weight gain", "cold intolerance", "dry skin", "constipation"], 
-            probability: 8,
-            description: "Underactive thyroid gland"
-        },  
-        // Respiratory Conditions
+        { name: "Common Cold", symptoms: ["cough", "sore throat", "runny nose", "congestion", "sneezing"], probability: 30 },
+        { name: "Influenza (Flu)", symptoms: ["fever", "cough", "fatigue", "muscle pain", "headache"], probability: 25 },
+        { name: "Migraine", symptoms: ["headache", "nausea", "dizziness", "sensitivity to light"], probability: 20 },
+        { name: "Sinusitis", symptoms: ["facial pain", "congestion", "headache", "postnasal drip"], probability: 15 },
+        { name: "Allergic Rhinitis", symptoms: ["sneezing", "runny nose", "itchy eyes", "congestion"], probability: 15 },
+        { name: "Gastroenteritis", symptoms: ["nausea", "vomiting", "diarrhea", "abdominal pain"], probability: 15 },
+        { name: "Urinary Tract Infection", symptoms: ["painful urination", "frequent urination", "abdominal pain"], probability: 10 },
+        { name: "Tension Headache", symptoms: ["headache", "stress", "neck pain"], probability: 10 },
+        { name: "COVID-19", symptoms: ["fever", "cough", "shortness of breath", "fatigue", "loss of taste or smell"], probability: 10 },
+        { name: "Anxiety Disorder", symptoms: ["anxiety", "irritability", "palpitations", "sweating"], probability: 5 },
         { name: "Asthma", symptoms: ["wheezing", "shortness of breath", "chest tightness", "cough"], probability: 10 },
         { name: "Bronchitis", symptoms: ["cough", "sputum production", "fatigue", "shortness of breath"], probability: 12 },
         { name: "Chronic Obstructive Pulmonary Disease (COPD)", symptoms: ["shortness of breath", "chronic cough", "wheezing", "sputum production"], probability: 6 },
         { name: "Sinusitis", symptoms: ["facial pain", "nasal congestion", "headache", "postnasal drip"], probability: 15 },
         { name: "Allergic Rhinitis", symptoms: ["sneezing", "runny nose", "itchy eyes", "nasal congestion"], probability: 18 },
-        
-        // Skin Conditions
         { name: "Eczema", symptoms: ["itchy skin", "redness", "dry skin", "rash"], probability: 12 },
         { name: "Psoriasis", symptoms: ["red patches", "silvery scales", "itchy skin", "dry skin"], probability: 5 },
         { name: "Contact Dermatitis", symptoms: ["rash", "redness", "itching", "skin irritation"], probability: 10 },
         { name: "Acne Vulgaris", symptoms: ["pimples", "blackheads", "whiteheads", "oily skin"], probability: 15 },
         { name: "Urticaria (Hives)", symptoms: ["itchy welts", "red bumps", "skin swelling"], probability: 8 },
-        
-        // Eye Conditions
         { name: "Conjunctivitis (Pink Eye)", symptoms: ["eye redness", "eye itching", "eye discharge", "gritty feeling"], probability: 12 },
         { name: "Dry Eye Syndrome", symptoms: ["dry eyes", "eye irritation", "burning sensation", "blurred vision"], probability: 10 },
         { name: "Cataracts", symptoms: ["cloudy vision", "glare sensitivity", "poor night vision", "fading colors"], probability: 5 },
-        
-        // Ear Conditions
         { name: "Otitis Media (Ear Infection)", symptoms: ["ear pain", "hearing loss", "ear drainage", "fever"], probability: 8 },
         { name: "Tinnitus", symptoms: ["ringing in ears", "buzzing", "hissing", "roaring"], probability: 7 },
         { name: "Meniere's Disease", symptoms: ["vertigo", "tinnitus", "hearing loss", "ear fullness"], probability: 2 },
-        
-        // Urinary Conditions
         { name: "Urinary Tract Infection", symptoms: ["painful urination", "frequent urination", "urinary urgency", "cloudy urine"], probability: 15 },
         { name: "Kidney Stones", symptoms: ["severe flank pain", "blood in urine", "nausea", "urinary urgency"], probability: 6 },
         { name: "Benign Prostatic Hyperplasia", symptoms: ["difficulty urinating", "frequent urination", "weak urine stream", "urinary retention"], probability: 10 },
-        
-        // Women's Health
         { name: "Premenstrual Syndrome (PMS)", symptoms: ["mood swings", "bloating", "breast tenderness", "irritability"], probability: 15 },
         { name: "Endometriosis", symptoms: ["pelvic pain", "painful periods", "painful intercourse", "infertility"], probability: 8 },
         { name: "Polycystic Ovary Syndrome (PCOS)", symptoms: ["irregular periods", "excess hair growth", "acne", "weight gain"], probability: 7 },
-        
-        // Men's Health
         { name: "Erectile Dysfunction", symptoms: ["difficulty achieving erection", "difficulty maintaining erection", "reduced sexual desire"], probability: 8 },
         { name: "Prostatitis", symptoms: ["pelvic pain", "painful urination", "frequent urination", "sexual dysfunction"], probability: 5 },
-        
-        // Pediatric Conditions
         { name: "Hand, Foot and Mouth Disease", symptoms: ["fever", "mouth sores", "skin rash", "loss of appetite"], probability: 7 },
         { name: "Croup", symptoms: ["barking cough", "hoarse voice", "difficulty breathing", "stridor"], probability: 5 },
         { name: "Ear Infection (Pediatric)", symptoms: ["ear pain", "tugging at ear", "fever", "irritability"], probability: 12 },
-        
-        // Infectious Diseases
         { name: "Mononucleosis", symptoms: ["fatigue", "sore throat", "fever", "swollen lymph nodes"], probability: 6 },
         { name: "Lyme Disease", symptoms: ["bullseye rash", "fever", "fatigue", "joint pain"], probability: 3 },
         { name: "Tuberculosis", symptoms: ["chronic cough", "fever", "night sweats", "weight loss"], probability: 2 },
-        
-        // Autoimmune Conditions
         { name: "Lupus", symptoms: ["fatigue", "joint pain", "rash", "fever"], probability: 3 },
         { name: "Multiple Sclerosis", symptoms: ["numbness", "weakness", "vision problems", "balance problems"], probability: 2 },
-        
-        // Neurological Conditions
         { name: "Parkinson's Disease", symptoms: ["tremor", "stiffness", "slow movement", "balance problems"], probability: 2 },
         { name: "Alzheimer's Disease", symptoms: ["memory loss", "confusion", "difficulty with familiar tasks", "personality changes"], probability: 2 },
-        
-        // Cancer-related Conditions
         { name: "Breast Cancer", symptoms: ["breast lump", "breast pain", "nipple discharge", "skin changes"], probability: 1, warning: "Requires immediate medical evaluation" },
         { name: "Lung Cancer", symptoms: ["chronic cough", "coughing blood", "chest pain", "weight loss"], probability: 1, warning: "Requires immediate medical evaluation" },
         { name: "Colorectal Cancer", symptoms: ["rectal bleeding", "abdominal pain", "change in bowel habits", "weight loss"], probability: 1, warning: "Requires immediate medical evaluation" },
+    ];
     
     // Match symptoms to conditions
     conditionDatabase.forEach(condition => {
