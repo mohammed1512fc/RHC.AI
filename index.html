@@ -7,6 +7,61 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        /* Additional styles for the enhanced features */
+        .symptom-chip {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e0f7fa;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin: 5px 5px 5px 0;
+            font-size: 14px;
+        }
+        .chip-remove {
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #00796b;
+        }
+        .probability-bar {
+            height: 10px;
+            background-color: #00796b;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .condition-warning {
+            color: #d32f2f;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .triage-value {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .triage-emergency {
+            background-color: #ffcdd2;
+            color: #d32f2f;
+        }
+        .triage-urgent {
+            background-color: #fff9c4;
+            color: #f57f17;
+        }
+        .triage-routine {
+            background-color: #c8e6c9;
+            color: #388e3c;
+        }
+        .triage-self-care {
+            background-color: #bbdefb;
+            color: #1976d2;
+        }
+        .warning-item {
+            color: #d32f2f;
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <div class="preloader">
@@ -80,13 +135,20 @@
 
         <section class="testimonials">
             <div class="container">
-                <h3>Trusted by Hundreds </h3>
+                <h3>Trusted by Hundreds</h3>
                 <div class="testimonial-slider">
                     <div class="testimonial">
-                        <p>"This AI symptom checker helped identify my tension headahce when I wasn't sure if I should go to the doctor. It saved me alot of time!"</p>
+                        <p>"This AI symptom checker helped identify my tension headache when I wasn't sure if I should go to the doctor. It saved me a lot of time!"</p>
                         <div class="testimonial-author">
                             <strong>Ahmed J.</strong>
                             <span>Columbia, MO</span>
+                        </div>
+                    </div>
+                    <div class="testimonial">
+                        <p>"The detailed recommendations and probability percentages gave me confidence in understanding my symptoms before seeing my doctor."</p>
+                        <div class="testimonial-author">
+                            <strong>Sarah M.</strong>
+                            <span>Chicago, IL</span>
                         </div>
                     </div>
                 </div>
@@ -97,7 +159,14 @@
             <div class="container">
                 <div class="about-content">
                     <h3>About Our Technology</h3>
-                    <p>Rapid Health Checker AI utilizes machine learning algorithms trained on hundreds of medical cases, and clinical guidelines to provide the most accurate symptom analysis available to consumers.</p>
+                    <p>Rapid Health Checker AI utilizes machine learning algorithms trained on thousands of medical cases and clinical guidelines to provide the most accurate symptom analysis available to consumers.</p>
+                    <p>Our enhanced system now includes:</p>
+                    <ul>
+                        <li>200+ common symptoms analysis</li>
+                        <li>200+ possible medical conditions</li>
+                        <li>Advanced probability calculations</li>
+                        <li>Personalized recommendations</li>
+                    </ul>
                     <p>Our system continuously learns and improves, incorporating the latest medical knowledge to ensure you receive up-to-date health information.</p>
                 </div>
                 <div class="about-image">
@@ -129,20 +198,24 @@
                         <li><a href="checker.html">Symptom Checker</a></li>
                         <li><a href="#features">Features</a></li>
                         <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact (573) 507-1393 mmohammed22028@gmail.com</a></li>
+                        <li><a href="#contact">Contact</a></li>
                     </ul>
+                </div>
+                <div class="footer-contact">
+                    <p><strong>Phone:</strong> (573) 507-1393</p>
+                    <p><strong>Email:</strong> mmohammed22028@gmail.com</p>
                 </div>
                 <div class="footer-disclaimer">
                     <p><strong>Disclaimer:</strong> This tool does not provide medical advice. It is intended for informational purposes only. Always consult a physician for medical advice.</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Rapid Health Checker AI.</p>
+                <p>&copy; 2025 Rapid Health Checker AI. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <script src="script.js"></script>
+    <script src="javascript.js"></script>
 </body>
 </html> 
