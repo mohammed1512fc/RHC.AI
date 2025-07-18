@@ -30,52 +30,67 @@ window.addEventListener('scroll', function() {
 const symptomInput = document.getElementById('symptoms');
 const suggestionsContainer = document.getElementById('symptomSuggestions');
 
-// 85 Common Symptoms
-const commonSymptoms = [
-    // General
+// 150 Common Symptoms
+const commonSymptoms = [ 
+    // General (25)
     "fever", "chills", "fatigue", "weakness", "malaise", "night sweats",
     "weight loss", "weight gain", "loss of appetite", "increased appetite",
-    "dehydration", "excessive thirst", "swollen glands", "body aches",
+    "dehydration", "excessive thirst", "excessive hunger", "swollen glands", 
+    "body aches", "general pain", "fainting", "dizziness", "lightheadedness",
+    "swelling", "heat intolerance", "cold intolerance", "low energy", 
+    "lethargy", "unexplained bleeding",
     
-    // Head/Neurological
-    "headache", "migraine", "dizziness", "lightheadedness", "vertigo",
-    "fainting", "seizures", "tremors", "numbness", "tingling",
-    "weakness", "memory loss", "confusion", "speech difficulty",
-    "blurred vision", "eye pain", "eye redness", "hearing loss",
-    "ringing in ears", "ear pain", "loss of smell", "loss of taste",
+    // Head/Neurological (30)
+    "headache", "migraine", "vertigo", "seizures", "tremors", "numbness",
+    "tingling", "muscle weakness", "memory loss", "confusion", "disorientation",
+    "speech difficulty", "slurred speech", "blurred vision", "double vision",
+    "eye pain", "eye redness", "dry eyes", "hearing loss", "ringing in ears",
+    "ear pain", "loss of smell", "loss of taste", "facial drooping", 
+    "balance problems", "coordination problems", "twitching", "tics", 
+    "hallucinations", "delusions",
     
-    // Respiratory
+    // Respiratory (20)
     "cough", "dry cough", "productive cough", "shortness of breath",
     "wheezing", "chest tightness", "chest pain", "rapid breathing",
-    "runny nose", "nasal congestion", "sneezing", "sore throat",
-    "difficulty swallowing", "hoarse voice",
+    "shallow breathing", "runny nose", "nasal congestion", "sneezing",
+    "sore throat", "difficulty swallowing", "hoarse voice", "snoring",
+    "bloody nose", "postnasal drip", "hiccups", "shortness of breath at rest",
     
-    // Cardiovascular
-    "palpitations", "irregular heartbeat", "rapid heartbeat",
-    "chest pressure", "heartburn", "swelling in legs",
+    // Cardiovascular (15)
+    "palpitations", "irregular heartbeat", "rapid heartbeat", "slow heartbeat",
+    "chest pressure", "heartburn", "swelling in legs", "leg pain when walking",
+    "varicose veins", "cold extremities", "high blood pressure", 
+    "low blood pressure", "fainting during exercise", "leg swelling", 
+    "pale skin",
     
-    // Gastrointestinal
+    // Gastrointestinal (25)
     "nausea", "vomiting", "diarrhea", "constipation", "abdominal pain",
     "stomach cramps", "bloating", "gas", "indigestion", "acid reflux",
-    "black stools", "blood in stool",
+    "black stools", "blood in stool", "rectal bleeding", "heartburn",
+    "difficulty swallowing", "excessive burping", "loss of bowel control",
+    "yellow skin", "dark urine", "light colored stools", "excessive saliva",
+    "mouth ulcers", "bad breath", "unintentional weight loss", "food intolerance",
     
-    // Urinary
+    // Urinary/Reproductive (15)
     "frequent urination", "painful urination", "blood in urine",
-    "cloudy urine", "difficulty urinating", "incontinence",
+    "cloudy urine", "difficulty urinating", "incontinence", "urgency",
+    "decreased urine output", "pelvic pain", "testicular pain", 
+    "vaginal discharge", "vaginal bleeding", "pain during intercourse",
+    "missed period", "heavy menstrual bleeding",
     
-    // Musculoskeletal
+    // Musculoskeletal (20)
     "joint pain", "joint swelling", "back pain", "neck pain",
     "shoulder pain", "arm pain", "leg pain", "knee pain",
-    "muscle pain", "muscle cramps",
+    "muscle pain", "muscle cramps", "muscle weakness", "stiffness",
+    "limited range of motion", "bone pain", "fracture", "sprain",
+    "tenderness", "popping joints", "grating sensation", "muscle spasms",
     
-    // Skin
+    // Skin (20)
     "rash", "hives", "itching", "dry skin", "acne", "blisters",
     "ulcers", "sores", "skin discoloration", "bruising",
-    "hair loss", "nail changes",
-    
-    // Psychological
-    "anxiety", "depression", "mood swings", "irritability",
-    "sleep problems", "insomnia"
+    "hair loss", "nail changes", "excessive sweating", "night sweats",
+    "skin growths", "moles changing", "yellow skin", "red palms",
+    "flushing", "skin peeling" 
 ];
 
 symptomInput.addEventListener('input', function() {
@@ -295,9 +310,42 @@ function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalIn
         { name: "Depression", symptoms: ["depressed mood", "loss of interest"], probability: 12 },
         { name: "Sleep Apnea", symptoms: ["snoring", "daytime sleepiness"], probability: 8 },
         { name: "Allergic Rhinitis", symptoms: ["sneezing", "runny nose", "itchy eyes"], probability: 15 },
-        
-        // Additional Conditions (70 more would be added here in a real implementation)
-        // ... (remaining conditions to reach 100 total)
+
+        // Cardiovascular (10) 
+        { name: "Coronary Artery Disease", symptoms: ["chest pain", "shortness of breath", "fatigue", "palpitations"], probability: 8 },
+        { name: "Heart Failure", symptoms: ["shortness of breath", "fatigue", "swelling in legs", "rapid weight gain"], probability: 6, warning: "Requires medical attention" },
+        { name: "Atrial Fibrillation", symptoms: ["palpitations", "irregular heartbeat", "shortness of breath", "dizziness"], probability: 7, warning: "Needs medical evaluation" },
+        { name: "Peripheral Artery Disease", symptoms: ["leg pain when walking", "numbness in legs", "cold legs", "poor wound healing"], probability: 5, description: "Circulation problems" },
+        { name: "Deep Vein Thrombosis", symptoms: ["leg swelling", "leg pain", "redness", "warmth"], probability: 4, warning: "Potentially serious condition" },
+        { name: "Hypertension Crisis", symptoms: ["severe headache", "blurred vision", "confusion", "chest pain"], probability: 3, warning: "Medical emergency" },
+        { name: "Myocarditis", symptoms: ["chest pain", "fatigue", "shortness of breath", "palpitations"], probability: 3, warning: "Requires urgent evaluation" },
+        { name: "Pericarditis", symptoms: ["chest pain", "fever", "fatigue", "shortness of breath"], probability: 3, description: "Heart lining inflammation" },
+        { name: "Varicose Veins", symptoms: ["visible veins", "leg pain", "swelling", "heaviness"], probability: 10, description: "Enlarged veins" },
+        { name: "Raynaud's Phenomenon", symptoms: ["cold fingers", "color changes in fingers", "numbness", "tingling"], probability: 5, description: "Circulation disorder" },
+
+        // Neurological (10)
+        { name: "Tension Headache", symptoms: ["headache", "pressure sensation", "neck pain", "light sensitivity"], probability: 20, description: "Common headache type" },
+        { name: "Cluster Headache", symptoms: ["severe headache", "eye pain", "tearing", "nasal congestion"], probability: 5, description: "Severe headache disorder" },
+        { name: "Multiple Sclerosis", symptoms: ["numbness", "tingling", "vision problems", "balance issues"], probability: 3, description: "Autoimmune neurological condition" },
+        { name: "Parkinson's Disease", symptoms: ["tremors", "stiffness", "slow movement", "balance problems"], probability: 2, description: "Progressive neurological disorder" },
+        { name: "Epilepsy", symptoms: ["seizures", "confusion", "staring spells", "uncontrollable movements"], probability: 4, description: "Seizure disorder" },
+        { name: "Peripheral Neuropathy", symptoms: ["numbness", "tingling", "burning pain", "weakness"], probability: 7, description: "Nerve damage" },
+        { name: "Bell's Palsy", symptoms: ["facial drooping", "difficulty closing eye", "drooling", "taste changes"], probability: 5, description: "Facial nerve paralysis" },
+        { name: "Stroke", symptoms: ["facial drooping", "arm weakness", "speech difficulty", "sudden confusion"], probability: 3, warning: "Medical emergency" },
+        { name: "Transient Ischemic Attack", symptoms: ["temporary weakness", "speech difficulty", "vision changes", "dizziness"], probability: 3, warning: "Stroke warning sign" },
+        { name: "Concussion", symptoms: ["headache", "dizziness", "confusion", "memory problems"], probability: 5, description: "Mild traumatic brain injury" },
+
+        // Gastrointestinal (10)
+        { name: "Gastritis", symptoms: ["abdominal pain", "nausea", "bloating", "loss of appetite"], probability: 12, description: "Stomach lining inflammation" },
+        { name: "Peptic Ulcer", symptoms: ["abdominal pain", "heartburn", "bloating", "nausea"], probability: 8, description: "Stomach or duodenal ulcer" },
+        { name: "Gallstones", symptoms: ["abdominal pain", "nausea", "vomiting", "bloating"], probability: 7, description: "Gallbladder stones" },
+        { name: "Celiac Disease", symptoms: ["diarrhea", "weight loss", "bloating", "fatigue"], probability: 5, description: "Gluten intolerance" },
+        { name: "Crohn's Disease", symptoms: ["abdominal pain", "diarrhea", "weight loss", "fatigue"], probability: 4, description: "Inflammatory bowel disease" },
+        { name: "Ulcerative Colitis", symptoms: ["diarrhea", "rectal bleeding", "abdominal pain", "urgency"], probability: 4, description: "Inflammatory bowel disease" },
+        { name: "Diverticulitis", symptoms: ["abdominal pain", "fever", "constipation", "bloating"], probability: 6, description: "Colon inflammation" },
+        { name: "Appendicitis", symptoms: ["abdominal pain", "nausea", "fever", "loss of appetite"], probability: 5, warning: "Requires urgent evaluation" },
+        { name: "Food Poisoning", symptoms: ["nausea", "vomiting", "diarrhea", "abdominal cramps"], probability: 15, description: "Foodborne illness" },
+        { name: "Lactose Intolerance", symptoms: ["bloating", "diarrhea", "gas", "abdominal pain"], probability: 12, description: "Dairy digestion problems" },
     ];
     
     const conditions = [];
