@@ -1,397 +1,408 @@
-// ========================
-// MEDICAL SYMPTOM CHECKER PRO
-// Version 4.0 - Clinical-Grade AI
-// ========================
-
-// Enhanced Preloader with Health Status Check
+// Preloader
 window.addEventListener('load', function() {
     const preloader = document.querySelector('.preloader');
-    const statusCheck = document.createElement('div');
-    statusCheck.className = 'health-status-check';
-    statusCheck.innerHTML = `
-        <div class="status-item"><span class="status-icon">✓</span> Loading medical knowledge base</div>
-        <div class="status-item"><span class="status-icon">✓</span> Connecting to diagnostic API</div>
-        <div class="status-item"><span class="status-icon">✓</span> Initializing neural networks</div>
-    `;
-    preloader.appendChild(statusCheck);
+    preloader.classList.add('fade-out');
+    setTimeout(() => {
+        preloader.style.display = 'none';
+    }, 500);
+});
+
+// Mobile Menu Toggle
+const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+const nav = document.querySelector('.nav');
+
+mobileMenuBtn.addEventListener('click', function() {
+    this.classList.toggle('active');
+    nav.classList.toggle('active');
+});
+
+// Header Scroll Effect
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('.header');
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+
+// Symptom Suggestions
+const symptomInput = document.getElementById('symptoms');
+const suggestionsContainer = document.getElementById('symptomSuggestions');
+
+// 85 Common Symptoms
+const commonSymptoms = [
+    // General
+    "fever", "chills", "fatigue", "weakness", "malaise", "night sweats",
+    "weight loss", "weight gain", "loss of appetite", "increased appetite",
+    "dehydration", "excessive thirst", "swollen glands", "body aches",
+    
+    // Head/Neurological
+    "headache", "migraine", "dizziness", "lightheadedness", "vertigo",
+    "fainting", "seizures", "tremors", "numbness", "tingling",
+    "weakness", "memory loss", "confusion", "speech difficulty",
+    "blurred vision", "eye pain", "eye redness", "hearing loss",
+    "ringing in ears", "ear pain", "loss of smell", "loss of taste",
+    
+    // Respiratory
+    "cough", "dry cough", "productive cough", "shortness of breath",
+    "wheezing", "chest tightness", "chest pain", "rapid breathing",
+    "runny nose", "nasal congestion", "sneezing", "sore throat",
+    "difficulty swallowing", "hoarse voice",
+    
+    // Cardiovascular
+    "palpitations", "irregular heartbeat", "rapid heartbeat",
+    "chest pressure", "heartburn", "swelling in legs",
+    
+    // Gastrointestinal
+    "nausea", "vomiting", "diarrhea", "constipation", "abdominal pain",
+    "stomach cramps", "bloating", "gas", "indigestion", "acid reflux",
+    "black stools", "blood in stool",
+    
+    // Urinary
+    "frequent urination", "painful urination", "blood in urine",
+    "cloudy urine", "difficulty urinating", "incontinence",
+    
+    // Musculoskeletal
+    "joint pain", "joint swelling", "back pain", "neck pain",
+    "shoulder pain", "arm pain", "leg pain", "knee pain",
+    "muscle pain", "muscle cramps",
+    
+    // Skin
+    "rash", "hives", "itching", "dry skin", "acne", "blisters",
+    "ulcers", "sores", "skin discoloration", "bruising",
+    "hair loss", "nail changes",
+    
+    // Psychological
+    "anxiety", "depression", "mood swings", "irritability",
+    "sleep problems", "insomnia"
+];
+
+symptomInput.addEventListener('input', function() {
+    const inputText = this.value.toLowerCase();
+    const lastTerm = inputText.split(',').pop().trim();
+    
+    if (lastTerm.length > 1) {
+        const filteredSymptoms = commonSymptoms.filter(symptom => 
+            symptom.includes(lastTerm) && !inputText.includes(symptom)
+        ).slice(0, 10);
+        
+        showSuggestions(filteredSymptoms, lastTerm);
+    } else {
+        hideSuggestions();
+    }
+});
+
+function showSuggestions(symptoms, term) {
+    if (symptoms.length === 0) {
+        hideSuggestions();
+        return;
+    }
+    
+    suggestionsContainer.innerHTML = '';
+    symptoms.forEach(symptom => {
+        const div = document.createElement('div');
+        div.className = 'symptom-suggestion';
+        div.textContent = symptom;
+        div.addEventListener('click', function() {
+            const currentValue = symptomInput.value;
+            const terms = currentValue.split(',');
+            terms[terms.length - 1] = terms[terms.length - 1].replace(term, '').trim() + ' ' + symptom;
+            symptomInput.value = terms.join(',') + (terms.length > 0 ? ', ' : '');
+            hideSuggestions();
+            symptomInput.focus();
+        });
+        suggestionsContainer.appendChild(div);
+    });
+    
+    suggestionsContainer.classList.add('show');
+}
+
+function hideSuggestions() {
+    suggestionsContainer.classList.remove('show');
+}
+
+// Close suggestions when clicking outside
+document.addEventListener('click', function(e) {
+    if (e.target !== symptomInput && !suggestionsContainer.contains(e.target)) {
+        hideSuggestions();
+    }
+});
+
+// Severity Slider
+const severitySlider = document.getElementById('severity');
+const severityValue = document.getElementById('severityValue');
+
+severitySlider.addEventListener('input', function() {
+    severityValue.textContent = this.value;
+});
+
+// Duration Selector
+const durationSelect = document.getElementById('duration');
+const customDuration = document.getElementById('customDuration');
+
+durationSelect.addEventListener('change', function() {
+    customDuration.style.display = this.value === 'custom' ? 'block' : 'none';
+});
+
+// Symptom Checker Form Submission
+const symptomForm = document.getElementById('symptomForm');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const resultsSection = document.getElementById('resultsSection');
+
+symptomForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    analyzeBtn.innerHTML = '<span class="loader-btn"></span> Analyzing...';
+    analyzeBtn.disabled = true;
     
     setTimeout(() => {
-        preloader.classList.add('fade-out');
-        setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 800);
+        processSymptoms();
+        symptomForm.style.display = 'none';
+        resultsSection.style.display = 'block';
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
     }, 1500);
 });
 
-// AI-Powered Symptom Analysis Engine
-class MedicalAI {
-    constructor() {
-        this.symptomOntology = new SymptomOntology();
-        this.diagnosticEngine = new DiagnosticEngine();
-        this.triageSystem = new TriageSystem();
-        this.clinicalKnowledge = new ClinicalKnowledgeBase();
-    }
-
-    async analyzeSymptoms(userInput) {
-        // Step 1: Symptom Normalization
-        const normalizedSymptoms = await this.symptomOntology.normalize(userInput.symptoms);
-        
-        // Step 2: Clinical Context Analysis
-        const clinicalContext = this.clinicalKnowledge.analyzeContext({
-            age: userInput.age,
-            gender: userInput.gender,
-            medicalHistory: userInput.medicalHistory,
-            medications: userInput.medications,
-            allergies: userInput.allergies
-        });
-        
-        // Step 3: Differential Diagnosis
-        const differentials = await this.diagnosticEngine.generateDifferentials(
-            normalizedSymptoms,
-            clinicalContext
-        );
-        
-        // Step 4: Triage Assessment
-        const triage = this.triageSystem.assessUrgency(
-            normalizedSymptoms,
-            userInput.severity,
-            differentials
-        );
-        
-        // Step 5: Generate Recommendations
-        return this.generateOutput(differentials, triage, clinicalContext);
-    }
-
-    generateOutput(differentials, triage, clinicalContext) {
-        // Enhanced output generation with evidence-based medicine
-        return {
-            triage: this.enhanceTriageOutput(triage),
-            conditions: this.rankConditions(differentials),
-            clinicalInsights: this.generateClinicalInsights(differentials, clinicalContext),
-            recommendations: this.generateEvidenceBasedRecommendations(differentials, triage),
-            safetyNetting: this.generateSafetyNettingAdvice(triage),
-            prevention: this.generatePreventionStrategies(differentials, clinicalContext)
-        };
-    }
-}
-
-// Symptom Ontology with 10,000+ medical concepts
-class SymptomOntology {
-    constructor() {
-        this.symptomGraph = this.buildSymptomGraph();
-        this.synonymMap = this.buildSynonymMap();
-    }
-
-    async normalize(rawSymptoms) {
-        // Advanced NLP processing with UMLS integration
-        const processed = await this.callNLPService(rawSymptoms);
-        return this.mapToStandardTerms(processed);
-    }
-
-    buildSymptomGraph() {
-        // Hierarchical symptom relationships (ICD-11 compliant)
-        return {
-            // Pain related
-            'pain': {
-                subtypes: ['headache', 'abdominal_pain', 'chest_pain'],
-                severityLevels: [1, 10],
-                characteristics: ['sharp', 'dull', 'throbbing']
-            },
-            // 1000+ more symptom categories...
-        };
+function processSymptoms() {
+    const age = document.getElementById('age').value;
+    const gender = document.getElementById('gender').value;
+    const symptoms = document.getElementById('symptoms').value;
+    const duration = document.getElementById('duration').value === 'custom' 
+        ? document.getElementById('customDurationValue').value + ' ' + document.getElementById('customDurationUnit').value
+        : document.getElementById('duration').value;
+    const severity = document.getElementById('severity').value;
+    const additionalInfo = document.getElementById('additionalInfo').value;
+    const medicalHistory = document.getElementById('medicalHistory').value;
+    const medications = document.getElementById('medications').value;
+    const allergies = document.getElementById('allergies').value;
+    
+    document.getElementById('resultAge').textContent = age;
+    document.getElementById('resultGender').textContent = gender.charAt(0).toUpperCase() + gender.slice(1);
+    document.getElementById('resultSymptoms').textContent = symptoms;
+    document.getElementById('resultDuration').textContent = duration;
+    document.getElementById('resultSeverity').textContent = severity;
+    
+    const analysisResults = analyzeSymptoms(age, gender, symptoms, duration, severity, additionalInfo, medicalHistory, medications, allergies);
+    
+    const triageValue = document.getElementById('triageValue');
+    triageValue.textContent = analysisResults.triage.level;
+    triageValue.className = 'triage-value ' + analysisResults.triage.class;
+    document.getElementById('triageDescription').textContent = analysisResults.triage.description;
+    
+    const conditionsList = document.getElementById('conditionsList');
+    conditionsList.innerHTML = '';
+    analysisResults.conditions.forEach(condition => {
+        const div = document.createElement('div');
+        div.className = 'condition-item fade-in';
+        div.innerHTML = `
+            <div class="condition-name">${condition.name}</div>
+            <div class="condition-probability">
+                <div class="probability-bar" style="width: ${condition.probability}%"></div>
+                <span>${condition.probability}%</span>
+            </div>
+            ${condition.description ? `<div class="condition-description">${condition.description}</div>` : ''}
+            ${condition.warning ? `<div class="condition-warning">⚠️ ${condition.warning}</div>` : ''}
+        `;
+        conditionsList.appendChild(div);
+    });
+    
+    document.getElementById('recommendationsContent').innerHTML = analysisResults.recommendations.map(rec => 
+        `<div class="recommendation-item">• ${rec}</div>`
+    ).join('');
+    
+    document.getElementById('nextStepsContent').innerHTML = analysisResults.nextSteps.map(step => 
+        `<div class="step-item">• ${step}</div>`
+    ).join('');
+    
+    document.getElementById('whenToSeekHelpContent').innerHTML = analysisResults.whenToSeekHelp.map(item => 
+        `<div class="warning-item">⚠️ ${item}</div>`
+    ).join('');
+    
+    if (analysisResults.preventionTips && analysisResults.preventionTips.length > 0) {
+        document.getElementById('preventionContent').innerHTML = analysisResults.preventionTips.map(tip => 
+            `<div class="tip-item">• ${tip}</div>`
+        ).join('');
+        document.getElementById('preventionSection').style.display = 'block';
+    } else {
+        document.getElementById('preventionSection').style.display = 'none';
     }
 }
 
-// Diagnostic Engine with Machine Learning
-class DiagnosticEngine {
-    constructor() {
-        this.model = this.loadDiagnosticModel();
-        this.rulesEngine = new ClinicalRulesEngine();
+// 100 Possible Conditions Database
+function analyzeSymptoms(age, gender, symptoms, duration, severity, additionalInfo, medicalHistory, medications, allergies) {
+    const symptomList = symptoms.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
+    const ageNum = parseInt(age) || 0;
+    
+    let triageLevel = 'Self-care';
+    let triageClass = 'triage-self-care';
+    let triageDescription = 'Your symptoms suggest a mild condition that can typically be managed with self-care at home.';
+    
+    const emergencyKeywords = [
+        'chest pain', 'shortness of breath', 'severe headache', 
+        'uncontrolled bleeding', 'sudden weakness', 'difficulty speaking',
+        'paralysis', 'seizures', 'loss of consciousness', 'vomiting blood',
+        'coughing blood', 'severe abdominal pain', 'suicidal thoughts'
+    ];
+    
+    if (emergencyKeywords.some(keyword => symptoms.toLowerCase().includes(keyword)) || severity >= 9) {
+        triageLevel = 'Emergency';
+        triageClass = 'triage-emergency';
+        triageDescription = 'Your symptoms suggest a potentially life-threatening condition that requires IMMEDIATE medical attention.';
     }
-
-    async generateDifferentials(symptoms, context) {
-        // Combine statistical model with clinical reasoning
-        const mlPredictions = await this.model.predict(symptoms, context);
-        const clinicalDifferentials = this.rulesEngine.applyClinicalRules(symptoms, context);
-        
-        return this.mergeResults(mlPredictions, clinicalDifferentials);
+    else if (symptomList.includes('high fever') || symptomList.includes('severe pain') || severity >= 7) {
+        triageLevel = 'Urgent';
+        triageClass = 'triage-urgent';
+        triageDescription = 'Your symptoms should be evaluated by a healthcare provider within 24 hours.';
     }
-}
-
-// Enhanced Triage System
-class TriageSystem {
-    assessUrgency(symptoms, severity, differentials) {
-        // Multi-dimensional risk assessment
-        const riskScore = this.calculateRiskScore(symptoms, severity, differentials);
-        
-        return {
-            level: this.determineTriageLevel(riskScore),
-            score: riskScore,
-            criticalSigns: this.checkCriticalSigns(symptoms),
-            timeToCare: this.calculateTimeToCare(riskScore)
-        };
+    else if (symptomList.length >= 3 || severity >= 5) {
+        triageLevel = 'Routine';
+        triageClass = 'triage-routine';
+        triageDescription = 'Your symptoms should be evaluated by a healthcare provider, but not urgently.';
     }
-
-    calculateRiskScore(symptoms, severity, differentials) {
-        // Complex algorithm considering 50+ factors
-        let score = 0;
+    
+    const conditionDatabase = [
+        // Infectious Diseases (15)
+        { name: "Common Cold", symptoms: ["cough", "sore throat", "runny nose"], probability: 30, description: "Viral upper respiratory infection" },
+        { name: "Influenza (Flu)", symptoms: ["fever", "cough", "body aches"], probability: 25, description: "Seasonal viral illness" },
+        { name: "COVID-19", symptoms: ["fever", "cough", "loss of taste"], probability: 20, description: "Respiratory viral infection" },
+        { name: "Strep Throat", symptoms: ["sore throat", "fever", "swollen glands"], probability: 15, description: "Bacterial throat infection" },
+        { name: "Pneumonia", symptoms: ["cough", "fever", "shortness of breath"], probability: 12, description: "Lung infection" },
+        { name: "Bronchitis", symptoms: ["cough", "wheezing", "chest discomfort"], probability: 10, description: "Airway inflammation" },
+        { name: "Sinusitis", symptoms: ["facial pain", "nasal congestion", "headache"], probability: 15 },
+        { name: "Ear Infection", symptoms: ["ear pain", "hearing loss", "fever"], probability: 10 },
+        { name: "UTI", symptoms: ["painful urination", "frequent urination"], probability: 15 },
+        { name: "Gastroenteritis", symptoms: ["nausea", "vomiting", "diarrhea"], probability: 20 },
+        { name: "Mononucleosis", symptoms: ["fatigue", "sore throat", "swollen glands"], probability: 8 },
+        { name: "Tonsillitis", symptoms: ["sore throat", "difficulty swallowing", "fever"], probability: 10 },
+        { name: "Conjunctivitis", symptoms: ["eye redness", "eye discharge", "itching"], probability: 12 },
+        { name: "Cellulitis", symptoms: ["skin redness", "swelling", "pain"], probability: 8, warning: "Requires antibiotics" },
+        { name: "Lyme Disease", symptoms: ["rash", "fever", "joint pain"], probability: 5 },
         
-        // 1. Symptom severity scoring
-        score += severity * 2.5;
+        // Chronic Conditions (15)
+        { name: "Hypertension", symptoms: ["headache", "dizziness"], probability: 10 },
+        { name: "Diabetes", symptoms: ["excessive thirst", "frequent urination"], probability: 8 },
+        { name: "Asthma", symptoms: ["wheezing", "shortness of breath"], probability: 12 },
+        { name: "COPD", symptoms: ["chronic cough", "shortness of breath"], probability: 7 },
+        { name: "GERD", symptoms: ["heartburn", "acid reflux"], probability: 15 },
+        { name: "IBS", symptoms: ["abdominal pain", "bloating", "diarrhea"], probability: 12 },
+        { name: "Migraine", symptoms: ["headache", "nausea", "light sensitivity"], probability: 18 },
+        { name: "Arthritis", symptoms: ["joint pain", "stiffness"], probability: 15 },
+        { name: "Fibromyalgia", symptoms: ["widespread pain", "fatigue"], probability: 8 },
+        { name: "Hypothyroidism", symptoms: ["fatigue", "weight gain", "cold intolerance"], probability: 7 },
+        { name: "Anemia", symptoms: ["fatigue", "pale skin", "shortness of breath"], probability: 10 },
+        { name: "Anxiety Disorder", symptoms: ["anxiety", "irritability", "palpitations"], probability: 15 },
+        { name: "Depression", symptoms: ["depressed mood", "loss of interest"], probability: 12 },
+        { name: "Sleep Apnea", symptoms: ["snoring", "daytime sleepiness"], probability: 8 },
+        { name: "Allergic Rhinitis", symptoms: ["sneezing", "runny nose", "itchy eyes"], probability: 15 },
         
-        // 2. Critical symptom detection
-        if (this.hasCriticalSymptoms(symptoms)) score += 50;
+        // Additional Conditions (70 more would be added here in a real implementation)
+        // ... (remaining conditions to reach 100 total)
+    ];
+    
+    const conditions = [];
+    conditionDatabase.forEach(condition => {
+        const matchingSymptoms = condition.symptoms.filter(symptom => 
+            symptomList.some(userSymptom => userSymptom.includes(symptom.toLowerCase()))
+        ).length;
         
-        // 3. High-risk condition detection
-        if (this.hasHighRiskConditions(differentials)) score += 30;
-        
-        // 4. Comorbidity adjustment
-        score = this.adjustForComorbidities(score);
-        
-        return Math.min(score, 100);
-    }
-}
-
-// ========================
-// CLINICAL KNOWLEDGE BASE
-// ========================
-
-class ClinicalKnowledgeBase {
-    constructor() {
-        this.conditions = this.loadConditionDatabase();
-        this.drugDatabase = this.loadDrugDatabase();
-        this.guidelines = this.loadClinicalGuidelines();
-    }
-
-    loadConditionDatabase() {
-        // 500+ conditions with detailed clinical profiles
-        return [
-            {
-                id: 'G20',
-                name: 'Parkinson Disease',
-                symptoms: ['tremor', 'bradykinesia', 'rigidity'],
-                redFlags: ['rapid progression', 'early dementia'],
-                diagnostics: ['neurological exam', 'DAT scan'],
-                treatments: ['levodopa', 'dopamine agonists']
-            },
-            // 499 more conditions...
+        if (matchingSymptoms > 0) {
+            let probability = condition.probability + (matchingSymptoms * 5) + (severity * 2);
+            probability = Math.min(probability, 95);
+            
+            conditions.push({
+                name: condition.name,
+                probability: probability,
+                description: condition.description || "",
+                warning: condition.warning || ""
+            });
+        }
+    });
+    
+    conditions.sort((a, b) => b.probability - a.probability);
+    const topConditions = conditions.slice(0, 5);
+    
+    let recommendations = [];
+    let nextSteps = [];
+    let whenToSeekHelp = [];
+    let preventionTips = [];
+    
+    if (triageLevel === 'Emergency') {
+        recommendations = [
+            "Call emergency services immediately",
+            "Do not attempt to drive yourself",
+            "Remain calm while waiting for help"
+        ];
+        whenToSeekHelp = ["Immediate help is already recommended"];
+    } 
+    else if (triageLevel === 'Urgent') {
+        recommendations = [
+            "Contact your doctor within 24 hours",
+            "Rest and stay hydrated",
+            "Monitor symptoms closely"
+        ];
+        whenToSeekHelp = [
+            "If symptoms worsen",
+            "If you develop high fever",
+            "If unable to keep fluids down"
+        ];
+        preventionTips = [
+            "Wash hands frequently",
+            "Cover coughs and sneezes"
         ];
     }
-}
-
-// ========================
-// UI ENHANCEMENTS
-// ========================
-
-// AI-Powered Symptom Input with Real-Time Feedback
-const symptomInput = document.getElementById('symptoms');
-symptomInput.addEventListener('input', async function() {
-    const analysis = await medicalAI.preliminaryAnalysis(this.value);
-    this.style.borderColor = analysis.urgency > 7 ? '#ff4444' : '#ddd';
-    
-    if (analysis.suggestedConditions.length > 0) {
-        showConditionAlerts(analysis.suggestedConditions);
+    else {
+        recommendations = [
+            "Schedule a doctor's appointment",
+            "Keep a symptom diary",
+            "Use OTC remedies as needed"
+        ];
+        preventionTips = [
+            "Maintain a healthy diet",
+            "Exercise regularly",
+            "Practice good sleep hygiene"
+        ];
     }
-});
-
-// Enhanced Results Visualization
-function displayResults(results) {
-    // Interactive condition explorer
-    const conditionsContainer = document.getElementById('conditionsList');
-    conditionsContainer.innerHTML = '';
     
-    results.conditions.forEach(condition => {
-        const conditionCard = document.createElement('div');
-        conditionCard.className = 'condition-card';
-        conditionCard.innerHTML = `
-            <div class="condition-header">
-                <h3>${condition.name}</h3>
-                <div class="probability ${this.getProbabilityClass(condition.probability)}">
-                    ${condition.probability}%
-                </div>
-            </div>
-            <div class="condition-details">
-                <div class="detail-item">
-                    <strong>Key Symptoms:</strong> ${condition.keySymptoms.join(', ')}
-                </div>
-                <div class="detail-item">
-                    <strong>Typical Presentation:</strong> ${condition.presentation}
-                </div>
-                ${condition.redFlags ? `
-                <div class="red-flags">
-                    <strong>Red Flags:</strong> ${condition.redFlags.join(', ')}
-                </div>` : ''}
-            </div>
-            <button class="btn-info">More Details</button>
-        `;
-        conditionsContainer.appendChild(conditionCard);
-    });
+    // Add general health recommendations
+    recommendations.push(
+        "Wash hands frequently",
+        "Get adequate sleep",
+        "Avoid smoking"
+    );
     
-    // Interactive treatment pathway
-    renderTreatmentPathway(results.recommendations);
-}
-
-// ========================
-// INTEGRATION WITH MEDICAL SYSTEMS
-// ========================
-
-class EHRIntegrator {
-    constructor() {
-        this.apiEndpoints = {
-            FHIR: 'https://fhir-api.example.com',
-            HL7: 'https://hl7-api.example.com'
-        };
-    }
-
-    async fetchPatientHistory(patientId) {
-        // Connect to electronic health records
-        try {
-            const response = await fetch(`${this.apiEndpoints.FHIR}/Patient/${patientId}`);
-            return await response.json();
-        } catch (error) {
-            console.error('EHR connection failed:', error);
-            return null;
-        }
-    }
-}
-
-// ========================
-// INITIALIZATION
-// ========================
-
-// Initialize the medical AI system
-const medicalAI = new MedicalAI();
-const ehrIntegrator = new EHRIntegrator();
-
-// Enhanced form submission
-document.getElementById('symptomForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    // Show advanced loading indicator
-    const loader = document.getElementById('ai-analysis-loader');
-    loader.style.display = 'block';
-    loader.innerHTML = `
-        <div class="ai-processing">
-            <div class="ai-thinking"></div>
-            <p>Medical AI is analyzing your symptoms...</p>
-            <div class="progress-steps">
-                <div class="step active">1. Symptom parsing</div>
-                <div class="step">2. Clinical context analysis</div>
-                <div class="step">3. Differential diagnosis</div>
-                <div class="step">4. Evidence review</div>
-            </div>
-        </div>
-    `;
-    
-    // Collect all input data
-    const formData = {
-        // Personal information
-        age: document.getElementById('age').value,
-        gender: document.getElementById('gender').value,
-        
-        // Symptom information
-        symptoms: document.getElementById('symptoms').value,
-        duration: document.getElementById('duration').value,
-        severity: document.getElementById('severity').value,
-        
-        // Medical history
-        medicalHistory: document.getElementById('medicalHistory').value,
-        medications: document.getElementById('medications').value,
-        allergies: document.getElementById('allergies').value,
-        
-        // Additional context
-        additionalInfo: document.getElementById('additionalInfo').value
+    return {
+        triage: { level: triageLevel, class: triageClass, description: triageDescription },
+        conditions: topConditions,
+        recommendations: recommendations,
+        nextSteps: nextSteps,
+        whenToSeekHelp: whenToSeekHelp,
+        preventionTips: preventionTips
     };
-    
-    try {
-        // Perform comprehensive analysis
-        const results = await medicalAI.analyzeSymptoms(formData);
-        
-        // Display results
-        displayResults(results);
-        
-        // Check for emergencies
-        if (results.triage.level === 'Emergency') {
-            showEmergencyAlert(results);
-        }
-        
-    } catch (error) {
-        showError(error);
-    } finally {
-        loader.style.display = 'none';
+}
+
+// Back button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('resultsSection')) {
+        const backBtn = document.createElement('button');
+        backBtn.className = 'btn-primary';
+        backBtn.textContent = 'Back to Symptom Checker';
+        backBtn.addEventListener('click', function() {
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('symptomForm').style.display = 'block';
+            document.getElementById('analyzeBtn').innerHTML = 'Analyze Symptoms';
+            document.getElementById('analyzeBtn').disabled = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        document.querySelector('.results-container').appendChild(backBtn);
     }
 });
 
-// ========================
-// SAFETY FEATURES
-// ========================
-
-// Emergency detection and response
-function showEmergencyAlert(results) {
-    const alertBox = document.createElement('div');
-    alertBox.className = 'emergency-alert';
-    alertBox.innerHTML = `
-        <div class="emergency-content">
-            <h2>⚠️ Medical Emergency Detected</h2>
-            <p>${results.triage.description}</p>
-            <div class="emergency-actions">
-                <button id="callEmergency" class="btn-emergency">
-                    Call Emergency Services
-                </button>
-                <button id="locateHospital" class="btn-secondary">
-                    Locate Nearest Hospital
-                </button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(alertBox);
-    
-    // Add emergency functionality
-    document.getElementById('callEmergency').addEventListener('click', function() {
-        window.location.href = 'tel:911';
+// Animation on scroll
+window.addEventListener('scroll', function() {
+    document.querySelectorAll('.feature-card, .testimonial').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight / 1.2) {
+            el.classList.add('animate__animated', 'animate__fadeInUp');
+        }
     });
-    
-    document.getElementById('locateHospital').addEventListener('click', function() {
-        launchHospitalLocator();
-    });
-}
-
-// ========================
-// CLINICAL DECISION SUPPORT
-// ========================
-
-function generateSafetyNettingAdvice(triage) {
-    const advice = [];
-    
-    if (triage.level === 'Emergency') {
-        advice.push("Do not delay seeking emergency care");
-        advice.push("Have someone stay with you until help arrives");
-    } else {
-        advice.push("Monitor symptoms every 2 hours");
-        advice.push("Watch for these worsening signs: " + triage.watchFor.join(', '));
-        advice.push("Seek care immediately if any red flags appear");
-    }
-    
-    return advice;
-}
-
-// ========================
-// CONTINUOUS LEARNING
-// ========================
-
-// Feedback system to improve AI accuracy
-function setupFeedbackSystem() {
-    document.querySelectorAll('.feedback-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const conditionId = this.dataset.conditionId;
-            const isCorrect = this.classList.contains('correct');
-            
-            // Send feedback to improve the model
-            medicalAI.recordFeedback(conditionId, isCorrect);
-            
-            // Show confirmation
-            showToast(isCorrect ? 'Thanks for your feedback!' : 'We\'ll review this diagnosis');
-        });
-    });
-} 
+}); 
