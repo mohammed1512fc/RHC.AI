@@ -50,100 +50,25 @@ const medicalDatabase = {
         ]
     },
 
-    // Medical conditions database with symptoms mapping
-    conditions: [
-        {
-            name: "Common Cold",
-            symptoms: ["Runny nose", "Stuffy nose", "Sore throat", "Cough", "Mild fever", "Fatigue", "Headache"],
-            severity: "low",
-            prevalence: "very_common",
-            description: "A viral infection of the upper respiratory tract, typically mild and self-limiting.",
-            treatment: "Rest, fluids, over-the-counter medications for symptom relief",
-            emergency: false
-        },
-        {
-            name: "Influenza",
-            symptoms: ["High fever", "Body aches", "Fatigue", "Cough", "Sore throat", "Headache", "Chills"],
-            severity: "moderate",
-            prevalence: "common",
-            description: "A viral respiratory illness that can cause severe symptoms and complications.",
-            treatment: "Antiviral medications if started early, rest, fluids, fever reducers",
-            emergency: false
-        },
-        {
-            name: "COVID-19",
-            symptoms: ["Fever", "Cough", "Shortness of breath", "Loss of taste", "Loss of smell", "Fatigue", "Body aches"],
-            severity: "high",
-            prevalence: "common",
-            description: "A respiratory illness caused by the SARS-CoV-2 virus, with varying severity.",
-            treatment: "Isolation, supportive care, antiviral medications for high-risk individuals",
-            emergency: false
-        },
-        {
-            name: "Heart Attack",
-            symptoms: ["Chest pain", "Shortness of breath", "Pain in left arm", "Jaw pain", "Nausea", "Sweating", "Fatigue"],
-            severity: "emergency",
-            prevalence: "uncommon",
-            description: "A medical emergency where blood flow to the heart is blocked, causing heart muscle damage.",
-            treatment: "Immediate emergency medical care, medications, possible procedures",
-            emergency: true
-        },
-        {
-            name: "Stroke",
-            symptoms: ["Sudden weakness", "Difficulty speaking", "Blurred vision", "Dizziness", "Severe headache", "Loss of balance"],
-            severity: "emergency",
-            prevalence: "uncommon",
-            description: "A medical emergency where blood flow to the brain is interrupted, causing brain damage.",
-            treatment: "Immediate emergency medical care, clot-busting medications, rehabilitation",
-            emergency: true
-        },
-        {
-            name: "Asthma",
-            symptoms: ["Shortness of breath", "Wheezing", "Chest tightness", "Cough", "Difficulty breathing"],
-            severity: "moderate",
-            prevalence: "common",
-            description: "A chronic respiratory condition characterized by inflammation and narrowing of airways.",
-            treatment: "Inhalers, medications, avoiding triggers, regular monitoring",
-            emergency: false
-        },
-        {
-            name: "Diabetes Type 2",
-            symptoms: ["Frequent urination", "Excessive thirst", "Fatigue", "Blurred vision", "Slow healing", "Weight loss"],
-            severity: "high",
-            prevalence: "common",
-            description: "A metabolic disorder characterized by high blood sugar levels and insulin resistance.",
-            treatment: "Diet, exercise, medications, blood sugar monitoring",
-            emergency: false
-        },
-        {
-            name: "Hypertension",
-            symptoms: ["High blood pressure", "Headache", "Dizziness", "Chest pain", "Shortness of breath", "Nosebleeds"],
-            severity: "moderate",
-            prevalence: "very_common",
-            description: "High blood pressure that can lead to serious cardiovascular complications if untreated.",
-            treatment: "Lifestyle changes, medications, regular monitoring",
-            emergency: false
-        },
-        {
-            name: "Migraine",
-            symptoms: ["Severe headache", "Nausea", "Light sensitivity", "Sound sensitivity", "Visual disturbances", "Vomiting"],
-            severity: "moderate",
-            prevalence: "common",
-            description: "A neurological condition characterized by severe, recurring headaches with various symptoms.",
-            treatment: "Pain medications, preventive medications, avoiding triggers",
-            emergency: false
-        },
-        {
-            name: "Anxiety Disorder",
-            symptoms: ["Excessive worry", "Restlessness", "Fatigue", "Difficulty concentrating", "Muscle tension", "Sleep problems"],
-            severity: "moderate",
-            prevalence: "common",
-            description: "A mental health condition characterized by persistent worry and fear that interferes with daily life.",
-            treatment: "Therapy, medications, lifestyle changes, stress management",
-            emergency: false
-        }
-    ]
-};
+   // Automated condition generator
+function generateConditions(baseCondition, variations, count) {
+    const conditions = [];
+    for (let i = 0; i < count; i++) {
+        conditions.push({
+            name: `${baseCondition} Type ${i + 1}`,
+            system: variations.system,
+            severity: variations.severity[Math.floor(Math.random() * variations.severity.length)],
+            prevalence: variations.prevalence[Math.floor(Math.random() * variations.prevalence.length)],
+            symptoms: [...variations.baseSymptoms, ...variations.additionalSymptoms.slice(0, 3)],
+            description: `Variant ${i + 1} of ${baseCondition} with specific characteristics...`,
+            treatment: variations.treatment,
+            emergency: Math.random() > 0.8,
+            risk_factors: variations.risk_factors,
+            prevention: variations.prevention
+        });
+    }
+    return conditions;
+}
 
 // Global state management
 let selectedSystem = null;
