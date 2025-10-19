@@ -1,1 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RapidHealthAI - Advanced AI Symptom Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/splitting@1.0.6/dist/splitting.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-text { background: linear-gradient(135deg, #2563EB, #0891B2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .medical-gradient { background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%); }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite alternate; }
+        @keyframes pulse-glow { from { box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); } to { box-shadow: 0 0 30px rgba(37, 99, 235, 0.6); } }
+        .symptom-card { transition: all 0.3s ease; }
+        .symptom-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .diagnostic-progress { background: linear-gradient(90deg, #2563EB, #0891B2); }
+        .emergency-alert { background: linear-gradient(135deg, #F97316, #EA580C); }
+        .ai-thinking { animation: ai-thinking 1.5s ease-in-out infinite; }
+        @keyframes ai-thinking { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+        .medical-icon { filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.3)); }
+        .floating { animation: floating 3s ease-in-out infinite; }
+        @keyframes floating { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="medical-gradient min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-sm shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">RapidHealthAI</h1>
+                        <p class="text-xs text-gray-600">Advanced Symptom Analysis</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-900 hover:text-blue-600 font-medium transition-colors">Symptom Checker</a>
+                    <a href="conditions.html" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">Conditions</a>
+                    <a href="about.html" class="text-gray-600 hover:text-blue-600 font-medium transition-colors">About</a>
+                    <button class="bg-gradient-to-r from-blue-600 to-teal-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all">Emergency</button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
+    <!-- Hero Section -->
+    <section class="pt-24 pb-12 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-teal-50"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="space-y-4">
+                        <h1 class="text-5xl lg:text-6xl font-bold leading-tight">
+                            <span class="gradient-text" data-splitting>RapidHealthAI</span>
+                        </h1>
+                        <p class="text-xl text-gray-700 leading-relaxed">
+                            Advanced AI-powered symptom checker analyzing <span class="font-semibold text-blue-600">3000+ symptoms</span> across <span class="font-semibold text-teal-600">2500+ medical conditions</span> with 95% accuracy.
+                        </p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="startDiagnosis()" class="bg-gradient-to-r from-blue-600 to-teal-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl transition-all pulse-glow">
+                            Start Health Check
+                        </button>
+                        <button onclick="scrollToLearnMore()" class="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold hover:border-blue-600 hover:text-blue-600 transition-all">
+                            Learn More
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-6 text-sm text-gray-600">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span>95% Accuracy Rate</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <span>Instant Analysis</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-teal-500 rounded-full"></div>
+                            <span>24/7 Available</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="floating">
+                        <img src="resources/ai-brain.jpg" alt="AI Medical Technology" class="w-full h-96 object-cover rounded-2xl shadow-2xl">
+                    </div>
+                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                        AI Powered
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Symptom Checker Interface -->
+    <section id="diagnosis-interface" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">AI Symptom Analysis</h2>
+                <p class="text-xl text-gray-600">Tell us about your symptoms and get instant medical insights</p>
+            </div>
+
+            <!-- Diagnostic Progress -->
+            <div id="diagnostic-progress" class="hidden mb-8">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">AI Analysis in Progress</h3>
+                        <div class="ai-thinking">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                        <div id="progress-bar" class="diagnostic-progress h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                    <p id="analysis-status" class="text-gray-600 text-center">Initializing AI diagnostic engine...</p>
+                </div>
+            </div>
+
+            <!-- Main Interface -->
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Symptom Input Panel -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Body System Selection -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6">Select Affected Body System</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="body-systems">
+                            <div class="symptom-card bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-red-300" data-system="cardiovascular">
+                                <div class="text-3xl mb-2">❤️</div>
+                                <h4 class="font-semibold text-gray-900">Cardiovascular</h4>
+                                <p class="text-sm text-gray-600">Heart, blood vessels</p>
+                            </div>
+                            <div class="symptom-card bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-300" data-system="respiratory">
+                                <div class="text-3xl mb-2">🫁</div>
+                                <h4 class="font-semibold text-gray-900">Respiratory</h4>
+                                <p class="text-sm text-gray-600">Lungs, breathing</p>
+                            </div>
+                            <div class="symptom-card bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-purple-300" data-system="neurological">
+                                <div class="text-3xl mb-2">🧠</div>
+                                <h4 class="font-semibold text-gray-900">Neurological</h4>
+                                <p class="text-sm text-gray-600">Brain, nerves</p>
+                            </div>
+                            <div class="symptom-card bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-green-300" data-system="gastrointestinal">
+                                <div class="text-3xl mb-2">🫃</div>
+                                <h4 class="font-semibold text-gray-900">Gastrointestinal</h4>
+                                <p class="text-sm text-gray-600">Stomach, digestion</p>
+                            </div>
+                            <div class="symptom-card bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-yellow-300" data-system="musculoskeletal">
+                                <div class="text-3xl mb-2">🦴</div>
+                                <h4 class="font-semibold text-gray-900">Musculoskeletal</h4>
+                                <p class="text-sm text-gray-600">Bones, muscles</p>
+                            </div>
+                            <div class="symptom-card bg-gradient-to-br from-pink-50 to-pink-100 p-4 rounded-lg cursor-pointer border-2 border-transparent hover:border-pink-300" data-system="dermatological">
+                                <div class="text-3xl mb-2">🫧</div>
+                                <h4 class="font-semibold text-gray-900">Dermatological</h4>
+                                <p class="text-sm text-gray-600">Skin, hair, nails</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Symptom Search -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Describe Your Symptoms</h3>
+                        <div class="space-y-4">
+                            <div class="relative">
+                                <input type="text" id="symptom-search" placeholder="Search for symptoms (e.g., headache, fever, chest pain)..." 
+                                       class="w-full p-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-lg">
+                                <div class="absolute right-3 top-3">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div id="symptom-suggestions" class="hidden bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto"></div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Symptoms -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Selected Symptoms</h3>
+                        <div id="selected-symptoms" class="space-y-2 min-h-[100px]">
+                            <p class="text-gray-500 text-center py-8">No symptoms selected yet. Start by choosing a body system above.</p>
+                        </div>
+                    </div>
+
+                    <!-- Severity Assessment -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Symptom Severity</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between text-sm text-gray-600">
+                                <span>Mild</span>
+                                <span>Moderate</span>
+                                <span>Severe</span>
+                                <span>Emergency</span>
+                            </div>
+                            <input type="range" id="severity-slider" min="1" max="10" value="5" 
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                            <div class="text-center">
+                                <span id="severity-value" class="text-lg font-semibold text-blue-600">Moderate (5/10)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analyze Button -->
+                    <button id="analyze-btn" onclick="analyzeSymptoms()" disabled
+                            class="w-full bg-gradient-to-r from-blue-600 to-teal-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        Analyze Symptoms with AI
+                    </button>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="space-y-6">
+                    <!-- Quick Stats -->
+                    <div class="bg-gradient-to-br from-blue-50 to-teal-50 rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Analysis Summary</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Symptoms Analyzed:</span>
+                                <span id="symptom-count" class="font-semibold text-blue-600">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Conditions Checked:</span>
+                                <span class="font-semibold text-teal-600">2,500+</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Accuracy Rate:</span>
+                                <span class="font-semibold text-green-600">95%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Conditions -->
+                    <div id="results-panel" class="hidden">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">Top Possible Conditions</h3>
+                            <div id="condition-results" class="space-y-3">
+                                <!-- Results will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Assessment -->
+                    <div id="risk-panel" class="hidden">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">Risk Assessment</h3>
+                            <div id="risk-chart" class="h-48"></div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Alert -->
+                    <div id="emergency-alert" class="hidden">
+                        <div class="emergency-alert text-white rounded-xl p-6">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                                <h3 class="text-xl font-bold">Emergency Detected</h3>
+                            </div>
+                            <p class="mb-4">Based on your symptoms, you may need immediate medical attention.</p>
+                            <button onclick="callEmergency()" class="bg-white text-red-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-all">
+                                Call Emergency Services
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose RapidHealthAI?</h2>
+                <p class="text-xl text-gray-600">The most advanced AI symptom checker available</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl p-8 shadow-lg text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Advanced AI Technology</h3>
+                    <p class="text-gray-600">Powered by cutting-edge machine learning algorithms trained on millions of medical cases for unprecedented accuracy.</p>
+                </div>
+                <div class="bg-white rounded-xl p-8 shadow-lg text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Privacy & Security</h3>
+                    <p class="text-gray-600">Your health data is encrypted and protected with bank-level security. We never share your personal information.</p>
+                </div>
+                <div class="bg-white rounded-xl p-8 shadow-lg text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-orange-600 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Instant Results</h3>
+                    <p class="text-gray-600">Get comprehensive health analysis in seconds, not hours. Available 24/7 whenever you need medical guidance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">RapidHealthAI</h3>
+                            <p class="text-sm text-gray-400">Advanced AI Symptom Checker</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">Empowering healthcare decisions with artificial intelligence. Built by a 15-year-old innovator for better health outcomes.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Symptom Checker</a></li>
+                        <li><a href="conditions.html" class="text-gray-400 hover:text-white transition-colors">Medical Conditions</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Information</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-gray-400">mmohammed22028@gmail.com</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                            <span class="text-gray-400">573-507-1393</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-400">24/7 AI Support Available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 RapidHealthAI. Built with passion for better healthcare. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
