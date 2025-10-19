@@ -47,8 +47,207 @@ const medicalDatabase = {
             "Dandruff", "Nail changes", "Skin lesions", "Bruising", "Bleeding under skin",
             "Sunburn", "Skin cancer", "Fungal infections", "Bacterial infections",
             "Viral infections", "Allergic reactions", "Contact dermatitis"
-        ]
-    },
+        ], 
+        symptoms: {
+    cardiovascular: [
+        // Chest & Heart Sensations
+        "Chest pain", "Chest pressure", "Chest tightness", "Chest heaviness", "Heart palpitations", "Irregular heartbeat", "Rapid heartbeat", "Slow heartbeat", "Skipped beats", "Fluttering in chest", "Pounding heart", "Heart murmur", "Awareness of heartbeat",
+
+        // Pain Radiations
+        "Pain radiating to left arm", "Pain radiating to right arm", "Pain radiating to jaw", "Pain radiating to neck", "Pain radiating to back", "Pain radiating to shoulder", "Pain radiating to upper abdomen",
+
+        // Circulation & Color
+        "Swelling in legs", "Swelling in ankles", "Swelling in feet", "Pitting edema", "Cold hands", "Cold feet", "Pale skin", "Bluish lips", "Bluish skin", "Bluish nail beds", "Clubbing of fingers", "Pallor", "Mottled skin", "Poor capillary refill", "Varicose veins", "Spider veins",
+
+        // Blood Pressure & Perfusion
+        "High blood pressure", "Low blood pressure", "Orthostatic hypotension", "Dizziness", "Lightheadedness", "Fainting", "Near-fainting", "Weak pulse", "Thready pulse", "Bounding pulse",
+
+        // Respiratory Link
+        "Shortness of breath", "Difficulty breathing lying flat", "Paroxysmal nocturnal dyspnea", "Exercise intolerance", "Fatigue", "Weakness",
+
+        // Systemic
+        "Excessive sweating", "Cold sweats", "Nausea", "Indigestion", "Abdominal bloating", "Loss of appetite", "Cough", "Coughing up blood", "Decreased urine output", "Nocturia"
+    ],
+
+    respiratory: [
+        // Breathing Patterns & Sensations
+        "Shortness of breath", "Difficulty breathing", "Labored breathing", "Shallow breathing", "Rapid breathing", "Slow breathing", "Cheyne-Stokes respiration", "Air hunger", "Inability to take deep breath", "Feeling of suffocation", "Wheezing", "Stridor", "Grunting",
+
+        // Cough & Sputum
+        "Cough", "Dry cough", "Productive cough", "Wet cough", "Barking cough", "Whooping cough", "Persistent cough", "Coughing up phlegm", "Coughing up blood", "Clear sputum", "White sputum", "Yellow sputum", "Green sputum", "Rust-colored sputum", "Frothy sputum", "Thick sputum",
+
+        // Nasal & Sinus
+        "Runny nose", "Stuffy nose", "Nasal congestion", "Nasal discharge", "Post-nasal drip", "Sneezing", "Sinus pressure", "Sinus pain", "Sinus headache", "Loss of smell", "Impaired smell", "Facial pain", "Facial tenderness",
+
+        // Throat & Voice
+        "Sore throat", "Throat pain", "Throat irritation", "Scratchy throat", "Hoarseness", "Loss of voice", "Voice changes", "Difficulty swallowing", "Swollen tonsils", "Tonsil exudate",
+
+        // Chest Sensations
+        "Chest pain", "Chest tightness", "Pleuritic chest pain", "Chest congestion", "Rattling in chest", "Pleurisy",
+
+        // Auditory
+        "Clubbed fingers", "Cyanosis", "Fever", "Chills", "Night sweats", "Fatigue", "Weight loss", "Loss of appetite"
+    ],
+
+    neurological: [
+        // Head & Pain
+        "Headache", "Migraine", "Cluster headache", "Tension headache", "Throbbing headache", "Pressure headache", "Sudden severe headache", "Explosive headache",
+
+        // Consciousness & Cognition
+        "Dizziness", "Lightheadedness", "Vertigo", "Fainting", "Loss of consciousness", "Confusion", "Disorientation", "Delirium", "Memory loss", "Amnesia", "Difficulty concentrating", "Brain fog", "Mental slowing", "Poor judgment", "Difficulty with executive function",
+
+        // Sensory - General
+        "Numbness", "Tingling", "Pins and needles", "Burning sensation", "Prickling sensation", "Loss of sensation", "Hypersensitivity", "Allodynia",
+
+        // Sensory - Vision
+        "Blurred vision", "Double vision", "Loss of vision", "Tunnel vision", "Blind spots", "Floaters", "Flashes of light", "Halos around lights", "Light sensitivity", "Eye pain", "Dry eyes",
+
+        // Sensory - Hearing & Balance
+        "Hearing loss", "Ringing in ears", "Buzzing in ears", "Popping in ears", "Ear pressure", "Sound sensitivity", "Loss of balance", "Unsteadiness", "Feeling of spinning", "Veering to one side",
+
+        // Sensory - Smell & Taste
+        "Loss of smell", "Impaired smell", "Loss of taste", "Impaired taste", "Metallic taste", "Bad taste in mouth",
+
+        // Motor Function
+        "Weakness", "Paralysis", "Hemiparesis", "Paraparesis", "Tremors", "Shaking", "Muscle twitching", "Fasciculations", "Seizures", "Convulsions", "Spasms", "Clonus", "Clumsiness", "Loss of coordination", "Ataxia", "Difficulty walking", "Abnormal gait", "Foot drop", "Dropping things",
+
+        // Speech & Language
+        "Slurred speech", "Difficulty speaking", "Aphasia", "Dysarthria", "Slow speech", "Stuttering", "Difficulty finding words", "Difficulty understanding speech",
+
+        // Sleep & Behavior
+        "Sleep problems", "Insomnia", "Hypersomnia", "Sleepwalking", "Night terrors", "Mood changes", "Personality changes", "Anxiety", "Depression", "Apathy", "Agitation", "Irritability", "Emotional lability",
+
+        // Autonomic & Other
+        "Neck stiffness", "Photophobia", "Phonophobia", "Difficulty swallowing", "Drooling", "Facial droop", "Bell's palsy", "Vertigo"
+    ],
+
+    gastrointestinal: [
+        // Upper GI - Esophagus/Stomach
+        "Abdominal pain", "Upper abdominal pain", "Lower abdominal pain", "Epigastric pain", "Heartburn", "Acid reflux", "Indigestion", "Dyspepsia", "Nausea", "Vomiting", "Vomiting blood", "Dry heaving", "Bloating", "Early satiety", "Loss of appetite", "Excessive burping", "Hiccups",
+
+        // Lower GI - Intestines
+        "Diarrhea", "Watery diarrhea", "Bloody diarrhea", "Constipation", "Urgent need to defecate", "Tenesmus", "Incomplete evacuation", "Fecal incontinence", "Gas", "Flatulence", "Abdominal cramps", "Abdominal distension", "Gurgling stomach", "Borborygmi",
+
+        // Rectal & Anal
+        "Rectal pain", "Anal pain", "Anal itching", "Blood in stool", "Bright red blood per rectum", "Black tarry stool", "Mucus in stool", "Pale stool", "Greasy stool", "Foul-smelling stool", "Narrow stools", "Hemorrhoids",
+
+        // Liver/Gallbladder/Pancreas
+        "Jaundice", "Yellow eyes", "Dark urine", "Light-colored stool", "Itchy skin", "Right upper quadrant pain", "Abdominal tenderness", "Ascites", "Abdominal swelling",
+
+        // Systemic & Associated
+        "Difficulty swallowing", "Painful swallowing", "Feeling of lump in throat", "Weight loss", "Unintended weight loss", "Weight gain", "Fatigue", "Weakness", "Fever", "Dehydration", "Malnutrition"
+    ],
+
+    musculoskeletal: [
+        // Pain - General & Localized
+        "Joint pain", "Muscle pain", "Bone pain", "Back pain", "Neck pain", "Lower back pain", "Sciatica", "Shoulder pain", "Elbow pain", "Wrist pain", "Hip pain", "Knee pain", "Ankle pain", "Foot pain", "Heel pain", "Toe pain", "Rib pain", "Tailbone pain",
+
+        // Pain Quality
+        "Aching pain", "Sharp pain", "Stabbing pain", "Shooting pain", "Burning pain", "Throbbing pain", "Pain with movement", "Pain at rest", "Night pain", "Morning stiffness",
+
+        // Inflammation & Swelling
+        "Joint swelling", "Muscle swelling", "Warm joints", "Red joints", "Joint effusion", "Bursitis", "Tendonitis",
+
+        // Mobility & Function
+        "Joint stiffness", "Muscle stiffness", "Limited range of motion", "Decreased flexibility", "Joint locking", "Joint instability", "Joint giving way", "Difficulty walking", "Limping", "Difficulty standing", "Difficulty climbing stairs", "Difficulty raising arms", "Loss of function",
+
+        // Structural Changes
+        "Muscle weakness", "Muscle atrophy", "Muscle cramps", "Muscle spasms", "Tremors", "Joint deformity", "Bone deformity", "Scoliosis", "Kyphosis", "Lordosis",
+
+        // Injuries
+        "Fractures", "Sprains", "Strains", "Dislocation", "Subluxation", "Clicking joints", "Popping joints", "Grinding joints", "Crepitus"
+    ],
+
+    dermatological: [
+        // Lesions & Eruptions
+        "Rash", "Macular rash", "Papular rash", "Vesicular rash", "Pustular rash", "Bullous rash", "Nodular rash", "Plaques", "Patches", "Hives", "Wheals", "Blisters", "Vesicles", "Pustules", "Boils", "Abscesses", "Cysts", "Nodules", "Tumors", "Skin tags",
+
+        // Color Changes
+        "Redness", "Erythema", "Flushing", "Blushing", "Pallor", "Paleness", "Jaundice", "Yellow skin", "Hyperpigmentation", "Hypopigmentation", "Vitiligo", "Melasma", "Darkening of skin", "Bronze skin", "Bluish skin", "Cyanosis", "Purpura", "Petechiae", "Ecchymosis", "Bruising", "Bruising easily",
+
+        // Texture & Scaling
+        "Dry skin", "Xerosis", "Oily skin", "Scaly skin", "Flaking skin", "Crusting", "Scabbing", "Lichenification", "Thickened skin", "Keratosis", "Calluses", "Corns",
+
+        // Hair & Nails
+        "Hair loss", "Alopecia", "Thinning hair", "Brittle hair", "Excessive hair growth", "Hirsutism", "Nail pitting", "Brittle nails", "Splitting nails", "Onycholysis", "Nail discoloration", "Yellow nails", "White spots on nails", "Beau's lines", "Clubbed nails",
+
+        // Sensations
+        "Itching", "Pruritus", "Burning sensation", "Stinging sensation", "Prickling sensation", "Painful skin", "Skin tenderness", "Allodynia",
+
+        // Infections & Infestations
+        "Fungal rash", "Ringworm", "Athlete's foot", "Bacterial infection", "Cellulitis", "Impetigo", "Viral rash", "Warts", "Molluscum", "Shingles rash", "Lice", "Scabies", "Bug bites",
+
+        // Growths & Moles
+        "Moles", "New moles", "Changing moles", "Asymmetric moles", "Moles with irregular borders", "Moles with color variation", "Large moles", "Skin cancer", "Basal cell carcinoma", "Squamous cell carcinoma", "Melanoma", "Actinic keratosis", "Seborrheic keratosis",
+
+        // Other
+        "Edema", "Swelling", "Pitting edema", "Non-pitting edema", "Lip swelling", "Eye swelling", "Face swelling", "Hot skin", "Cold skin", "Sweating", "Excessive sweating", "Night sweats", "Body odor", "Poor wound healing", "Ulcers", "Bedsores", "Stretch marks", "Scars", "Keloids"
+    ],
+
+    genitourinary: [
+        // Urinary
+        "Frequent urination", "Urgency", "Nocturia", "Painful urination", "Burning with urination", "Difficulty starting urination", "Weak urine stream", "Straining to urinate", "Dribbling", "Incomplete emptying", "Urinary incontinence", "Stress incontinence", "Urge incontinence", "Blood in urine", "Cloudy urine", "Foul-smelling urine", "Dark urine", "Decreased urine output", "Oliguria", "Anuria",
+
+        // Male Reproductive
+        "Testicular pain", "Penile pain", "Groin pain", "Erectile dysfunction", "Difficulty with erection", "Premature ejaculation", "Delayed ejaculation", "Loss of libido", "Penile discharge", "Urethral discharge", "Prostate pain", "Swollen testicle", "Testicular lump", "Varicocele", "Hydrocele",
+
+        // Female Reproductive
+        "Vaginal bleeding", "Heavy menstrual bleeding", "Irregular periods", "Missed periods", "Painful periods", "Spotting between periods", "Postmenopausal bleeding", "Vaginal discharge", "Abnormal vaginal discharge", "Vaginal itching", "Vaginal burning", "Vaginal dryness", "Painful intercourse", "Pelvic pain", "Ovarian pain", "Painful ovulation", "Infertility", "Loss of libido", "Hot flashes", "Night sweats", "Breast pain", "Breast lump", "Nipple discharge",
+
+        // Renal & Flank
+        "Flank pain", "Back pain", "Kidney pain", "Renal colic"
+    ],
+
+    endocrine_metabolic: [
+        // Thyroid
+        "Fatigue", "Weight gain", "Weight loss", "Unintended weight change", "Heat intolerance", "Cold intolerance", "Excessive sweating", "Dry skin", "Moist skin", "Hair loss", "Brittle nails", "Palpitations", "Anxiety", "Irritability", "Nervousness", "Tremors", "Insomnia", "Lethargy", "Sluggishness", "Constipation", "Diarrhea",
+
+        // Adrenal
+        "Low blood pressure", "Dizziness", "Salt craving", "Hyperpigmentation", "Darkening of skin creases", "Buffalo hump", "Moon face", "Purple stretch marks", "Muscle weakness", "Excessive thirst", "Excessive urination",
+
+        // Pituitary
+        "Headache", "Vision changes", "Galactorrhea", "Lactation", "Growth abnormalities", "Acromegaly", "Coarsening of facial features", "Loss of peripheral vision",
+
+        // Diabetes & Blood Sugar
+        "Excessive thirst", "Frequent urination", "Increased appetite", "Blurred vision", "Slow-healing sores", "Frequent infections", "Numbness in hands/feet", "Tingling in hands/feet", "Fruity-smelling breath", "Confusion",
+
+        // Calcium & Bone
+        "Bone pain", "Fractures", "Muscle cramps", "Tingling around mouth", "Tingling in fingers", "Kidney stones", "Fatigue", "Weakness"
+    ],
+
+    hematologic_immunologic: [
+        // Anemia & Bleeding
+        "Fatigue", "Weakness", "Pale skin", "Pallor", "Shortness of breath", "Rapid heartbeat", "Dizziness", "Headache", "Cold hands and feet", "Bruising easily", "Petechiae", "Purpura", "Prolonged bleeding", "Heavy menstrual bleeding", "Blood in stool", "Blood in urine", "Nosebleeds", "Bleeding gums",
+
+        // Infection & Immunity
+        "Fever", "Recurrent infections", "Frequent infections", "Swollen lymph nodes", "Night sweats", "Unexplained weight loss", "Fatigue", "Malaise", "Sore throat", "Mouth sores", "Slow wound healing"
+    ],
+
+    psychiatric_behavioral: [
+        // Mood
+        "Depressed mood", "Loss of interest", "Anhedonia", "Excessive worry", "Anxiety", "Panic attacks", "Irritability", "Anger", "Mood swings", "Emotional lability", "Apathy", "Euphoria", "Grandiosity",
+
+        // Thought Process
+        "Racing thoughts", "Flight of ideas", "Slow thinking", "Poor concentration", "Indecisiveness", "Confusion", "Delusions", "Paranoia", "Hallucinations", "Suicidal thoughts", "Homicidal thoughts",
+
+        // Behavior
+        "Agitation", "Restlessness", "Psychomotor retardation", "Social withdrawal", "Impulsivity", "Risk-taking behavior", "Compulsive behavior", "Aggression", "Self-harm", "Changes in sleep", "Changes in appetite", "Changes in energy level",
+
+        // Cognitive
+        "Memory problems", "Forgetfulness", "Disorientation", "Difficulty with problem-solving", "Poor judgment"
+    ],
+
+    general_constitutional: [
+        // Systemic
+        "Fever", "Chills", "Night sweats", "Fatigue", "Malaise", "Weakness", "Lethargy", "Unintended weight loss", "Unintended weight gain", "Loss of appetite", "Increased appetite", "Dehydration", "Swelling", "Edema",
+
+        // Sleep
+        "Insomnia", "Hypersomnia", "Excessive daytime sleepiness", "Sleep apnea", "Snoring", "Restless legs", "Nightmares", "Night terrors", "Sleepwalking",
+
+        // Pain - Generalized
+        "Body aches", "Growing pains", "Generalized pain", "Widespread pain", "Fatigue", "Tender points"
+    ]
+},
 
     // Medical conditions database with symptoms mapping
     conditions: [
