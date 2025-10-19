@@ -50,26 +50,681 @@ const medicalDatabase = {
         ]
     },
 
-   // Automated condition generator
-function generateConditions(baseCondition, variations, count) {
-    const conditions = [];
-    for (let i = 0; i < count; i++) {
-        conditions.push({
-            name: `${baseCondition} Type ${i + 1}`,
-            system: variations.system,
-            severity: variations.severity[Math.floor(Math.random() * variations.severity.length)],
-            prevalence: variations.prevalence[Math.floor(Math.random() * variations.prevalence.length)],
-            symptoms: [...variations.baseSymptoms, ...variations.additionalSymptoms.slice(0, 3)],
-            description: `Variant ${i + 1} of ${baseCondition} with specific characteristics...`,
-            treatment: variations.treatment,
-            emergency: Math.random() > 0.8,
-            risk_factors: variations.risk_factors,
-            prevention: variations.prevention
-        });
-    }
-    return conditions;
-}
+    // Medical conditions database with symptoms mapping
+    conditions: [
+        {
+            name: "Common Cold",
+            symptoms: ["Runny nose", "Stuffy nose", "Sore throat", "Cough", "Mild fever", "Fatigue", "Headache"],
+            severity: "low",
+            prevalence: "very_common",
+            description: "A viral infection of the upper respiratory tract, typically mild and self-limiting.",
+            treatment: "Rest, fluids, over-the-counter medications for symptom relief",
+            emergency: false
+        },
+        {
+            name: "Influenza",
+            symptoms: ["High fever", "Body aches", "Fatigue", "Cough", "Sore throat", "Headache", "Chills"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A viral respiratory illness that can cause severe symptoms and complications.",
+            treatment: "Antiviral medications if started early, rest, fluids, fever reducers",
+            emergency: false
+        },
+        {
+            name: "COVID-19",
+            symptoms: ["Fever", "Cough", "Shortness of breath", "Loss of taste", "Loss of smell", "Fatigue", "Body aches"],
+            severity: "high",
+            prevalence: "common",
+            description: "A respiratory illness caused by the SARS-CoV-2 virus, with varying severity.",
+            treatment: "Isolation, supportive care, antiviral medications for high-risk individuals",
+            emergency: false
+        },
+        {
+            name: "Heart Attack",
+            symptoms: ["Chest pain", "Shortness of breath", "Pain in left arm", "Jaw pain", "Nausea", "Sweating", "Fatigue"],
+            severity: "emergency",
+            prevalence: "uncommon",
+            description: "A medical emergency where blood flow to the heart is blocked, causing heart muscle damage.",
+            treatment: "Immediate emergency medical care, medications, possible procedures",
+            emergency: true
+        },
+        {
+            name: "Stroke",
+            symptoms: ["Sudden weakness", "Difficulty speaking", "Blurred vision", "Dizziness", "Severe headache", "Loss of balance"],
+            severity: "emergency",
+            prevalence: "uncommon",
+            description: "A medical emergency where blood flow to the brain is interrupted, causing brain damage.",
+            treatment: "Immediate emergency medical care, clot-busting medications, rehabilitation",
+            emergency: true
+        },
+        {
+            name: "Asthma",
+            symptoms: ["Shortness of breath", "Wheezing", "Chest tightness", "Cough", "Difficulty breathing"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A chronic respiratory condition characterized by inflammation and narrowing of airways.",
+            treatment: "Inhalers, medications, avoiding triggers, regular monitoring",
+            emergency: false
+        },
+        {
+            name: "Diabetes Type 2",
+            symptoms: ["Frequent urination", "Excessive thirst", "Fatigue", "Blurred vision", "Slow healing", "Weight loss"],
+            severity: "high",
+            prevalence: "common",
+            description: "A metabolic disorder characterized by high blood sugar levels and insulin resistance.",
+            treatment: "Diet, exercise, medications, blood sugar monitoring",
+            emergency: false
+        },
+        {
+            name: "Hypertension",
+            symptoms: ["High blood pressure", "Headache", "Dizziness", "Chest pain", "Shortness of breath", "Nosebleeds"],
+            severity: "moderate",
+            prevalence: "very_common",
+            description: "High blood pressure that can lead to serious cardiovascular complications if untreated.",
+            treatment: "Lifestyle changes, medications, regular monitoring",
+            emergency: false
+        },
+        {
+            name: "Migraine",
+            symptoms: ["Severe headache", "Nausea", "Light sensitivity", "Sound sensitivity", "Visual disturbances", "Vomiting"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A neurological condition characterized by severe, recurring headaches with various symptoms.",
+            treatment: "Pain medications, preventive medications, avoiding triggers",
+            emergency: false
+        },
+        {
+            name: "Anxiety Disorder",
+            symptoms: ["Excessive worry", "Restlessness", "Fatigue", "Difficulty concentrating", "Muscle tension", "Sleep problems"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A mental health condition characterized by persistent worry and fear that interferes with daily life.",
+            treatment: "Therapy, medications, lifestyle changes, stress management",
+            emergency: false
+        },
+        
+        // INFECTIOUS DISEASES
+        {
+            name: "Pneumonia",
+            symptoms: ["Cough with phlegm", "Fever", "Chills", "Shortness of breath", "Chest pain", "Fatigue", "Confusion (in elderly)"],
+            severity: "high",
+            prevalence: "common",
+            description: "Infection that inflames air sacs in one or both lungs, which may fill with fluid.",
+            treatment: "Antibiotics, antiviral or antifungal medications, rest, fluids, fever reducers",
+            emergency: true
+        },
+        {
+            name: "Bronchitis",
+            symptoms: ["Persistent cough", "Mucus production", "Fatigue", "Shortness of breath", "Chest discomfort", "Mild fever"],
+            severity: "low",
+            prevalence: "common",
+            description: "Inflammation of the lining of your bronchial tubes, which carry air to and from your lungs.",
+            treatment: "Rest, fluids, humidifier, over-the-counter cough medicines",
+            emergency: false
+        },
+        {
+            name: "Strep Throat",
+            symptoms: ["Severe sore throat", "Painful swallowing", "Fever", "Swollen lymph nodes", "White patches on tonsils", "Headache"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A bacterial infection that causes inflammation and pain in the throat.",
+            treatment: "Antibiotics, pain relievers, rest, warm liquids",
+            emergency: false
+        },
+        {
+            name: "Urinary Tract Infection (UTI)",
+            symptoms: ["Burning sensation when urinating", "Frequent urination", "Cloudy urine", "Pelvic pain", "Strong-smelling urine"],
+            severity: "low",
+            prevalence: "very_common",
+            description: "An infection in any part of the urinary system, most commonly the bladder and urethra.",
+            treatment: "Antibiotics, increased fluid intake",
+            emergency: false
+        },
+        {
+            name: "Mononucleosis",
+            symptoms: ["Extreme fatigue", "Fever", "Sore throat", "Swollen lymph nodes", "Body aches", "Swollen spleen"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "Often called 'mono,' it's a viral infection causing fever, sore throat, and fatigue.",
+            treatment: "Rest, fluids, over-the-counter pain relievers",
+            emergency: false
+        },
+        {
+            name: "Appendicitis",
+            symptoms: ["Sudden pain near navel shifting to lower right abdomen", "Fever", "Nausea", "Vomiting", "Loss of appetite", "Abdominal swelling"],
+            severity: "emergency",
+            prevalence: "uncommon",
+            description: "Inflammation of the appendix, a medical emergency requiring immediate surgery.",
+            treatment: "Surgical removal of the appendix (appendectomy), antibiotics",
+            emergency: true
+        },
+        {
+            name: "Gastroenteritis (Stomach Flu)",
+            symptoms: ["Watery diarrhea", "Abdominal cramps", "Nausea", "Vomiting", "Fever", "Muscle aches"],
+            severity: "low",
+            prevalence: "common",
+            description: "Intestinal infection marked by diarrhea, cramps, and vomiting.",
+            treatment: "Rest, fluids, bland diet, electrolyte solutions",
+            emergency: false
+        },
+        {
+            name: "Sinusitis",
+            symptoms: ["Facial pain/pressure", "Nasal congestion", "Thick nasal discharge", "Loss of smell", "Cough", "Headache"],
+            severity: "low",
+            prevalence: "common",
+            description: "Inflammation or swelling of the tissue lining the sinuses.",
+            treatment: "Nasal decongestants, saline spray, pain relievers, antibiotics (if bacterial)",
+            emergency: false
+        },
+        {
+            name: "Tuberculosis",
+            symptoms: ["Cough lasting 3+ weeks", "Coughing up blood", "Chest pain", "Unintentional weight loss", "Fever", "Night sweats"],
+            severity: "high",
+            prevalence: "rare",
+            description: "A potentially serious infectious disease that mainly affects the lungs.",
+            treatment: "Long-term antibiotic regimen",
+            emergency: false
+        },
+        {
+            name: "Lyme Disease",
+            symptoms: ["Bull's-eye rash", "Fever", "Chills", "Fatigue", "Body aches", "Headache", "Swollen lymph nodes"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "An infectious disease caused by Borrelia bacteria, transmitted by tick bites.",
+            treatment: "Antibiotics",
+            emergency: false
+        },
 
+        // CARDIOVASCULAR
+        {
+            name: "Heart Failure",
+            symptoms: ["Shortness of breath", "Fatigue", "Swelling in legs/ankles/feet", "Rapid heartbeat", "Persistent cough", "Weight gain"],
+            severity: "high",
+            prevalence: "common",
+            description: "A chronic condition where the heart doesn't pump blood as well as it should.",
+            treatment: "Medications, lifestyle changes, device implantation, surgery",
+            emergency: false
+        },
+        {
+            name: "Arrhythmia",
+            symptoms: ["Fluttering in chest", "Racing heartbeat", "Slow heartbeat", "Chest pain", "Shortness of breath", "Dizziness", "Fainting"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "Improper beating of the heart, whether irregular, too fast, or too slow.",
+            treatment: "Medications, cardioversion, catheter procedures, pacemaker",
+            emergency: false
+        },
+        {
+            name: "Atrial Fibrillation",
+            symptoms: ["Heart palpitations", "Shortness of breath", "Weakness", "Fatigue", "Lightheadedness", "Chest pain"],
+            severity: "high",
+            prevalence: "common",
+            description: "An irregular and often very rapid heart rhythm that can lead to blood clots.",
+            treatment: "Medications, procedures, lifestyle changes",
+            emergency: false
+        },
+        {
+            name: "Deep Vein Thrombosis (DVT)",
+            symptoms: ["Swelling in one leg", "Pain in leg", "Red/discolored skin", "Warmth in affected leg"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "A blood clot that forms in a vein deep in the body, usually in the leg.",
+            treatment: "Blood thinners, compression stockings, clot busters",
+            emergency: true
+        },
+        {
+            name: "Pulmonary Embolism",
+            symptoms: ["Sudden shortness of breath", "Chest pain", "Cough (possibly with blood)", "Rapid heartbeat", "Lightheadedness", "Sweating"],
+            severity: "emergency",
+            prevalence: "uncommon",
+            description: "A blocked artery in the lungs, often caused by a blood clot that traveled from the leg.",
+            treatment: "Emergency medical care, blood thinners, clot dissolvers",
+            emergency: true
+        },
+        {
+            name: "Pericarditis",
+            symptoms: ["Sharp chest pain", "Shortness of breath", "Heart palpitations", "Low-grade fever", "Weakness", "Cough"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "Swelling and irritation of the pericardium, the thin sac-like membrane surrounding the heart.",
+            treatment: "Medications for pain and inflammation, treating underlying cause",
+            emergency: false
+        },
+
+        // NEUROLOGICAL
+        {
+            name: "Epilepsy",
+            symptoms: ["Temporary confusion", "Staring spell", "Uncontrollable jerking", "Loss of consciousness", "Fear/anxiety"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "A central nervous system disorder in which brain activity becomes abnormal, causing seizures.",
+            treatment: "Anti-seizure medications, surgery, dietary therapy",
+            emergency: false
+        },
+        {
+            name: "Multiple Sclerosis",
+            symptoms: ["Numbness/weakness in limbs", "Electric-shock sensations", "Tremor", "Lack of coordination", "Slurred speech", "Fatigue", "Vision problems"],
+            severity: "high",
+            prevalence: "rare",
+            description: "A disease in which the immune system eats away at the protective covering of nerves.",
+            treatment: "Disease-modifying therapies, physical therapy, medications for symptoms",
+            emergency: false
+        },
+        {
+            name: "Parkinson's Disease",
+            symptoms: ["Tremor", "Slowed movement", "Rigid muscles", "Impaired posture", "Speech changes", "Loss of automatic movements"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "A progressive nervous system disorder that affects movement.",
+            treatment: "Medications, physical therapy, lifestyle modifications, possible surgery",
+            emergency: false
+        },
+        {
+            name: "Alzheimer's Disease",
+            symptoms: ["Memory loss", "Difficulty planning/problem-solving", "Confusion", "Personality changes", "Difficulty speaking/writing"],
+            severity: "high",
+            prevalence: "common",
+            description: "A progressive disorder that causes brain cells to waste away and die.",
+            treatment: "Medications to manage symptoms, supportive care",
+            emergency: false
+        },
+        {
+            name: "Meningitis",
+            symptoms: ["Sudden high fever", "Stiff neck", "Severe headache", "Nausea", "Vomiting", "Confusion", "Sensitivity to light"],
+            severity: "emergency",
+            prevalence: "rare",
+            description: "Inflammation of the fluid and membranes surrounding the brain and spinal cord.",
+            treatment: "Emergency hospitalization, antibiotics, antiviral medications, corticosteroids",
+            emergency: true
+        },
+        {
+            name: "Concussion",
+            symptoms: ["Headache", "Confusion", "Dizziness", "Nausea", "Ringling in ears", "Fatigue", "Blurred vision"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A traumatic brain injury that affects brain function, typically caused by a blow to the head.",
+            treatment: "Physical and mental rest, gradual return to activity",
+            emergency: false
+        },
+        {
+            name: "Bell's Palsy",
+            symptoms: ["Sudden weakness/paralysis on one side of face", "Drooping mouth/eyelid", "Drooling", "Loss of taste", "Increased sensitivity to sound"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "A sudden, temporary weakness or paralysis of the facial muscles.",
+            treatment: "Corticosteroids, antiviral drugs, eye protection, physical therapy",
+            emergency: false
+        },
+
+        // GASTROINTESTINAL
+        {
+            name: "Gastroesophageal Reflux Disease (GERD)",
+            symptoms: ["Heartburn", "Regurgitation", "Chest pain", "Difficulty swallowing", "Sensation of a lump in throat"],
+            severity: "low",
+            prevalence: "very_common",
+            description: "A digestive disorder that affects the lower esophageal sphincter.",
+            treatment: "Lifestyle changes, over-the-counter medications, prescription medications, possible surgery",
+            emergency: false
+        },
+        {
+            name: "Irritable Bowel Syndrome (IBS)",
+            symptoms: ["Abdominal cramping", "Bloating", "Gas", "Diarrhea", "Constipation", "Mucus in stool"],
+            severity: "low",
+            prevalence: "common",
+            description: "A common disorder affecting the large intestine.",
+            treatment: "Dietary changes, stress management, medications",
+            emergency: false
+        },
+        {
+            name: "Inflammatory Bowel Disease (IBD) - Crohn's/Ulcerative Colitis",
+            symptoms: ["Persistent diarrhea", "Abdominal pain", "Rectal bleeding", "Fatigue", "Weight loss", "Fever"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "Chronic inflammation of the digestive tract.",
+            treatment: "Anti-inflammatory drugs, immune system suppressors, biologics, surgery",
+            emergency: false
+        },
+        {
+            name: "Celiac Disease",
+            symptoms: ["Diarrhea", "Fatigue", "Weight loss", "Bloating", "Anemia", "Abdominal pain"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "An immune reaction to eating gluten, a protein found in wheat, barley, and rye.",
+            treatment: "Strict, lifelong gluten-free diet",
+            emergency: false
+        },
+        {
+            name: "Gallstones",
+            symptoms: ["Sudden pain in upper right abdomen", "Back pain between shoulder blades", "Nausea", "Vomiting", "Indigestion"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "Hardened deposits in the digestive fluid that can form in your gallbladder.",
+            treatment: "Surgery to remove gallbladder, medications to dissolve stones",
+            emergency: false
+        },
+        {
+            name: "Pancreatitis",
+            symptoms: ["Upper abdominal pain", "Abdominal pain radiating to back", "Fever", "Rapid pulse", "Nausea", "Vomiting"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "Inflammation of the pancreas.",
+            treatment: "Hospitalization for supportive care, pain management, treating underlying cause",
+            emergency: true
+        },
+        {
+            name: "Peptic Ulcer",
+            symptoms: ["Burning stomach pain", "Feeling of fullness", "Bloating", "Belching", "Heartburn", "Nausea"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "Sores that develop on the lining of the stomach, upper small intestine, or esophagus.",
+            treatment: "Antibiotics (if H. pylori), acid-reducing medications, lifestyle changes",
+            emergency: false
+        },
+
+        // MUSCULOSKELETAL
+        {
+            name: "Osteoarthritis",
+            symptoms: ["Joint pain", "Stiffness", "Tenderness", "Loss of flexibility", "Grating sensation", "Bone spurs"],
+            severity: "moderate",
+            prevalence: "very_common",
+            description: "The most common form of arthritis, affecting millions worldwide, involving wear-and-tear of joint cartilage.",
+            treatment: "Pain relievers, physical therapy, lifestyle changes, joint surgery",
+            emergency: false
+        },
+        {
+            name: "Rheumatoid Arthritis",
+            symptoms: ["Tender/warm/swollen joints", "Joint stiffness (worse in mornings)", "Fatigue", "Fever", "Weight loss"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "An autoimmune disorder that primarily affects joints, causing painful swelling and potential joint deformity.",
+            treatment: "Disease-modifying antirheumatic drugs, biologics, physical therapy",
+            emergency: false
+        },
+        {
+            name: "Osteoporosis",
+            symptoms: ["Back pain", "Loss of height over time", "Stooped posture", "Bone fracture from minor injury"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A condition in which bones become weak and brittle.",
+            treatment: "Bone-building medications, calcium and vitamin D supplements, weight-bearing exercise",
+            emergency: false
+        },
+        {
+            name: "Gout",
+            symptoms: ["Intense joint pain", "Lingering discomfort", "Inflammation and redness", "Limited range of motion"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A form of arthritis characterized by severe pain, redness, and tenderness in joints.",
+            treatment: "NSAIDs, corticosteroids, medications to block uric acid production",
+            emergency: false
+        },
+        {
+            name: "Carpal Tunnel Syndrome",
+            symptoms: ["Numbness/tingling in hand/arm", "Weakness in hand", "Pain in wrist/hand", "Shock-like sensations"],
+            severity: "low",
+            prevalence: "common",
+            description: "A condition caused by pressure on the median nerve in the wrist.",
+            treatment: "Wrist splinting, medications, corticosteroid injections, surgery",
+            emergency: false
+        },
+        {
+            name: "Fibromyalgia",
+            symptoms: ["Widespread pain", "Fatigue", "Cognitive difficulties ('fibro fog')", "Headaches", "Sleep problems"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "A disorder characterized by widespread musculoskeletal pain accompanied by fatigue, sleep, and mood issues.",
+            treatment: "Pain relievers, antidepressants, anti-seizure drugs, therapy, lifestyle changes",
+            emergency: false
+        },
+
+        // DERMATOLOGICAL
+        {
+            name: "Eczema (Atopic Dermatitis)",
+            symptoms: ["Itchy skin", "Red to brownish-gray patches", "Small raised bumps", "Thickened/cracked/scaly skin", "Raw/sensitive skin from scratching"],
+            severity: "low",
+            prevalence: "common",
+            description: "A condition that makes your skin red and itchy.",
+            treatment: "Moisturizers, topical corticosteroids, avoiding triggers, light therapy",
+            emergency: false
+        },
+        {
+            name: "Psoriasis",
+            symptoms: ["Red patches of skin with silvery scales", "Dry/cracked skin that may bleed", "Itching/burning/soreness", "Thickened/pitted nails"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A skin disease that causes red, itchy scaly patches, most commonly on the knees, elbows, and scalp.",
+            treatment: "Topical treatments, light therapy, oral/injected medications",
+            emergency: false
+        },
+        {
+            name: "Shingles",
+            symptoms: ["Pain/tingling/itching", "Red rash", "Fluid-filled blisters", "Fever", "Headache", "Fatigue"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "A viral infection causing a painful rash, caused by the same virus as chickenpox.",
+            treatment: "Antiviral medications, pain relievers, anticonvulsants, numbing agents",
+            emergency: false
+        },
+        {
+            name: "Acne Vulgaris",
+            symptoms: ["Whiteheads", "Blackheads", "Small red tender bumps", "Pimples", "Large painful lumps under skin"],
+            severity: "low",
+            prevalence: "very_common",
+            description: "A skin condition that occurs when hair follicles become plugged with oil and dead skin cells.",
+            treatment: "Topical treatments, antibiotics, oral contraceptives, isotretinoin",
+            emergency: false
+        },
+        {
+            name: "Rosacea",
+            symptoms: ["Facial redness", "Visible blood vessels", "Swollen red bumps", "Eye problems", "Burning sensation"],
+            severity: "low",
+            prevalence: "common",
+            description: "A common skin condition that causes redness and visible blood vessels in your face.",
+            treatment: "Topical/oral medications, laser therapy, avoiding triggers",
+            emergency: false
+        },
+        {
+            name: "Cellulitis",
+            symptoms: ["Red/swollen area of skin", "Pain/tenderness", "Skin warmth", "Fever", "Blisters"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A common bacterial skin infection that can be serious if not treated.",
+            treatment: "Oral/IV antibiotics, elevating affected area, pain relievers",
+            emergency: false
+        },
+
+        // ENDOCRINE / METABOLIC
+        {
+            name: "Diabetes Type 1",
+            symptoms: ["Increased thirst", "Frequent urination", "Extreme hunger", "Unintended weight loss", "Fatigue", "Blurred vision"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "A chronic condition where the pancreas produces little or no insulin.",
+            treatment: "Insulin therapy, blood sugar monitoring, carbohydrate counting",
+            emergency: false
+        },
+        {
+            name: "Hypothyroidism",
+            symptoms: ["Fatigue", "Increased sensitivity to cold", "Constipation", "Dry skin", "Weight gain", "Puffy face", "Hoarseness"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A condition where the thyroid gland doesn't produce enough thyroid hormone.",
+            treatment: "Daily hormone replacement therapy with levothyroxine",
+            emergency: false
+        },
+        {
+            name: "Hyperthyroidism",
+            symptoms: ["Unintentional weight loss", "Rapid heartbeat", "Increased appetite", "Nervousness", "Tremor", "Sweating", "Changes in menstrual patterns"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "A condition where the thyroid gland produces too much thyroid hormone.",
+            treatment: "Anti-thyroid medications, radioactive iodine, beta blockers, surgery",
+            emergency: false
+        },
+        {
+            name: "Cushing's Syndrome",
+            symptoms: ["Weight gain (especially torso)", "Purple stretch marks", "Rounding of face ('moon face')", "Fatty hump between shoulders", "Thin skin that bruises easily"],
+            severity: "high",
+            prevalence: "rare",
+            description: "A condition that occurs from exposure to high cortisol levels for a long time.",
+            treatment: "Reducing corticosteroid use, surgery, radiation therapy, medications",
+            emergency: false
+        },
+        {
+            name: "Addison's Disease",
+            symptoms: ["Extreme fatigue", "Weight loss", "Low blood pressure", "Salt craving", "Hyperpigmentation", "Nausea", "Abdominal pain"],
+            severity: "high",
+            prevalence: "rare",
+            description: "A disorder in which the adrenal glands don't produce enough hormones.",
+            treatment: "Hormone replacement therapy",
+            emergency: false
+        },
+
+        // MENTAL HEALTH
+        {
+            name: "Major Depressive Disorder",
+            symptoms: ["Persistent sadness", "Loss of interest in activities", "Changes in appetite", "Sleep disturbances", "Fatigue", "Feelings of worthlessness", "Difficulty concentrating"],
+            severity: "high",
+            prevalence: "common",
+            description: "A mental health disorder characterized by persistently depressed mood or loss of interest in activities.",
+            treatment: "Psychotherapy, antidepressant medications, lifestyle changes",
+            emergency: false
+        },
+        {
+            name: "Bipolar Disorder",
+            symptoms: ["Mania: elevated mood, increased energy", "Depression: sadness, hopelessness", "Racing thoughts", "Impulsive behavior", "Sleep disturbances"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "A mental health condition causing extreme mood swings that include emotional highs and lows.",
+            treatment: "Mood stabilizers, antipsychotics, psychotherapy",
+            emergency: false
+        },
+        {
+            name: "Obsessive-Compulsive Disorder (OCD)",
+            symptoms: ["Unwanted repetitive thoughts", "Urge to do something repetitively", "Anxiety", "Fear of contamination", "Need for order"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "A pattern of unwanted thoughts and fears that lead to repetitive behaviors.",
+            treatment: "Psychotherapy (CBT), medications (SSRIs)",
+            emergency: false
+        },
+        {
+            name: "Post-Traumatic Stress Disorder (PTSD)",
+            symptoms: ["Flashbacks", "Nightmares", "Severe anxiety", "Uncontrollable thoughts about the event", "Avoidance of reminders"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "A mental health condition triggered by a terrifying event.",
+            treatment: "Psychotherapy (EMDR, CBT), medications",
+            emergency: false
+        },
+        {
+            name: "Schizophrenia",
+            symptoms: ["Delusions", "Hallucinations", "Disorganized thinking/speech", "Abnormal motor behavior", "Negative symptoms (lack of emotion)"],
+            severity: "high",
+            prevalence: "rare",
+            description: "A serious mental disorder in which people interpret reality abnormally.",
+            treatment: "Antipsychotic medications, psychotherapy, social skills training",
+            emergency: false
+        },
+
+        // GENITOURINARY
+        {
+            name: "Kidney Stones",
+            symptoms: ["Severe pain in side/back", "Pain radiating to lower abdomen", "Painful urination", "Pink/red/brown urine", "Nausea", "Vomiting"],
+            severity: "high",
+            prevalence: "common",
+            description: "Hard deposits of minerals and salts that form inside your kidneys.",
+            treatment: "Pain relievers, drinking water, medical procedures to break up/remove stones",
+            emergency: true
+        },
+        {
+            name: "Kidney Infection (Pyelonephritis)",
+            symptoms: ["Fever", "Chills", "Back/side/groin pain", "Abdominal pain", "Frequent urination", "Nausea", "Vomiting"],
+            severity: "high",
+            prevalence: "uncommon",
+            description: "A type of urinary tract infection that generally begins in the urethra or bladder and travels to the kidneys.",
+            treatment: "Antibiotics, hospitalization for severe cases",
+            emergency: true
+        },
+        {
+            name: "Endometriosis",
+            symptoms: ["Painful periods", "Pain with intercourse", "Pain with bowel movements/urination", "Excessive bleeding", "Infertility", "Fatigue"],
+            severity: "moderate",
+            prevalence: "uncommon",
+            description: "An often painful disorder where tissue similar to the uterine lining grows outside the uterus.",
+            treatment: "Pain medications, hormone therapy, conservative surgery, hysterectomy",
+            emergency: false
+        },
+        {
+            name: "Polycystic Ovary Syndrome (PCOS)",
+            symptoms: ["Irregular periods", "Excess androgen", "Polycystic ovaries", "Weight gain", "Infertility", "Acne", "Thinning hair"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A hormonal disorder common among women of reproductive age.",
+            treatment: "Lifestyle changes, birth control pills, medications to induce ovulation",
+            emergency: false
+        },
+        {
+            name: "Benign Prostatic Hyperplasia (BPH)",
+            symptoms: ["Frequent urination", "Urgency", "Difficulty starting urination", "Weak stream", "Dribbling", "Inability to empty bladder"],
+            severity: "low",
+            prevalence: "common",
+            description: "An enlarged prostate gland that can cause problems with urination.",
+            treatment: "Medications, minimally invasive procedures, surgery",
+            emergency: false
+        },
+
+        // OTHER CHRONIC CONDITIONS
+        {
+            name: "Chronic Fatigue Syndrome",
+            symptoms: ["Severe fatigue not improved by rest", "Worsening of symptoms after physical/mental exertion", "Sleep problems", "Difficulty concentrating", "Dizziness"],
+            severity: "high",
+            prevalence: "rare",
+            description: "A complicated disorder characterized by extreme fatigue that can't be explained by an underlying medical condition.",
+            treatment: "Symptom management, cognitive behavioral therapy, graded exercise therapy",
+            emergency: false
+        },
+        {
+            name: "Sleep Apnea",
+            symptoms: ["Loud snoring", "Episodes of stopped breathing during sleep", "Gasping for air during sleep", "Morning headache", "Excessive daytime sleepiness"],
+            severity: "moderate",
+            prevalence: "common",
+            description: "A potentially serious sleep disorder in which breathing repeatedly stops and starts.",
+            treatment: "Lifestyle changes, CPAP machine, oral appliances, surgery",
+            emergency: false
+        },
+        {
+            name: "Anemia",
+            symptoms: ["Fatigue", "Weakness", "Pale skin", "Shortness of breath", "Dizziness", "Cold hands/feet", "Headache"],
+            severity: "low",
+            prevalence: "very_common",
+            description: "A condition in which you lack enough healthy red blood cells to carry adequate oxygen to your body's tissues.",
+            treatment: "Iron supplements, vitamin supplements, treating underlying cause, blood transfusions",
+            emergency: false
+        },
+        {
+            name: "Glaucoma",
+            symptoms: ["Patchy blind spots in peripheral vision", "Tunnel vision (advanced)", "Eye pain", "Headache", "Nausea", "Blurred vision", "Halos around lights"],
+            severity: "high",
+            prevalence: "common",
+            description: "A group of eye conditions that damage the optic nerve, often caused by abnormally high pressure in the eye.",
+            treatment: "Prescription eye drops, oral medications, laser treatment, surgery",
+            emergency: false
+        },
+        {
+            name: "Cataracts",
+            symptoms: ["Clouded/blurred vision", "Difficulty with night vision", "Sensitivity to light", "Seeing 'halos' around lights", "Fading of colors", "Double vision"],
+            severity: "moderate",
+            prevalence: "very_common",
+            description: "Clouding of the normally clear lens of the eye.",
+            treatment: "Surgery to remove the cloudy lens and replace it with an artificial one",
+            emergency: false
+        }
+
+        // ... This pattern would continue for hundreds more conditions ...
+    ]
+};
+    
 // Global state management
 let selectedSystem = null;
 let selectedSymptoms = [];
